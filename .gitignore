@@ -27,3 +27,14 @@ autoresearch.sh
 experiments/
 plots/
 .gstack/
+
+# Harness runtime state — per-persona JSON files written every round.
+# The schema lives in code (harness/types.ts) so reproducibility is
+# captured; the live data is ephemeral and shouldn't be committed.
+harness/state/
+harness/seeds/
+
+# Octogent tentacle scaffolding (auto-generated per-tentacle folders).
+# Tracked: README.md, tentacle.json schema. Untracked: per-tentacle folders.
+.octogent/tentacles/*/
+!.octogent/tentacles/README.md
