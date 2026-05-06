@@ -1188,6 +1188,45 @@ The stack is chosen for one reason: a single founder can ship the whole thing wi
 
 This stack has zero infra to maintain, scales to thousands without rework, and every layer has well-known patterns Claude Code can implement.
 
+## Appendix B.5: build tooling
+
+The build itself runs through a small set of installed Claude Code skills. Documented in `docs/external-tools.md`.
+
+### gstack (garrytan/gstack)
+
+Garry Tan's open-source software factory. Installed globally at `~/.claude/skills/gstack/` and required for this repo via team mode (a hook in `.claude/settings.json` checks for it on every Skill invocation).
+
+Mapped to Jumpstart workflow:
+
+- `/office-hours` for product validation when scope drift threatens
+- `/plan-ceo-review` and `/plan-eng-review` before any feature build (challenges the plan from strategic and architectural angles)
+- `/plan-design-review` for any new screen
+- `/autoplan` for the full review pipeline before phase 2 starts
+- `/design-consultation` to formalize the design system after the spec
+- `/review` on every PR
+- `/qa` against staging before any deploy
+- `/cso` security audit before the public launch
+- `/investigate` for any bug
+- `/retro` weekly during build
+
+### autoresearch (drivelineresearch/autoresearch-claude-code)
+
+Autonomous experiment loop. Installed at `~/.claude/skills/autoresearch/` plus a slash command at `~/.claude/commands/autoresearch.md`. The hook script is staged at `~/.claude/hooks/autoresearch-context.sh` and is wired into `.claude/settings.json` only when an experiment is active.
+
+Used for tuning each agent's prompt against measurable metrics. Examples in section 11 of this spec map directly to autoresearch experiments. The most valuable early experiments:
+
+- Tune Match Explainer prompt against the 50-case golden set (target 95% pass rate)
+- Sweep Matchmaker scoring weights against a replay of past drops (target 1.4x request rate lift)
+- Tune Safety Classifier threshold against the labeled abuse set (target false positive under 5%)
+
+### karpathy/autoresearch (reference)
+
+The pattern source. Andrej Karpathy's `program.md` plus `train.py` plus 5-minute eval loop is the same structure as this spec's section 11. We do not install the actual code (it is for ML training). We borrow the discipline: a spec the agent reads, a benchmark the agent runs, a loop that keeps winners.
+
+### Where this lives in the build sequence
+
+Phase 1 (week 1) uses gstack for planning and review. Phase 2 (week 2 to 3) brings autoresearch online for prompt and weight tuning once the eval suites exist. Phase 3 onward uses both as the standard operating loop.
+
 ## Appendix C: not in this spec, parking lot
 
 Captured here so they are not forgotten when v2 is considered.
