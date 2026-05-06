@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { loadMe } from "@/lib/mock/me";
 import { generateLocalDrop } from "@/lib/match/local-drop";
 import type { Match } from "@/lib/types";
+import { motion, staggerList, fadeUpItem } from "@/components/motion";
 
 export default function DropPage() {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -52,13 +53,18 @@ export default function DropPage() {
             ))}
           </div>
         ) : (
-          <ul className="flex flex-col gap-3">
+          <motion.ul
+            className="flex flex-col gap-3"
+            variants={staggerList}
+            initial="hidden"
+            animate="visible"
+          >
             {matches.map((m, i) => (
-              <li key={m.id} className="animate-fade-up" style={{ animationDelay: `${i * 80}ms` }}>
+              <motion.li key={m.id} variants={fadeUpItem}>
                 <MatchCard match={m} index={i + 1} />
-              </li>
+              </motion.li>
             ))}
-          </ul>
+          </motion.ul>
         )}
 
         <div className="mt-7 surface p-5 text-center bg-gradient-to-b from-surface to-accent-soft border-accent-edge">
