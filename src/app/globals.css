@@ -143,4 +143,45 @@
     background-size: 468px 100%;
     @apply animate-shimmer rounded-sm;
   }
+
+  /* Standardized interactive card lift. One source of truth so every
+     surface in the app moves the same way on hover. 150ms cubic-out. */
+  .card-interactive {
+    transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 150ms ease;
+  }
+  .card-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: theme("boxShadow.hover");
+    border-color: theme("colors.ink/30");
+  }
+
+  /* Section masthead: the editorial banner that opens every section.
+     Uses ed-rule + ed-serial under the hood. */
+  .ed-masthead {
+    @apply ed-rule pt-3 mb-8 flex items-baseline justify-between gap-4;
+  }
+
+  /* Large folio numerals for editorial step lists. Display serif at
+     scale, matched to the h1 character. */
+  .ed-folio {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 400;
+    font-size: 3.25rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: theme("colors.accent");
+  }
+
+  /* Double-Bezel: nested-radius pattern lifted from taste-skill.
+     Outer container at 2rem, inner panel offset by the border thickness
+     (0.375rem) so the interior radius reads as a clean concentric curve. */
+  .double-bezel-outer {
+    border-radius: 2rem;
+    padding: 0.375rem;
+  }
+  .double-bezel-inner {
+    border-radius: calc(2rem - 0.375rem);
+  }
 }

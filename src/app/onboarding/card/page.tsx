@@ -65,7 +65,7 @@ export default function CardReviewStep() {
         <p className="text-xxs uppercase tracking-wider text-accent font-semibold mt-3">
           Step 4 of 4
         </p>
-        <h1 className="text-2xl font-semibold tracking-tight mt-1">Your Founder Card</h1>
+        <h1 className="font-display text-3xl text-ink leading-tight mt-1">Your Founder Card</h1>
         <p className="text-sm text-muted mt-2">
           Drafted from your interview. Edit any line, change any tag, then save.
         </p>

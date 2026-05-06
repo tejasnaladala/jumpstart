@@ -39,7 +39,7 @@ export default function VerificationStep() {
         <p className="text-xxs uppercase tracking-wider text-accent font-semibold mt-3">
           Step 2 of 4
         </p>
-        <h1 className="text-2xl font-semibold tracking-tight mt-1">Verify you are in the cohort</h1>
+        <h1 className="font-display text-3xl text-ink leading-tight mt-1">Verify you are in the cohort</h1>
         <p className="text-sm text-muted mt-2">
           Soft verification gets you in within seconds. A reviewer flips you to full visibility within 24 hours.
         </p>

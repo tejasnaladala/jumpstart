@@ -21,7 +21,7 @@ export default function GlobalError({
           <p className="text-xxs uppercase tracking-wider text-error font-semibold">
             Something went wrong
           </p>
-          <h1 className="text-2xl font-semibold tracking-tight mt-2">
+          <h1 className="font-display text-3xl text-ink leading-tight mt-2">
             Hit a rough edge.
           </h1>
           <p className="text-muted mt-3 leading-relaxed">

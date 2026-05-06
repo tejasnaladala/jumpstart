@@ -104,7 +104,7 @@ export default function MatchDetailPage() {
             <Avatar name={match.candidate.name} size={56} />
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-semibold">{match.candidate.name}</h1>
+                <h1 className="font-sans text-xl font-semibold tracking-tight text-ink">{match.candidate.name}</h1>
                 <Pill size="sm" accent>{MATCH_TYPE_LABEL[match.match_type]}</Pill>
               </div>
               <p className="text-sm text-muted">{match.candidate.location}</p>

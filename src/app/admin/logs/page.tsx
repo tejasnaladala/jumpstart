@@ -70,7 +70,7 @@ export default async function AgentLogsPage() {
           <p className="text-xxs uppercase tracking-wider text-accent font-semibold">
             Observability
           </p>
-          <h1 className="text-3xl font-semibold tracking-tight mt-1">Agent logs</h1>
+          <h1 className="font-display text-4xl text-ink leading-tight mt-1">Agent logs</h1>
           <p className="text-muted text-sm mt-2 max-w-2xl">
             Last 200 invocations. Reads from <code className="text-xs bg-bg px-1.5 py-0.5 rounded">.jumpstart-logs/agent.jsonl</code>.
             In production this view will read from <code className="text-xs bg-bg px-1.5 py-0.5 rounded">agent_logs</code> in Supabase.
