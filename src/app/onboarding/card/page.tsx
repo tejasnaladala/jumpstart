@@ -21,6 +21,25 @@ export default function CardReviewStep() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // If the user has previously saved their card and is now re-visiting
+    // /onboarding/card (because they bookmarked it, came back to edit a
+    // line, or hit refresh), hydrate from the saved Pass instead of
+    // re-synthesizing from onboarding drafts. Otherwise the synth pass
+    // silently overwrites every line they hand-edited the last time
+    // through. Closes returning-user agent finding.
+    try {
+      const savedRaw = window.localStorage.getItem("jumpstart.me");
+      if (savedRaw) {
+        const saved = JSON.parse(savedRaw) as FounderCard;
+        if (saved && typeof saved === "object" && saved.name) {
+          setCard(saved);
+          setHydrating(false);
+          return;
+        }
+      }
+    } catch {
+      // fall through to synthesis from drafts
+    }
     try {
       // useDraftState wraps stored state in a versioned envelope:
       // { v: 1, ts, data }. Unwrap before synthesis. Falls back to {}

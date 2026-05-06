@@ -20,6 +20,11 @@ export default function MatchDetailPage() {
   const router = useRouter();
   const toast = useToast();
   const [match, setMatch] = useState<Match | null>(null);
+  // notFound: the URL referenced a match id that doesn't exist in the
+  // local drop. We previously substituted the first match in the drop
+  // which silently sent a stranger to the user — closing security/match
+  // agent finding "stranger substitution on stale URLs".
+  const [notFound, setNotFound] = useState(false);
   const [opener, setOpener] = useState("");
   const [requestOpen, setRequestOpen] = useState(false);
   // Note (the personalized intro request body) is auto-saved per-match so a
@@ -35,10 +40,18 @@ export default function MatchDetailPage() {
 
   useEffect(() => {
     const me = loadMe();
-    const m = getMatchById(params.id!, me) || generateLocalDrop(me)[0];
+    const m = getMatchById(params.id!, me);
     if (m) {
       setMatch(m);
       setOpener(m.suggested_opener);
+      setNotFound(false);
+    } else {
+      // Stale or invalid match id (drop has rotated, user pasted a
+      // shared URL from a different cohort, link was tampered with).
+      // Show a real not-found surface instead of substituting the first
+      // match in the current drop — that would expose a stranger as if
+      // the user had been matched with them.
+      setNotFound(true);
     }
   }, [params.id]);
 
@@ -90,13 +103,21 @@ export default function MatchDetailPage() {
     if (!match) return;
     setSending(true);
     try {
+      // If the user left the note blank, send the suggested opener so
+      // the recipient sees the Pass-pulled phrasing. The Sheet copy
+      // already says "Leave blank if the suggested opener feels right";
+      // honor that instead of sending an empty intro note that gives
+      // the recipient zero context. The Safety Classifier still runs
+      // on whatever text we send.
+      const trimmed = note.trim();
+      const finalNote = trimmed.length > 0 ? trimmed : opener;
       const res = await fetch("/api/intros", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           match_id: match.id,
           recipient_id: match.candidate.user_id,
-          note: note.trim(),
+          note: finalNote,
         }),
       });
       const body = await res.json();
@@ -129,6 +150,34 @@ export default function MatchDetailPage() {
     const me = loadMe();
     return me.tags.filter((t) => match.candidate.tags.includes(t));
   }, [match]);
+
+  if (notFound) {
+    return (
+      <>
+        <TopBar back={{ href: "/drop" }} title="Match not found" />
+        <section className="container-app py-12">
+          <div className="surface p-6 max-w-lg">
+            <p className="text-xxs uppercase tracking-wider text-muted font-semibold">
+              Stale link
+            </p>
+            <h1 className="font-display text-2xl text-ink leading-tight mt-1">
+              This match isn't in your current drop
+            </h1>
+            <p className="text-sm text-muted mt-3 leading-relaxed">
+              Drops rotate at 09:00 PT on Mon, Wed, and Fri. The match you're looking for
+              has already cycled out, or the link was for a different account.
+            </p>
+            <div className="mt-5 flex gap-2">
+              <Button onClick={() => router.push("/drop")}>Back to today's drop</Button>
+              <Button variant="ghost" onClick={() => router.push("/browse")}>
+                Browse cohort
+              </Button>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
 
   if (!match) {
     return (

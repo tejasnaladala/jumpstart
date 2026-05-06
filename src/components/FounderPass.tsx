@@ -253,12 +253,28 @@ export function FounderPass({
             style={{ width: `${100 - CUTOUT_X_PCT}%` }}
           >
             <StampSeal
-              topLabel="Verified"
+              topLabel={
+                card.trust_tier === "verified"
+                  ? "Verified"
+                  : card.trust_tier === "peer_vouched"
+                  ? "Vouched"
+                  : "Pending"
+              }
               bottomLabel="SS 2026"
-              ariaLabel="Verified attendee, Startup School 2026"
+              ariaLabel={`${
+                card.trust_tier === "verified"
+                  ? "Verified"
+                  : card.trust_tier === "peer_vouched"
+                  ? "Peer vouched"
+                  : "Provisional"
+              } attendee, Startup School 2026`}
               size={56}
               rotate={-6}
-              className="text-accent shrink-0"
+              className={
+                card.trust_tier === "provisional"
+                  ? "text-muted shrink-0"
+                  : "text-accent shrink-0"
+              }
             />
           </div>
 

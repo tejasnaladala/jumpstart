@@ -8,6 +8,15 @@
 // This is a public route (not gated by the (app) layout). The (app)
 // layout enforces auth via getSession; this directory sits outside it
 // so the page renders for unauthenticated visitors.
+//
+// Hardening for closed-beta launch:
+// - robots:noindex so search engines don't index private user passes
+// - generateMetadata produces sender-specific OG tags so link previews
+//   in iMessage / WhatsApp / Telegram show the sender's name and one
+//   line, not generic site copy
+// - signup link carries ?from=<id> so we can attribute referrals to
+//   the inviter once the funnel is live
+// - mononyms render the full name instead of an empty .split(" ")[0]
 
 import { Logo } from "@/components/Logo";
 import { FounderPass } from "@/components/FounderPass";
@@ -15,6 +24,60 @@ import { findById } from "@/lib/mock/cohort";
 import { DEFAULT_ME } from "@/lib/mock/me";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import type { FounderCard } from "@/lib/types";
+
+function lookup(id: string): FounderCard | undefined {
+  if (id === "me") return DEFAULT_ME;
+  const cohortHit = findById(id);
+  if (cohortHit) return cohortHit;
+  if (DEFAULT_ME.id === id || DEFAULT_ME.user_id === id) return DEFAULT_ME;
+  return undefined;
+}
+
+function firstNameOf(name: string): string {
+  // Mononyms (e.g. "Madonna", "Adele") — split returns [name] so
+  // .split(" ")[0] still works, but a defensive trim guards against
+  // weird whitespace, leading separators, etc.
+  const trimmed = (name || "").trim();
+  if (!trimmed) return "Someone";
+  const first = trimmed.split(/\s+/)[0];
+  return first || trimmed;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const card = lookup(id);
+  if (!card) {
+    return {
+      title: "Founder Pass not found",
+      robots: { index: false, follow: false },
+    };
+  }
+  const firstName = firstNameOf(card.name);
+  const oneLine = card.building_summary || `${firstName} on Jumpstart for SS 2026`;
+  return {
+    title: `${firstName}'s Founder Pass`,
+    description: oneLine,
+    // Private user pages should not be indexed. Friends-only sharing
+    // by design; SEO indexing would surface unconsented PII.
+    robots: { index: false, follow: false },
+    openGraph: {
+      title: `${firstName} sent you their Founder Pass`,
+      description: oneLine,
+      type: "profile",
+    },
+    twitter: {
+      card: "summary",
+      title: `${firstName}'s Founder Pass`,
+      description: oneLine,
+    },
+  };
+}
 
 export default async function PublicPassPage({
   params,
@@ -22,17 +85,17 @@ export default async function PublicPassPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  // Look up by user_id or card id. Falls back to the dev card if the id
-  // is the literal "me" so devs can preview their own public Pass.
-  const card =
-    id === "me"
-      ? DEFAULT_ME
-      : findById(id) ||
-        (DEFAULT_ME.id === id || DEFAULT_ME.user_id === id ? DEFAULT_ME : undefined);
+  const card = lookup(id);
 
   if (!card) {
     notFound();
   }
+
+  const firstName = firstNameOf(card.name);
+  // Referral attribution: the recipient who clicks "Get my own pass"
+  // lands on /signup with ?from=<inviter_id>. Once the funnel is wired
+  // for real this is the seed for the invitee→inviter graph.
+  const signupHref = `/signup?from=${encodeURIComponent(id)}`;
 
   return (
     <main className="min-h-svh bg-bg text-ink flex flex-col">
@@ -40,7 +103,7 @@ export default async function PublicPassPage({
         <div className="container-wide py-4 flex items-center justify-between">
           <Logo />
           <Link
-            href="/signup"
+            href={signupHref}
             className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted hover:text-ink transition-colors"
           >
             Get my own pass
@@ -58,7 +121,7 @@ export default async function PublicPassPage({
 
         <div className="mt-10 max-w-[600px] mx-auto text-center">
           <p className="text-sm text-muted leading-relaxed mb-4">
-            <span className="font-display italic text-ink">{card.name.split(" ")[0]}</span>{" "}
+            <span className="font-display italic text-ink">{firstName}</span>{" "}
             sent you their Founder Pass via Jumpstart, the unofficial pre-event matchmaker
             for YC Startup School 2026.
           </p>
@@ -67,7 +130,7 @@ export default async function PublicPassPage({
             handles the rest.
           </p>
           <Link
-            href="/signup"
+            href={signupHref}
             className="inline-flex items-center justify-center h-11 px-5 mt-6 rounded-md bg-ink text-bg text-sm font-medium hover:bg-espresso transition-colors"
           >
             Get my own Founder Pass
