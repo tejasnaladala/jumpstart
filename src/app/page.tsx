@@ -1,5 +1,4 @@
 import { Logo } from "@/components/Logo";
-import { FounderCardView } from "@/components/FounderCard";
 import { FounderPass } from "@/components/FounderPass";
 import { MOCK_COHORT } from "@/lib/mock/cohort";
 import { Marquee } from "@/components/Marquee";
@@ -133,17 +132,17 @@ export default function LandingPage() {
         </Reveal>
         <Reveal>
           <h2 className="font-display text-4xl sm:text-5xl max-w-3xl">
-            A bounded cohort. A three-times-a-week ritual.{" "}
-            <span className="italic text-accent">Eight thousand</span> of the world&apos;s best
-            young builders.
+            Two days at Chase Center. Eight weeks of matchmaking lead-in.{" "}
+            <span className="italic text-accent">Two thousand</span> of the world&apos;s best
+            young AI builders.
           </h2>
         </Reveal>
         <Reveal delay={0.1}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 mt-12">
-            <Stat label="Verified attendees" value={8000} suffix="" />
-            <Stat label="Anchor cities" value={60} suffix="+" />
+            <Stat label="Verified attendees" value={2000} suffix="" />
+            <Stat label="Countries" value={60} suffix="+" />
             <Stat label="Drops per week" value={3} />
-            <Stat label="Days the cohort runs" value={90} />
+            <Stat label="Days at Chase Center" value={2} />
           </div>
         </Reveal>
       </section>
@@ -189,51 +188,19 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Section 03 - Founder Pass */}
+      {/* Section 03 - Founder Pass (merged Pass + Card) */}
       <section className="container-wide py-20">
         <Reveal>
           <div className="ed-masthead">
             <span className="ed-serial">§ 03 / Founder Pass</span>
-            <span className="ed-serial hidden sm:inline">Your admit-one to the cohort</span>
+            <span className="ed-serial hidden sm:inline">Your admit-one + the four lines</span>
           </div>
         </Reveal>
-        <Reveal>
-          <h2 className="font-display text-4xl sm:text-5xl max-w-3xl leading-[1.06]">
-            One pass. One cohort.{" "}
-            <span className="italic text-accent">Eight thousand founders worth meeting.</span>
-          </h2>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <p className="text-muted mt-5 text-lg leading-relaxed max-w-2xl">
-            Your Founder Pass is the identity object. It says you are in the cohort, what city you
-            are anchored to, and the dates of the in-person Demo Day. The matchmaker scores every
-            pass against yours between drops.
-          </p>
-        </Reveal>
-        <Reveal delay={0.16}>
-          <div className="mt-12">
-            <FounderPass
-              name="Jordan Park"
-              cohort="Startup School 2026"
-              venue="Chase Center, SF · July 25-26"
-            />
-          </div>
-        </Reveal>
-      </section>
-
-      {/* Section 04 - Founder Card */}
-      <section className="container-wide py-20">
-        <Reveal>
-          <div className="ed-masthead">
-            <span className="ed-serial">§ 04 / Founder Card</span>
-            <span className="ed-serial hidden sm:inline">The four lines</span>
-          </div>
-        </Reveal>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          <div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          <div className="lg:col-span-5">
             <Reveal>
               <h2 className="font-display text-4xl sm:text-5xl leading-[1.06]">
-                You write it once.{" "}
+                One pass.{" "}
                 <span className="italic text-accent">
                   <TypewriterText
                     text="The matchmaker reads it forever."
@@ -246,9 +213,10 @@ export default function LandingPage() {
             </Reveal>
             <Reveal delay={0.08}>
               <p className="text-muted mt-5 text-lg leading-relaxed">
-                The Pass is your seat in the room. The Card is what the matchmaker reads. Four
-                lines, free text. No follower count, no vanity metrics, no public profile. Other
-                verified attendees see it. That is the entire audience.
+                Your Founder Pass is the identity object. Cohort meta on top, the four lines that
+                tell the AI who you are in the middle, your tags and the venue at the bottom. No
+                follower count, no vanity metrics, no public profile. Other verified attendees see
+                it. That is the entire audience.
               </p>
             </Reveal>
             <Reveal delay={0.16}>
@@ -267,17 +235,17 @@ export default function LandingPage() {
               </ul>
             </Reveal>
           </div>
-          <Reveal delay={0.12}>
-            <FounderCardView card={sample[2]!} />
+          <Reveal delay={0.18} className="lg:col-span-7">
+            <FounderPass card={sample[2]!} />
           </Reveal>
         </div>
       </section>
 
-      {/* Section 05 - Cohort composition (was "Who it is for") */}
+      {/* Section 04 - Cohort composition (was "Who it is for") */}
       <section className="container-wide py-20">
         <Reveal>
           <div className="ed-masthead">
-            <span className="ed-serial">§ 05 / Cohort composition</span>
+            <span className="ed-serial">§ 04 / Cohort composition</span>
             <span className="ed-serial hidden sm:inline">60+ countries verifying</span>
           </div>
         </Reveal>
@@ -308,11 +276,11 @@ export default function LandingPage() {
         </Reveal>
       </section>
 
-      {/* Section 06 - Counter-positioning */}
+      {/* Section 05 - Counter-positioning */}
       <section className="container-wide py-20">
         <Reveal>
           <div className="ed-masthead">
-            <span className="ed-serial">§ 06 / Counter-positioning</span>
+            <span className="ed-serial">§ 05 / Counter-positioning</span>
             <span className="ed-serial hidden sm:inline">What this is and isn&apos;t</span>
           </div>
         </Reveal>
@@ -413,9 +381,9 @@ export default function LandingPage() {
 }
 
 const COHORT_SEGMENTS: { label: string; note: string }[] = [
-  { label: "SF-bound", note: "Demo Day, summer programming, in-person" },
+  { label: "SF-bound", note: "Locals plus cohort travelers in for July 25-26" },
   { label: "India cohort", note: "Bangalore, Bombay, Delhi, Hyderabad" },
-  { label: "Remote / global", note: "Verified across 60+ countries" },
+  { label: "Remote / global", note: "Flying in from 60+ countries" },
   { label: "Cofounder seekers", note: "Looking for a long-term partner" },
   { label: "Technical founders", note: "Building, shipping, debugging" },
   { label: "GTM founders", note: "Distribution, sales, partnerships" },
@@ -429,7 +397,7 @@ const COUNTER_PAIRS: { not: string; instead: string }[] = [
   { not: "Follower counts", instead: "No public profile, ever" },
   { not: "Open DMs", instead: "Structured intro request" },
   { not: "Chatbot you talk to", instead: "Matchmaker that learns" },
-  { not: "Lifelong network", instead: "Bounded 90-day cohort" },
+  { not: "Lifelong network", instead: "Bounded 2-day event" },
 ];
 
 function Stat({
