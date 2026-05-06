@@ -1,5 +1,18 @@
 # Jumpstart design spec
 
+> **CORRECTION BANNER (2026-05-06).** This spec was written assuming an
+> 8,000-founder, 90-day distributed cohort. The actual event is the **YC
+> AI Startup School 2026**, a **2-day in-person event** at **Chase Center,
+> San Francisco** on **July 25-26, 2026**, with approximately **2,000
+> hand-picked attendees**. Treat any reference in this document to "8,000
+> users", "8000 founders", "90-day cohort", or "Days the cohort runs: 90"
+> as outdated. The product is a **pre-event matchmaker** with ~8 weeks of
+> matchmaking lead-in (Mon, Wed, Fri at 09:00 PT), denser scheduling
+> support during the 2 days on-site, and a follow-up window post-event.
+> See `CLAUDE.md` for the corrected facts. Sections of this spec that hinge
+> on the 90-day premise (cost projections, growth targets, retention
+> framing) need to be revised in a follow-up pass.
+
 Date: 2026-05-05
 Phase: 1, ideation locked
 Author: Tejas N.

@@ -1,6 +1,5 @@
 "use client";
 import { TopBar } from "@/components/TopBar";
-import { FounderCardView } from "@/components/FounderCard";
 import { FounderPass } from "@/components/FounderPass";
 import { Button } from "@/components/primitive/Button";
 import { Pill } from "@/components/primitive/Pill";
@@ -43,25 +42,16 @@ export default function YouPage() {
 
   return (
     <>
-      <TopBar title="You" subtitle="Your Founder Pass and Card" />
+      <TopBar title="You" subtitle="Your Founder Pass" />
       <section className="container-app pt-5 pb-6">
-        {/* Founder Pass: the editorial admit-one ticket. Identity object,
-            shown above the structured Founder Card data. */}
+        {/* Founder Pass: the editorial admit-one ticket carries both the
+            identity treatment and the four founder-card lines. Pass and
+            Card are one object. */}
         <div className="ed-rule pt-3 mb-4 flex items-baseline justify-between">
           <span className="ed-serial">No. 001 / Founder Pass</span>
-          <span className="ed-serial hidden sm:inline">SS 2026</span>
+          <span className="ed-serial hidden sm:inline">Editable below</span>
         </div>
-        <FounderPass
-          name={card.name}
-          cohort="Startup School 2026"
-          venue="Chase Center, SF · July 25-26"
-        />
-
-        <div className="ed-rule pt-3 mt-8 mb-4 flex items-baseline justify-between">
-          <span className="ed-serial">The four lines</span>
-          <span className="ed-serial hidden sm:inline">Editable</span>
-        </div>
-        <FounderCardView card={card} />
+        <FounderPass card={card} />
 
         <div className="surface mt-4 p-4">
           <div className="flex items-center justify-between mb-1">

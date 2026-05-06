@@ -1,8 +1,21 @@
 # Jumpstart
 
-AI-routed relationship layer for the YC Startup School 2026 cohort. Curated weekly drops of three founders worth meeting, no swiping, no directory scrolling, all matchmaking done by agents.
+AI-routed pre-event matchmaker for **YC Startup School 2026**, the AI-focused **2-day in-person event** at **Chase Center, San Francisco, July 25-26, 2026**. Curated drops of founders worth meeting at the event. Built by an attendee. Cadence is Monday, Wednesday, Friday at 09:00 PT during the matchmaking lead-in (~8 weeks before the event), with denser scheduling support during the 2 days on-site, then a follow-up window post-event.
 
-**Source of truth for everything is** `docs/superpowers/specs/2026-05-05-jumpstart-design.md`. Read that first if you're spinning up on this project.
+**Cohort size: ~2,000 hand-picked attendees**, not 8,000. The 8,000 figure refers to the historical online Startup School program, not the in-person AI Startup School 2026 event. Any user-facing copy or stat referencing 8,000 is wrong and should read 2,000.
+
+**Source of truth for everything is** `docs/superpowers/specs/2026-05-05-jumpstart-design.md`. Read that first if you're spinning up on this project. **NB:** that spec was written assuming an 8,000-founder, 90-day distributed cohort. Treat all references to "8000 users", "8,000 founders", "90-day cohort", and "Days the cohort runs: 90" as outdated. The corrected facts above (2 days, Chase Center, ~2,000 attendees) override the spec.
+
+## Event facts (load-bearing, do not get wrong)
+
+- **Name:** YC Startup School 2026 (AI-focused, the in-person AI Startup School)
+- **Dates:** July 25-26, 2026 (Saturday + Sunday)
+- **Venue:** Chase Center, San Francisco
+- **Format:** 2-day in-person event with speakers (Jensen Huang, Sam Altman, Jeff Dean among others), founder programming, networking time
+- **Attendees:** ~2,000 hand-picked accepted founders
+- **Pre-event window:** ~8 weeks of pre-event matchmaking (Jumpstart's primary surface)
+- **Post-event window:** ~1-2 weeks of follow-up scheduling
+- **Founder positioning:** "Built by an attendee, for the cohort"
 
 ## gstack (required, global install)
 
@@ -46,6 +59,16 @@ Match the user's intent to the skill. Invoke via the Skill tool.
 ## Autoresearch (also installed)
 
 `/autoresearch <goal>` runs an autonomous experiment loop on any measurable metric. Useful for tuning Match Explainer prompt quality, Matchmaker scoring weights, Onboarding Interviewer drop-off rate, and any other agent prompt tuning. The agent creates a branch, writes a benchmark, runs a baseline, and loops, keeping winners and discarding losers. Hook the autoresearch context into settings.json only when actively running an experiment.
+
+## Reframed product shape (post-correction)
+
+The original spec described a 90-day distributed cohort with weekly drops. The actual event is a 2-day in-person gathering. Reconcile this way:
+
+- **The cohort exists for ~10-12 weeks** total (8 pre-event + 2 in person + 1-2 follow-up), not 90 days.
+- **Weekly drops** become **3-times-a-week drops** (Mon, Wed, Fri at 09:00 PT) during the pre-event window, more frequent on-site.
+- **The success metric** is not "useful meetings during a 90-day program" but **"useful meetings scheduled and completed during or around the 2-day event"**.
+- **The Founder Pass** (the editorial admit-one ticket) and **the Founder Card** (the four-line founder data) are the same identity object, presented as one merged surface.
+- **YC outreach trigger**: not "1000 verified users in 30 days" but a richer signal like "30-50 high-signal verified attendees + 20 meetings scheduled at the event + 10 marked useful afterward + 3 testimonials".
 
 ## Tech stack (from the spec)
 
