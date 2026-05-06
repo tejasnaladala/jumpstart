@@ -5,6 +5,7 @@ import type { Match } from "@/lib/types";
 import { MATCH_TYPE_LABEL } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { motion, SPRING_TIGHT } from "@/components/motion";
 
 type Props = {
   match: Match;
@@ -13,11 +14,17 @@ type Props = {
 
 export function MatchCard({ match, index }: Props) {
   return (
+    <motion.div
+      whileHover={{ y: -2, scale: 1.005 }}
+      whileTap={{ scale: 0.995 }}
+      transition={SPRING_TIGHT}
+      className="rounded-lg"
+    >
     <Link
       href={`/match/${match.id}`}
       className={cn(
-        "block surface p-4 transition-all duration-200",
-        "hover:shadow-hover hover:-translate-y-px"
+        "block surface p-4 transition-shadow duration-200",
+        "hover:shadow-hover"
       )}
     >
       <div className="flex items-start gap-3">
@@ -54,5 +61,6 @@ export function MatchCard({ match, index }: Props) {
         </div>
       </div>
     </Link>
+    </motion.div>
   );
 }
