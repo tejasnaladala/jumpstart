@@ -7,7 +7,7 @@
 // the top-N (default 3) per cycle so we focus on what's most painful
 // rather than thrashing on every signal.
 
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 
 const ACTIVITY = path.resolve(__dirname, "..", "..", "experiments", "harness-activity.jsonl");
@@ -134,17 +134,16 @@ export function extractFindings(windowMinutes = 30): Finding[] {
   if (existsSync(RUNS_DIR)) {
     // Walk run dirs (just the latest 3 to keep this cheap).
     try {
-      const fs = require("node:fs") as typeof import("node:fs");
-      const runs = fs.readdirSync(RUNS_DIR).sort().slice(-3);
+      const runs = readdirSync(RUNS_DIR).sort().slice(-3);
       for (const run of runs) {
         const runPath = path.join(RUNS_DIR, run);
-        if (!fs.statSync(runPath).isDirectory()) continue;
-        const personas = fs.readdirSync(runPath).filter((p) => p.startsWith("p_"));
+        if (!statSync(runPath).isDirectory()) continue;
+        const personas = readdirSync(runPath).filter((p) => p.startsWith("p_"));
         for (const persona of personas) {
           const telPath = path.join(runPath, persona, "telemetry.json");
-          if (!fs.existsSync(telPath)) continue;
+          if (!existsSync(telPath)) continue;
           try {
-            const tel = JSON.parse(fs.readFileSync(telPath, "utf-8")) as {
+            const tel = JSON.parse(readFileSync(telPath, "utf-8")) as {
               console_errors?: { text: string }[];
             };
             for (const ce of tel.console_errors || []) {
@@ -178,17 +177,16 @@ export function extractFindings(windowMinutes = 30): Finding[] {
   const slowCounts = new Map<string, { count: number; max_ms: number }>();
   if (existsSync(RUNS_DIR)) {
     try {
-      const fs = require("node:fs") as typeof import("node:fs");
-      const runs = fs.readdirSync(RUNS_DIR).sort().slice(-3);
+      const runs = readdirSync(RUNS_DIR).sort().slice(-3);
       for (const run of runs) {
         const runPath = path.join(RUNS_DIR, run);
-        if (!fs.statSync(runPath).isDirectory()) continue;
-        const personas = fs.readdirSync(runPath).filter((p) => p.startsWith("p_"));
+        if (!statSync(runPath).isDirectory()) continue;
+        const personas = readdirSync(runPath).filter((p) => p.startsWith("p_"));
         for (const persona of personas) {
           const telPath = path.join(runPath, persona, "telemetry.json");
-          if (!fs.existsSync(telPath)) continue;
+          if (!existsSync(telPath)) continue;
           try {
-            const tel = JSON.parse(fs.readFileSync(telPath, "utf-8")) as {
+            const tel = JSON.parse(readFileSync(telPath, "utf-8")) as {
               slow_calls?: { url: string; latency_ms: number }[];
             };
             for (const slow of tel.slow_calls || []) {
