@@ -143,12 +143,13 @@ export async function checkLimit(
       help: conf.help,
     };
   }
-  // Hard guard: production must use Upstash. The in-memory limiter is
-  // bypassable across serverless cold starts and instances. Closes Codex
-  // challenge P2 #9.
-  if (process.env.NODE_ENV === "production") {
+  // Hard guard: production must use Upstash unless this is an explicit
+  // private-beta tunnel (JUMPSTART_PRIVATE_BETA=1). The in-memory limiter is
+  // bypassable across serverless cold starts and instances, so it must NOT
+  // run in real prod. Closes Codex challenge P2 #9.
+  if (process.env.NODE_ENV === "production" && process.env.JUMPSTART_PRIVATE_BETA !== "1") {
     throw new Error(
-      "Upstash is required in production. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN, or set NODE_ENV != 'production' for local dev."
+      "Upstash is required in production. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN, or run private beta with JUMPSTART_PRIVATE_BETA=1."
     );
   }
   const allowed = await memCheck(key, identifier);

@@ -12,31 +12,34 @@ export default function OG() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#FAFAF7",
+          background: "#F4F1DB",
           display: "flex",
           flexDirection: "column",
           padding: "80px 90px",
-          fontFamily: "Inter, system-ui, sans-serif",
+          fontFamily: "Georgia, system-ui, sans-serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <span
             style={{
-              width: 64,
-              height: 64,
-              background: "#1A1A1A",
-              borderRadius: 14,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#C45612",
-              fontSize: 38,
-              fontWeight: 600,
+              fontSize: 56,
+              color: "#FF6600",
+              fontWeight: 700,
+              fontStyle: "italic",
+              fontFamily: "Georgia, serif",
+              lineHeight: 1,
             }}
           >
             J
-          </div>
-          <span style={{ fontSize: 28, fontWeight: 600, color: "#1A1A1A" }}>
+          </span>
+          <span
+            style={{
+              fontSize: 28,
+              fontWeight: 600,
+              color: "#16140F",
+              fontFamily: "system-ui, sans-serif",
+            }}
+          >
             jumpstart
           </span>
         </div>
@@ -44,7 +47,7 @@ export default function OG() {
           <p
             style={{
               fontSize: 16,
-              color: "#C45612",
+              color: "#FF6600",
               fontWeight: 700,
               textTransform: "uppercase",
               letterSpacing: 1.2,
@@ -55,26 +58,43 @@ export default function OG() {
           </p>
           <h1
             style={{
-              fontSize: 72,
-              lineHeight: 1.05,
-              fontWeight: 600,
-              color: "#1A1A1A",
+              fontSize: 78,
+              lineHeight: 1.02,
+              fontWeight: 400,
+              color: "#16140F",
               margin: "20px 0 0 0",
-              maxWidth: 950,
+              maxWidth: 1000,
+              fontFamily: "Georgia, serif",
+              letterSpacing: -0.02,
             }}
           >
-            Three founder matches every Wednesday.
+            Three founder matches every <em style={{ color: "#FF6600" }}>Wednesday</em>.
           </h1>
-          <p style={{ fontSize: 32, color: "#6B6B6B", margin: "24px 0 0 0", maxWidth: 900 }}>
+          <p
+            style={{
+              fontSize: 30,
+              color: "#463325",
+              margin: "24px 0 0 0",
+              maxWidth: 920,
+              fontFamily: "system-ui, sans-serif",
+            }}
+          >
             The unofficial global attendee graph for YC Startup School 2026.
           </p>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-          <span style={{ fontSize: 18, color: "#6B6B6B" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            fontFamily: "system-ui, sans-serif",
+          }}
+        >
+          <span style={{ fontSize: 18, color: "#463325" }}>
             Verified attendees only. Not affiliated with Y Combinator.
           </span>
-          <span style={{ fontSize: 18, fontWeight: 600, color: "#C45612" }}>
-            jumpstart.app →
+          <span style={{ fontSize: 18, fontWeight: 600, color: "#FF6600" }}>
+            jumpstart →
           </span>
         </div>
       </div>

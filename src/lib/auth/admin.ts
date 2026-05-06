@@ -16,9 +16,11 @@ function adminEmails(): string[] {
 }
 
 function devAdminAllowed(): boolean {
-  return (
-    process.env.JUMPSTART_DEV_ADMIN === "1" && process.env.NODE_ENV !== "production"
-  );
+  if (process.env.JUMPSTART_DEV_ADMIN !== "1") return false;
+  // Allowed in dev. In production, only if explicit JUMPSTART_PRIVATE_BETA=1
+  // marks this as a tunneled private beta (intentional, opt-in).
+  if (process.env.NODE_ENV !== "production") return true;
+  return process.env.JUMPSTART_PRIVATE_BETA === "1";
 }
 
 export async function getAdmin(): Promise<SessionUser | null> {
