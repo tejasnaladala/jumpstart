@@ -30,8 +30,13 @@ const COLORS = {
   muted: "#463325",
   border: "#E8E3CC",
   accent: "#FF6600",
-  graticule: "rgba(70, 51, 37, 0.16)",
-  landFill: "#E8E3CC",
+  accentGlow: "rgba(255, 102, 0, 0.55)",
+  accentFaint: "rgba(255, 102, 0, 0.32)",
+  accentLand: "rgba(255, 102, 0, 0.85)",
+  graticule: "rgba(255, 102, 0, 0.18)",
+  backsideLand: "rgba(70, 51, 37, 0.13)",
+  backsideGraticule: "rgba(70, 51, 37, 0.06)",
+  scanline: "rgba(255, 102, 0, 0.55)",
 };
 
 type Pulse = { idx: number; t0: number };
@@ -100,39 +105,93 @@ export function CohortGlobe({ size = 460 }: { size?: number }) {
       const dt = Math.min(64, t - lastT);
       lastT = t;
       if (!reduced) {
-        lambda += dt * 0.012; // ~4.3 deg/sec, full rotation in ~84s, calm
+        lambda += dt * 0.014; // a bit livelier for the holo feel
       }
-      const center: [number, number] = [-lambda, -phi];
       projection.rotate([lambda, phi]);
 
       ctx!.clearRect(0, 0, size, size);
 
-      // Sphere (cream surface for the land background)
-      ctx!.beginPath();
-      path({ type: "Sphere" });
-      ctx!.fillStyle = COLORS.surface;
-      ctx!.fill();
-
-      // Subtle graticule for character (every 20 degrees)
-      drawGraticule(ctx!, projection, cx, cy, radius);
-
-      // Land (real country outlines)
+      // Backside ghost: rotate by 180 degrees on a temporary projection,
+      // draw country outlines at very low opacity. Reads like the back of
+      // a glass globe with hairline ink shadows. Cool but quiet.
       if (land) {
+        const back = geoOrthographic()
+          .scale(radius)
+          .translate([cx, cy])
+          .clipAngle(90)
+          .rotate([lambda + 180, -phi]);
+        const backPath = geoPath(back, ctx!);
+        ctx!.save();
         ctx!.beginPath();
-        path(land);
-        ctx!.fillStyle = COLORS.landFill;
-        ctx!.fill();
-        ctx!.strokeStyle = COLORS.muted;
-        ctx!.lineWidth = 0.55;
+        backPath(land);
+        ctx!.strokeStyle = COLORS.backsideLand;
+        ctx!.lineWidth = 0.45;
+        ctx!.setLineDash([2, 2]);
         ctx!.stroke();
+        ctx!.setLineDash([]);
+        ctx!.restore();
       }
 
-      // Sphere outline (drawn last so it sits on top of land edges)
+      // Soft outer aura around the sphere edge so it reads as glass.
+      const aura = ctx!.createRadialGradient(cx, cy, radius * 0.95, cx, cy, radius * 1.06);
+      aura.addColorStop(0, "rgba(255, 102, 0, 0)");
+      aura.addColorStop(0.55, "rgba(255, 102, 0, 0.08)");
+      aura.addColorStop(1, "rgba(255, 102, 0, 0)");
+      ctx!.fillStyle = aura;
+      ctx!.fillRect(0, 0, size, size);
+
+      // Graticule (orange, faint).
+      drawGraticule(ctx!, projection, cx, cy, radius, COLORS.graticule);
+
+      // Land (front hemisphere), outline only with a subtle orange glow.
+      if (land) {
+        ctx!.save();
+        ctx!.shadowColor = COLORS.accentGlow;
+        ctx!.shadowBlur = 6;
+        ctx!.beginPath();
+        path(land);
+        ctx!.strokeStyle = COLORS.accentLand;
+        ctx!.lineWidth = 0.7;
+        ctx!.stroke();
+        ctx!.restore();
+      }
+
+      // Equator and prime meridian, slightly brighter for the techy feel.
+      drawEmphasizedAxis(ctx!, projection, cx, cy, radius);
+
+      // Sphere outline with a soft orange glow.
+      ctx!.save();
+      ctx!.shadowColor = COLORS.accentGlow;
+      ctx!.shadowBlur = 10;
       ctx!.beginPath();
       path({ type: "Sphere" });
-      ctx!.strokeStyle = COLORS.ink;
-      ctx!.lineWidth = 1.2;
+      ctx!.strokeStyle = COLORS.accent;
+      ctx!.lineWidth = 1.1;
       ctx!.stroke();
+      ctx!.restore();
+
+      // Holo scanline: a thin horizontal beam that sweeps top-to-bottom
+      // across the sphere every 5 seconds. Skipped under reduced motion.
+      if (!reduced) {
+        const period = 5000;
+        const phase = (t % period) / period; // 0..1
+        const lineY = cy - radius + phase * (radius * 2);
+        const grad = ctx!.createLinearGradient(0, lineY - 12, 0, lineY + 12);
+        grad.addColorStop(0, "rgba(255, 102, 0, 0)");
+        grad.addColorStop(0.5, "rgba(255, 102, 0, 0.28)");
+        grad.addColorStop(1, "rgba(255, 102, 0, 0)");
+        ctx!.save();
+        // Clip to sphere so the scanline only touches the globe.
+        ctx!.beginPath();
+        ctx!.arc(cx, cy, radius, 0, Math.PI * 2);
+        ctx!.clip();
+        ctx!.fillStyle = grad;
+        ctx!.fillRect(0, lineY - 12, size, 24);
+        // The bright spine of the scanline.
+        ctx!.fillStyle = COLORS.scanline;
+        ctx!.fillRect(0, lineY - 0.5, size, 1);
+        ctx!.restore();
+      }
 
       // Waypoints
       const visibleNow = new Set<number>();
@@ -150,13 +209,20 @@ export function CohortGlobe({ size = 460 }: { size?: number }) {
           nearestAngle = ang;
           nearestIdx = i;
         }
-        // Static dot
+        // Static dot with a soft halo for the holo feel.
+        ctx!.save();
+        ctx!.shadowColor = COLORS.accent;
+        ctx!.shadowBlur = 12;
         ctx!.beginPath();
-        ctx!.arc(px, py, 3.2, 0, Math.PI * 2);
+        ctx!.arc(px, py, 3.4, 0, Math.PI * 2);
         ctx!.fillStyle = COLORS.accent;
         ctx!.fill();
-        ctx!.strokeStyle = COLORS.cream;
-        ctx!.lineWidth = 1.4;
+        ctx!.restore();
+        // Thin cream rim so the dot sits on the wireframe cleanly.
+        ctx!.beginPath();
+        ctx!.arc(px, py, 3.4, 0, Math.PI * 2);
+        ctx!.strokeStyle = "rgba(244, 241, 219, 0.55)";
+        ctx!.lineWidth = 0.6;
         ctx!.stroke();
       });
 
@@ -228,9 +294,10 @@ function drawGraticule(
   projection: ReturnType<typeof geoOrthographic>,
   cx: number,
   cy: number,
-  radius: number
+  radius: number,
+  color: string = COLORS.graticule
 ) {
-  ctx.strokeStyle = COLORS.graticule;
+  ctx.strokeStyle = color;
   ctx.lineWidth = 0.4;
   ctx.beginPath();
   // Lat lines
@@ -281,4 +348,67 @@ function drawGraticule(
     }
   }
   ctx.stroke();
+}
+
+// Equator and prime meridian, slightly brighter than the regular graticule
+// so the holo wireframe has a primary axis read.
+function drawEmphasizedAxis(
+  ctx: CanvasRenderingContext2D,
+  projection: ReturnType<typeof geoOrthographic>,
+  cx: number,
+  cy: number,
+  radius: number
+) {
+  ctx.save();
+  ctx.shadowColor = COLORS.accentGlow;
+  ctx.shadowBlur = 4;
+  ctx.strokeStyle = COLORS.accentFaint;
+  ctx.lineWidth = 0.7;
+  // Equator (lat = 0)
+  ctx.beginPath();
+  let started = false;
+  for (let lng = -180; lng <= 180; lng += 2) {
+    const p = projection([lng, 0]);
+    if (!p) {
+      started = false;
+      continue;
+    }
+    const dx = p[0] - cx;
+    const dy = p[1] - cy;
+    if (dx * dx + dy * dy > radius * radius) {
+      started = false;
+      continue;
+    }
+    if (!started) {
+      ctx.moveTo(p[0], p[1]);
+      started = true;
+    } else {
+      ctx.lineTo(p[0], p[1]);
+    }
+  }
+  ctx.stroke();
+  // Prime meridian (lng = 0)
+  ctx.beginPath();
+  started = false;
+  for (let lat = -90; lat <= 90; lat += 2) {
+    const p = projection([0, lat]);
+    if (!p) {
+      started = false;
+      continue;
+    }
+    const dx = p[0] - cx;
+    const dy = p[1] - cy;
+    if (dx * dx + dy * dy > radius * radius) {
+      started = false;
+      continue;
+    }
+    if (!started) {
+      ctx.moveTo(p[0], p[1]);
+      started = true;
+    } else {
+      ctx.lineTo(p[0], p[1]);
+    }
+  }
+  ctx.stroke();
+  ctx.restore();
 }
