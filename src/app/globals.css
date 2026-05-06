@@ -18,6 +18,43 @@
     @apply bg-bg text-ink font-sans;
     font-feature-settings: "ss01", "cv01", "cv11";
     line-height: 1.55; /* readable body line-height per ui-ux-pro-max */
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(26, 26, 26, 0.025) 1px, transparent 0);
+    background-size: 22px 22px;
+    background-attachment: fixed;
+  }
+
+  /* Editorial display: Instrument Serif for the briefing-headline feel. */
+  h1, h2 {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+  }
+  h1 { letter-spacing: -0.018em; }
+
+  /* Numeric serials and timestamps live in mono with tabular figures */
+  .ed-serial {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-feature-settings: "tnum", "ss01";
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: theme("colors.muted");
+    text-transform: uppercase;
+  }
+
+  /* Editorial divider with a single accent tick */
+  .ed-rule {
+    border-top: 1px solid theme("colors.border");
+    position: relative;
+  }
+  .ed-rule::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 28px;
+    height: 1px;
+    background: theme("colors.accent");
   }
 
   /* Body copy line-length cap inside prose blocks */

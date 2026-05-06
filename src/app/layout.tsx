@@ -1,12 +1,28 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Instrument_Serif, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/primitive/Toast";
 import { MotionConfig } from "framer-motion";
 
-const inter = Inter({
+// Editorial pairing. Instrument Serif for the briefing-headline feel,
+// Geist for body, Geist Mono for serials and timestamps.
+const display = Instrument_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const body = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+const mono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -25,7 +41,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body className="min-h-svh">
         <MotionConfig reducedMotion="user">
           <ToastProvider>{children}</ToastProvider>

@@ -32,24 +32,24 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="container-wide pt-12 pb-16 sm:pt-20 sm:pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <section className="container-wide pt-14 pb-16 sm:pt-24 sm:pb-24">
+        <div className="ed-rule mb-12 flex items-center justify-between gap-4 pt-3 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+            <span className="ed-serial">No. 001 / Cohort SS 2026</span>
+          </div>
+          <span className="ed-serial hidden sm:inline">Filed Wednesdays at 09:00 PT</span>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           <div className="lg:col-span-7">
-            <div className="inline-flex items-center gap-2 mb-6">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
-              <span className="text-xs uppercase tracking-wider text-muted font-semibold">
-                Built by an SS 2026 attendee, for the cohort
-              </span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.05]">
-              YC Startup School brings the world&apos;s best young builders into one cohort.
-              <span className="block text-accent mt-2">
-                Jumpstart helps them find each other.
-              </span>
+            <h1 className="font-display text-5xl sm:text-7xl text-ink leading-[1.02]">
+              YC Startup School brings the world&apos;s best young builders into one cohort.{" "}
+              <span className="italic text-accent">Jumpstart helps them find each other.</span>
             </h1>
-            <p className="mt-6 text-lg text-muted max-w-2xl leading-relaxed">
-              The unofficial global attendee graph for SS 2026. Get three curated founder
-              matches every week, with a one-line on why you should meet and an opener already
+            <p className="mt-7 text-lg text-muted max-w-2xl leading-relaxed">
+              The unofficial global attendee graph for SS 2026. Three curated founder matches
+              every Wednesday, with a one-line on why you should meet and an opener already
               half-written.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 mt-8">
@@ -77,20 +77,19 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Drop preview card */}
+          {/* Drop preview card, styled as a press-release filing */}
           <div className="lg:col-span-5">
             <div className="relative">
-              <div className="absolute -top-3 -left-3 -right-3 -bottom-3 bg-accent-soft rounded-2xl rotate-1 opacity-60" aria-hidden />
-              <div className="relative surface p-5 rounded-2xl shadow-hover">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <p className="text-xxs uppercase tracking-wider text-accent font-semibold">
-                      This Wednesday
-                    </p>
-                    <h3 className="text-lg font-semibold">Your Founder Drop</h3>
-                  </div>
-                  <span className="text-xxs text-muted font-mono">3/3</span>
+              <div className="absolute -top-2 -left-2 -right-2 -bottom-2 bg-accent-soft rounded-[20px] rotate-1 opacity-60" aria-hidden />
+              <div className="relative surface p-6 rounded-[20px] shadow-hover">
+                <div className="flex items-baseline justify-between mb-2">
+                  <span className="ed-serial">This Wednesday / Drop No. 14</span>
+                  <span className="ed-serial">3 of 3</span>
                 </div>
+                <h3 className="font-display text-2xl text-ink leading-tight">
+                  Your Founder Drop
+                </h3>
+                <div className="ed-rule mt-4 mb-2" />
                 <ul className="row-divide">
                   {sample.map((c, i) => (
                     <li key={c.id} className="py-3 first:pt-0 last:pb-0 flex items-start gap-3">

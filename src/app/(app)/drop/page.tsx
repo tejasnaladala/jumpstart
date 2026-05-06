@@ -22,23 +22,36 @@ export default function DropPage() {
     setHydrating(false);
   }, []);
 
-  const today = new Date().toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
+  const today = new Date();
+  const longDate = today.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
+  const isoStamp = today.toISOString().slice(0, 16).replace("T", " ");
 
   return (
     <>
       <TopBar
         title="Your Drop"
-        subtitle={today}
+        subtitle={longDate}
         right={<Logo size={22} withWord={false} href="/" />}
       />
       <section className="container-app pt-5 pb-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Pill accent size="sm">3 worth meeting</Pill>
-          <span className="text-xs text-muted">curated for {meName.split(" ")[0] || "you"}</span>
+        {/* Editorial masthead for the drop, like a press release filing */}
+        <div className="ed-rule pt-3 pb-4">
+          <div className="flex items-center justify-between gap-2">
+            <span className="ed-serial">Drop No. 14 / 3 of 3</span>
+            <span className="ed-serial">{isoStamp} UTC</span>
+          </div>
+          <h2 className="font-display text-3xl text-ink mt-3 leading-tight">
+            Three worth meeting,{" "}
+            <span className="italic text-accent">picked for {meName.split(" ")[0] || "you"}</span>.
+          </h2>
+          <p className="text-sm text-muted mt-2 leading-relaxed">
+            Tap a card for the full briefing. Request intro and you both get a single email with
+            contact and a calendar link on accept.
+          </p>
         </div>
 
         {hydrating ? (
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 pt-2">
             {[0, 1, 2].map((i) => (
               <div key={i} className="surface p-4 animate-pulse">
                 <div className="flex items-start gap-3">
@@ -54,24 +67,30 @@ export default function DropPage() {
           </div>
         ) : (
           <motion.ul
-            className="flex flex-col gap-3"
+            className="flex flex-col gap-3 pt-2"
             variants={staggerList}
             initial="hidden"
             animate="visible"
           >
             {matches.map((m, i) => (
-              <motion.li key={m.id} variants={fadeUpItem}>
+              <motion.li key={m.id} variants={fadeUpItem} className="relative">
+                <span className="ed-serial absolute -left-1 -top-2 z-10 bg-bg px-1">
+                  {String(i + 1).padStart(2, "0")} / 03
+                </span>
                 <MatchCard match={m} index={i + 1} />
               </motion.li>
             ))}
           </motion.ul>
         )}
 
-        <div className="mt-7 surface p-5 text-center bg-gradient-to-b from-surface to-accent-soft border-accent-edge">
-          <p className="text-xxs uppercase tracking-wider text-accent font-semibold">Next drop</p>
-          <p className="text-sm font-medium text-ink mt-1">Wednesday at 9:00 AM</p>
-          <p className="text-xs text-muted mt-1.5 max-w-xs mx-auto">
-            New three. We are matching the cohort against your card all week.
+        {/* Next drop press-card */}
+        <div className="mt-10 surface p-6 bg-gradient-to-b from-surface to-accent-soft border-accent-edge relative overflow-hidden">
+          <span className="ed-serial absolute top-3 right-4">Next filing</span>
+          <p className="font-display text-2xl text-ink leading-tight">
+            Wednesday, <span className="italic">09:00 PT</span>.
+          </p>
+          <p className="text-sm text-muted mt-2 max-w-xs leading-relaxed">
+            New three. The matchmaker is scoring the cohort against your card all week.
           </p>
         </div>
       </section>
