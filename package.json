@@ -25,6 +25,7 @@
     "research": "tsx harness/scripts/autoresearch.ts",
     "research:once": "tsx harness/scripts/autoresearch.ts once",
     "research:loop": "tsx harness/scripts/autoresearch.ts loop",
+    "assert:loop": "tsx harness/scripts/assertion-loop.ts",
     "db:generate": "tsx scripts/generate-types.ts",
     "db:seed": "tsx scripts/seed-cohort.ts",
     "db:migrate": "supabase db push",
