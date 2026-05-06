@@ -8,14 +8,14 @@ import { Reveal } from "@/components/Reveal";
 import { BlurReveal } from "@/components/BlurReveal";
 import { GlobeLazy } from "@/components/GlobeLazy";
 import { StampSeal } from "@/components/primitive/StampSeal";
-// REVIEW PILE - visual eval only. Codex + The Fool flagged these three as
-// "cut for editorial restraint" earlier. Wired back in temporarily so the
-// user can see them in context and decide. To revert: remove these three
-// imports and the three JSX blocks marked /* REVIEW PILE */ below.
-import { RotatingWord } from "@/components/RotatingWord";
-import { TypeAsImage } from "@/components/TypeAsImage";
-import { SmokeBackground } from "@/components/SmokeBackground";
 import Link from "next/link";
+
+// Editorial restraint: per The Fool red-team, three additions cut from the
+// landing surface. SmokeBackground (WebGL noise = Vegas not FT Weekend),
+// TypeAsImage (260px italic break adds zero new information between
+// sections), RotatingWord (cohort composition list at section 04 already
+// names the archetypes; rotating them again dilutes that beat).
+// Keepers: BlurReveal (one h2 italic only), StampSeal (one CTA usage).
 
 export default function LandingPage() {
   const sample = MOCK_COHORT.slice(0, 3);
@@ -60,27 +60,8 @@ export default function LandingPage() {
                 <span className="italic text-accent">Jumpstart helps them find each other.</span>
               </h1>
             </Reveal>
-            {/* REVIEW PILE - RotatingWord archetype kicker. */}
-            <Reveal delay={0.06}>
-              <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
-                Built for the{" "}
-                <RotatingWord
-                  words={[
-                    "AI infra builders",
-                    "hardtech founders",
-                    "technical cofounders",
-                    "GTM operators",
-                    "undergrads shipping",
-                    "second-time founders",
-                    "research-to-product folks",
-                  ]}
-                  intervalMs={2600}
-                  wordClassName="font-mono uppercase tracking-[0.22em] text-accent"
-                />
-              </p>
-            </Reveal>
-            <Reveal delay={0.12}>
-              <p className="mt-6 text-lg text-muted max-w-2xl leading-relaxed">
+            <Reveal delay={0.08}>
+              <p className="mt-7 text-lg text-muted max-w-2xl leading-relaxed">
                 The unofficial global attendee graph for SS 2026. One curated founder match three
                 times a week, Monday, Wednesday, and Friday at 09:00 PT. With a one-line on why
                 you should meet and an opener already half-written.
@@ -353,35 +334,9 @@ export default function LandingPage() {
       {/* CTA - solid espresso, no shader. Per Fool red-team: animated
           background competes with the italic accent and the brand thesis
           is editorial restraint. Authority comes from typography. */}
-
-      {/* REVIEW PILE - TypeAsImage huashu-design break between sections */}
-      <section className="container-wide py-12 sm:py-16">
-        <TypeAsImage
-          text="The cohort"
-          variant="outline"
-          kicker="Section break"
-          kickerPosition="top"
-        />
-      </section>
-
       <section className="container-wide py-16 sm:py-24">
         <Reveal>
           <div className="bg-espresso text-bg rounded-2xl px-8 py-14 sm:px-14 sm:py-20 relative overflow-hidden">
-            {/* REVIEW PILE - Smoke shader behind the espresso CTA. Tinted to
-                YC orange (#FF6600) at intensity 0.55 over the espresso bg.
-                Includes the original gradient overlay that fades the smoke
-                toward the bottom so the CTA content stays readable. */}
-            <div className="absolute inset-0" aria-hidden>
-              <SmokeBackground color="#FF6600" intensity={0.55} />
-            </div>
-            <div
-              aria-hidden
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background:
-                  "linear-gradient(to bottom, rgba(45,36,23,0) 0%, rgba(45,36,23,0.55) 70%, rgba(45,36,23,0.85) 100%)",
-              }}
-            />
             <div
               aria-hidden
               className="absolute inset-0 opacity-[0.06] grain"
