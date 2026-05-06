@@ -2,24 +2,36 @@
 import { Button } from "@/components/primitive/Button";
 import { Input } from "@/components/primitive/Input";
 import { StepDots } from "@/components/ProgressBar";
-import { useState } from "react";
+import { DraftIndicator } from "@/components/primitive/DraftIndicator";
+import { useDraftState } from "@/lib/hooks/useDraftState";
 import { useRouter } from "next/navigation";
 
+type IdentityDraft = { name: string; location: string; oneLine: string };
+
+const EMPTY: IdentityDraft = { name: "", location: "", oneLine: "" };
+
 export default function IdentityStep() {
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
-  const [oneLine, setOneLine] = useState("");
+  // Auto-save every keystroke so a refresh on step 1 does not lose the
+  // three lines the user just typed. Closes DX audit top finding (early
+  // onboarding steps had plain useState while only intent had save state).
+  const [draft, setDraft, status] = useDraftState<IdentityDraft>(
+    "jumpstart.onboarding.identity",
+    EMPTY,
+    { debounceMs: 300 }
+  );
   const router = useRouter();
 
   function onNext() {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(
-        "jumpstart.onboarding.identity",
-        JSON.stringify({ name, location, oneLine })
-      );
-    }
+    // Draft is already in localStorage via useDraftState; the next step
+    // (verification) reads its own draft. card synthesis reads identity.
     router.push("/onboarding/verification");
   }
+
+  function set<K extends keyof IdentityDraft>(k: K, v: IdentityDraft[K]) {
+    setDraft((s) => ({ ...s, [k]: v }));
+  }
+
+  const canContinue = Boolean(draft.name && draft.location && draft.oneLine);
 
   return (
     <div className="flex-1 flex flex-col">
@@ -38,29 +50,32 @@ export default function IdentityStep() {
           <Input
             label="Your name"
             placeholder="First and last"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={draft.name}
+            onChange={(e) => set("name", e.target.value)}
             autoFocus
           />
           <Input
             label="Where you are"
             placeholder="City, optionally where you are heading"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            value={draft.location}
+            onChange={(e) => set("location", e.target.value)}
             hint="Example: Seattle, going to SF"
           />
           <Input
             label="One line on what you are building"
             placeholder="Plasmax. Autonomous R and D systems for hardtech."
-            value={oneLine}
-            onChange={(e) => setOneLine(e.target.value)}
+            value={draft.oneLine}
+            onChange={(e) => set("oneLine", e.target.value)}
           />
         </div>
       </div>
       <div className="border-t border-border bg-surface sticky bottom-0">
-        <div className="container-app py-3 flex items-center justify-between">
-          <span className="text-xs text-muted">Identity</span>
-          <Button onClick={onNext} disabled={!name || !location || !oneLine}>
+        <div className="container-app py-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="text-xs text-muted whitespace-nowrap">Identity</span>
+            <DraftIndicator status={status} className="hidden sm:inline-flex" />
+          </div>
+          <Button onClick={onNext} disabled={!canContinue}>
             Continue
           </Button>
         </div>

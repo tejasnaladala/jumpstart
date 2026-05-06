@@ -19,6 +19,10 @@ let client: Anthropic | null = null;
 
 function getClient() {
   if (client) return client;
+  // Hard kill switch independent of FORCE_STUBS so the founder can disable
+  // Anthropic during a spend incident without flipping any other flag.
+  // Closes DevOps audit blocker #2 (no kill switch existed).
+  if (process.env.JUMPSTART_DISABLE_ANTHROPIC === "1") return null;
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return null;
   if (process.env.JUMPSTART_FORCE_STUBS === "1") return null;
@@ -63,9 +67,16 @@ export async function runAgent<I, O>(
   const c = getClient();
 
   if (!c) {
-    if (process.env.NODE_ENV === "production" && process.env.JUMPSTART_FORCE_STUBS !== "1") {
+    // Production refuses to start in stub mode unless one of the explicit
+    // override flags is set. Lists all three so the operator knows their
+    // options.
+    if (
+      process.env.NODE_ENV === "production" &&
+      process.env.JUMPSTART_FORCE_STUBS !== "1" &&
+      process.env.JUMPSTART_DISABLE_ANTHROPIC !== "1"
+    ) {
       throw new Error(
-        "ANTHROPIC_API_KEY is required in production. Set JUMPSTART_FORCE_STUBS=1 to override."
+        "ANTHROPIC_API_KEY is required in production. Set JUMPSTART_FORCE_STUBS=1 (full stub fallback) or JUMPSTART_DISABLE_ANTHROPIC=1 (kill switch) to override."
       );
     }
     const result: RunResult<O> = {

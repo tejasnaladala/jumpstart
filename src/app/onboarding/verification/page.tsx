@@ -2,33 +2,77 @@
 import { Button } from "@/components/primitive/Button";
 import { Input } from "@/components/primitive/Input";
 import { StepDots } from "@/components/ProgressBar";
+import { Sheet } from "@/components/primitive/Sheet";
+import { DraftIndicator } from "@/components/primitive/DraftIndicator";
+import { useDraftState } from "@/lib/hooks/useDraftState";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function VerificationStep() {
-  const [emailSubject, setEmailSubject] = useState("");
-  const [referral, setReferral] = useState("");
-  const [opts, setOpts] = useState({
+type VerificationDraft = {
+  emailSubject: string;
+  referral: string;
+  opts: {
+    sf: boolean;
+    india: boolean;
+    remote: boolean;
+    notSure: boolean;
+    asyncOk: boolean;
+    inPerson: boolean;
+  };
+};
+
+const EMPTY: VerificationDraft = {
+  emailSubject: "",
+  referral: "",
+  opts: {
     sf: false,
     india: false,
     remote: false,
     notSure: false,
     asyncOk: true,
     inPerson: true,
-  });
+  },
+};
+
+export default function VerificationStep() {
+  // Auto-save every keystroke + toggle. Closes DX top finding (early
+  // onboarding steps lacked save state).
+  const [draft, setDraft, status] = useDraftState<VerificationDraft>(
+    "jumpstart.onboarding.verification",
+    EMPTY,
+    { debounceMs: 300 }
+  );
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const router = useRouter();
 
+  const { emailSubject, referral, opts } = draft;
+
+  const proofProvided =
+    emailSubject.trim().length > 5 || referral.trim().length > 2;
+  const locationPicked = opts.sf || opts.india || opts.remote || opts.notSure;
+  const ready = proofProvided && locationPicked;
+
+  // Inline hint that names the second requirement when only the first is
+  // satisfied. Closes DX top finding (silent disabled-button is hostile).
+  const blockedReason = !proofProvided
+    ? "Add the email subject line or a referral code."
+    : !locationPicked
+    ? "And tell us where you'll be during SS."
+    : "";
+
   function onNext() {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(
-        "jumpstart.onboarding.verification",
-        JSON.stringify({ emailSubject, referral, opts })
-      );
-    }
     router.push("/onboarding/intent");
   }
 
-  const ready = (emailSubject.trim().length > 5 || referral.trim().length > 2) && (opts.sf || opts.india || opts.remote || opts.notSure);
+  function set<K extends keyof VerificationDraft>(k: K, v: VerificationDraft[K]) {
+    setDraft((s) => ({ ...s, [k]: v }));
+  }
+  function setOpt<K extends keyof VerificationDraft["opts"]>(
+    k: K,
+    v: VerificationDraft["opts"][K]
+  ) {
+    setDraft((s) => ({ ...s, opts: { ...s.opts, [k]: v } }));
+  }
 
   return (
     <div className="flex-1 flex flex-col">
@@ -52,19 +96,19 @@ export default function VerificationStep() {
             label="Acceptance email subject line"
             placeholder='Welcome to YC Startup School 2026'
             value={emailSubject}
-            onChange={(e) => setEmailSubject(e.target.value)}
+            onChange={(e) => set("emailSubject", e.target.value)}
             hint="The subject line of the YC email confirming your acceptance."
           />
           <Input
             label="Referral code (optional)"
             placeholder="From a verified attendee"
             value={referral}
-            onChange={(e) => setReferral(e.target.value)}
+            onChange={(e) => set("referral", e.target.value)}
           />
         </div>
 
         <p className="text-xxs uppercase tracking-wider text-muted font-semibold mt-8 mb-3">
-          Where will you be during SS?
+          Where will you be during SS? You can pick more than one.
         </p>
         <div className="grid grid-cols-2 gap-2">
           {[
@@ -76,8 +120,8 @@ export default function VerificationStep() {
             <button
               key={o.key}
               type="button"
-              onClick={() => setOpts((s) => ({ ...s, [o.key]: !s[o.key as keyof typeof s] }))}
-              className={`surface px-4 py-3 text-left text-sm transition-all ${opts[o.key as keyof typeof opts] ? "border-ink shadow-card" : "hover:border-ink/40"}`}
+              onClick={() => setOpt(o.key as keyof VerificationDraft["opts"], !opts[o.key as keyof VerificationDraft["opts"]])}
+              className={`surface px-4 py-3 text-left text-sm transition-all ${opts[o.key as keyof VerificationDraft["opts"]] ? "border-ink shadow-card" : "hover:border-ink/40"}`}
             >
               {o.label}
             </button>
@@ -91,28 +135,74 @@ export default function VerificationStep() {
           <Toggle
             on={opts.asyncOk}
             label="Open to async"
-            onChange={() => setOpts((s) => ({ ...s, asyncOk: !s.asyncOk }))}
+            onChange={() => setOpt("asyncOk", !opts.asyncOk)}
           />
           <Toggle
             on={opts.inPerson}
             label="Open to in-person"
-            onChange={() => setOpts((s) => ({ ...s, inPerson: !s.inPerson }))}
+            onChange={() => setOpt("inPerson", !opts.inPerson)}
           />
         </div>
 
         <p className="text-xs text-muted mt-7 leading-relaxed">
           We delete acceptance proof within 24 hours of review and never display your phone number or
-          exact location. Read the
-          <a href="#" className="text-ink underline ml-1">privacy summary</a>.
+          exact location.{" "}
+          <button
+            type="button"
+            onClick={() => setPrivacyOpen(true)}
+            className="text-ink underline hover:text-accent transition-colors"
+          >
+            Read the privacy summary.
+          </button>
         </p>
       </div>
 
       <div className="border-t border-border bg-surface sticky bottom-0">
-        <div className="container-app py-3 flex items-center justify-between">
-          <span className="text-xs text-muted">Verification</span>
-          <Button onClick={onNext} disabled={!ready}>Continue</Button>
+        <div className="container-app py-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="text-xs text-muted whitespace-nowrap">Verification</span>
+            <DraftIndicator status={status} className="hidden sm:inline-flex" />
+          </div>
+          <div className="flex items-center gap-3">
+            {blockedReason ? (
+              <span className="text-xs text-muted hidden sm:inline">{blockedReason}</span>
+            ) : null}
+            <Button onClick={onNext} disabled={!ready}>Continue</Button>
+          </div>
         </div>
       </div>
+
+      <Sheet
+        open={privacyOpen}
+        onClose={() => setPrivacyOpen(false)}
+        title="Privacy summary"
+      >
+        <p className="text-sm text-muted leading-relaxed mb-4">
+          Five things Jumpstart does not do, ever:
+        </p>
+        <ul className="space-y-3 text-sm text-ink">
+          <li className="flex items-start gap-2">
+            <span className="text-accent">·</span>
+            <span>Show your phone number to anyone, ever.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-accent">·</span>
+            <span>Display your exact location, only city.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-accent">·</span>
+            <span>Rank attendees publicly. No leaderboard.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-accent">·</span>
+            <span>Tell you how many people viewed your card.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-accent">·</span>
+            <span>Keep your acceptance proof beyond 24 hours after review.</span>
+          </li>
+        </ul>
+      </Sheet>
     </div>
   );
 }

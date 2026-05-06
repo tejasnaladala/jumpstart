@@ -45,7 +45,29 @@ export function saveMe(card: FounderCard) {
   window.localStorage.setItem(ME_KEY, JSON.stringify(card));
 }
 
+// Clear all Jumpstart-namespaced localStorage on sign-out so a shared
+// laptop does not leave the previous user's identity, onboarding drafts,
+// or per-match intro notes behind. Closes DX audit privacy finding.
+const JUMPSTART_PREFIX = "jumpstart.";
+
 export function resetMe() {
   if (typeof window === "undefined") return;
-  window.localStorage.removeItem(ME_KEY);
+  try {
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const k = window.localStorage.key(i);
+      if (k && k.startsWith(JUMPSTART_PREFIX)) keysToRemove.push(k);
+    }
+    for (const k of keysToRemove) {
+      window.localStorage.removeItem(k);
+    }
+  } catch {
+    // Privacy mode or quota error; fall back to clearing the canonical
+    // me key so at least the visible identity is gone.
+    try {
+      window.localStorage.removeItem(ME_KEY);
+    } catch {
+      // truly nothing more we can do
+    }
+  }
 }
