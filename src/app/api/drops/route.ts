@@ -1,37 +1,50 @@
-import { NextResponse } from "next/server";
 import { generateLocalDrop } from "@/lib/match/local-drop";
 import { DEFAULT_ME } from "@/lib/mock/me";
+import { requireSession, UnauthorizedError, isStubMode } from "@/lib/auth/session";
+import { checkLimit } from "@/lib/auth/rate-limit";
+import { jsonError } from "@/lib/api/schema";
 import type { FounderCard } from "@/lib/types";
 
-// In production, this hits Supabase, runs the Matchmaker plus Match Explainer
-// plus Opener Drafter agents, persists the drop, and returns it. For dev, we
-// use the local heuristic drop generator and accept the user card from the
-// request body (otherwise default to DEFAULT_ME).
+// Drops are generated server-side from the authenticated user's stored card.
+// Bodies are NOT trusted for the user payload anymore. GET is removed entirely
+// because it bypassed auth in stub mode.
 
-export async function POST(req: Request) {
-  let me: FounderCard;
+export async function POST() {
+  let session;
   try {
-    const body = await req.json();
-    me = (body.me as FounderCard) || DEFAULT_ME;
-  } catch {
-    me = DEFAULT_ME;
+    session = await requireSession();
+  } catch (err) {
+    if (err instanceof UnauthorizedError) {
+      return jsonError(401, "UNAUTHORIZED", "Authentication required.");
+    }
+    return jsonError(500, "SESSION_ERROR", "Could not load session.");
   }
 
+  const limit = await checkLimit("drops_day", session.id);
+  if (!limit.allowed) {
+    return jsonError(429, "RATE_LIMITED", `Too many drops today. ${limit.help}.`, {
+      retry_in_ms: limit.reset_in_ms,
+    });
+  }
+
+  // In stub mode, the user card is read from server-side default. In prod,
+  // this MUST read from founder_cards. The function explicitly throws if
+  // called outside stub mode without a real DB wired up to prevent silent
+  // wrong-card drops.
+  const me: FounderCard = isStubMode() ? DEFAULT_ME : await loadMeFromDb();
+
   const matches = generateLocalDrop(me);
-  return NextResponse.json({
+  return Response.json({
     drop_id: `drop_${Date.now()}`,
-    user_id: me.user_id,
+    user_id: session.id,
     matches,
     generated_at: new Date().toISOString(),
   });
 }
 
-export async function GET() {
-  const matches = generateLocalDrop(DEFAULT_ME);
-  return NextResponse.json({
-    drop_id: "drop_default",
-    user_id: DEFAULT_ME.user_id,
-    matches,
-    generated_at: new Date().toISOString(),
-  });
+async function loadMeFromDb(): Promise<FounderCard> {
+  // TODO(prod): supabase server client → founder_cards.select(...).eq("user_id", session.id).single()
+  throw new Error(
+    "loadMeFromDb is not implemented. Set JUMPSTART_ALLOW_STUB=1 for local dev, or wire the real DB read before this code path is reached in prod."
+  );
 }

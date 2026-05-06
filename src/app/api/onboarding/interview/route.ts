@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
 import { runAgent } from "@/lib/agents/runner";
 import { onboardingInterviewer } from "@/lib/agents/onboarding-interviewer";
+import { InterviewSchema, jsonError, genericValidationErrors } from "@/lib/api/schema";
+import { requireSession, UnauthorizedError } from "@/lib/auth/session";
+import { checkLimit } from "@/lib/auth/rate-limit";
 
 const FALLBACK_QUESTIONS = [
   "What are you building, in your own words?",
@@ -10,28 +12,57 @@ const FALLBACK_QUESTIONS = [
 ];
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const { identity, history, questionsAsked } = body as {
-    identity: { name: string; location: string; oneLine: string };
-    history: Array<{ role: "interviewer" | "user"; content: string }>;
-    questionsAsked: number;
-  };
+  let session;
+  try {
+    session = await requireSession();
+  } catch (err) {
+    if (err instanceof UnauthorizedError) {
+      return jsonError(401, "UNAUTHORIZED", "Authentication required.");
+    }
+    return jsonError(500, "SESSION_ERROR", "Could not load session.");
+  }
 
-  const result = await runAgent(onboardingInterviewer, { identity, history, questionsAsked });
+  const limit = await checkLimit("onboarding_min", session.id);
+  if (!limit.allowed) {
+    return jsonError(429, "RATE_LIMITED", `${limit.help}.`, {
+      retry_in_ms: limit.reset_in_ms,
+    });
+  }
+
+  let body;
+  try {
+    body = await req.json();
+  } catch {
+    return jsonError(400, "BAD_JSON", "Body is not valid JSON.");
+  }
+  const parsed = InterviewSchema.safeParse(body);
+  if (!parsed.success) {
+    return jsonError(400, "VALIDATION", "Invalid request body.", {
+      fields: genericValidationErrors(parsed.error),
+    });
+  }
+
+  const { identity, history, questionsAsked } = parsed.data;
+
+  let result;
+  try {
+    result = await runAgent(onboardingInterviewer, { identity, history, questionsAsked });
+  } catch {
+    return jsonError(500, "AGENT_ERROR", "Could not run the interview agent. Try again.");
+  }
 
   if (result.via === "stub") {
     const q = FALLBACK_QUESTIONS[questionsAsked] ?? FALLBACK_QUESTIONS[0]!;
-    return NextResponse.json({
+    return Response.json({
       next_question: q,
       is_final: questionsAsked >= FALLBACK_QUESTIONS.length - 1,
       reasoning: "local fallback",
-      via: "stub",
     });
   }
 
   if (!result.ok || !result.output) {
-    return NextResponse.json({ error: result.error || "agent error" }, { status: 500 });
+    return jsonError(500, "AGENT_ERROR", result.error || "Agent error.");
   }
 
-  return NextResponse.json({ ...result.output, via: result.via });
+  return Response.json(result.output);
 }

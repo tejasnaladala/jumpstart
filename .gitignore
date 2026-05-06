@@ -1,6 +1,9 @@
 .superpowers/
 external/inspection/
 node_modules/
+.jumpstart-logs/
+.env.local
+.env.*.local
 .next/
 .env
 .env.local
