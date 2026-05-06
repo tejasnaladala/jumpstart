@@ -36,7 +36,24 @@ export default function IdentityStep() {
     setDraft((s) => ({ ...s, [k]: v }));
   }
 
-  const canContinue = Boolean(draft.name && draft.location && draft.oneLine);
+  // Trim before checking so whitespace-only input doesn't pass the gate.
+  // Closes speed-runner + stress-tester findings: blank-string Pass hero,
+  // silent corruption of saved card. Min 3 chars on oneLine to block "asdf"
+  // -shape garbage that produces zero auto-tags.
+  const canContinue = Boolean(
+    draft.name.trim().length >= 2 &&
+      draft.location.trim().length >= 2 &&
+      draft.oneLine.trim().length >= 10
+  );
+
+  const blockedReason =
+    draft.name.trim().length < 2
+      ? "Add your name."
+      : draft.location.trim().length < 2
+      ? "Add your city."
+      : draft.oneLine.trim().length < 10
+      ? "One line on what you're building (10+ characters)."
+      : "";
 
   return (
     <div className="flex-1 flex flex-col">

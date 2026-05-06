@@ -2,6 +2,11 @@ import Link from "next/link";
 
 const TILES = [
   {
+    href: "/admin/health",
+    title: "Live health",
+    body: "Polls /api/health every 4s. Per-dependency probes (Supabase, Anthropic, Upstash) with latency, plus a 30-poll history sparkline.",
+  },
+  {
     href: "/admin/moderation",
     title: "Moderation queue",
     body: "Reports, flagged intros, verifications waiting on review.",
@@ -29,7 +34,7 @@ export default function AdminHome() {
         Founder-only operational surface. Read-mostly. The agents do the work,
         you review the output.
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 max-w-4xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 max-w-6xl">
         {TILES.map((t) => (
           <Link
             key={t.href}

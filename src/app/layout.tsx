@@ -26,11 +26,18 @@ const mono = Geist_Mono({
   display: "swap",
 });
 
+// metadataBase: derived from NEXT_PUBLIC_SITE_URL so OG images/links
+// resolve against the live origin. Falls back to localhost in dev. The
+// hardcoded https://jumpstart.dev was wrong for closed-beta tunnels and
+// for any future custom domain that isn't jumpstart.dev. For tunnel
+// mode set NEXT_PUBLIC_SITE_URL to the current cloudflared URL.
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3030";
+
 export const metadata: Metadata = {
   title: "Jumpstart for Startup School 2026",
   description:
     "The unofficial pre-event matchmaker for YC Startup School 2026. Two days in person at Chase Center, July 25-26. Curated founder matches Monday, Wednesday, Friday at 09:00 PT in the lead-in window.",
-  metadataBase: new URL("https://jumpstart.dev"),
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     title: "Jumpstart for Startup School 2026",
     description:
