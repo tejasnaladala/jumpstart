@@ -846,15 +846,15 @@ Look at drop open rate, request rate, accept rate by week. Tune Match Explainer 
 
 LinkedIn post (cleaned up by user before posting):
 
-> I am building Jumpstart for the YC Startup School 2026 cohort.
+> I just got into YC Startup School 2026 and built Jumpstart for our cohort.
 >
-> 8000 of the world's best young founders are about to be in the same cohort for three months. I want to actually meet the ones worth my time.
+> 8000 of the best young founders in the world are about to be in the same cohort for three months. I want to actually meet the ones worth my time, and I want it to be easy for the people I should know to find me.
 >
-> Jumpstart is a small app that delivers three curated founder matches a week. The AI does the matchmaking. You get a one-line on why you should meet and a suggested opener. You request intro, they accept, you talk.
+> Jumpstart delivers three curated founder matches every Wednesday. The AI does the matchmaking. You get a one-line on why you should meet and an opener you can copy. Request intro, they accept, both of you get a single email with the other person's contact and a calendar link.
 >
 > No directory to scroll. No swiping. No followers. Just a weekly drop.
 >
-> If you got into SS 2026 and want to be on the early list, comment "in" or DM me. Founders only, verified, not affiliated with YC.
+> If you also got into SS 2026 and want on the early list, comment "in" or DM me. Verified attendees only. Not affiliated with YC.
 
 ## 27. YC outreach message
 
@@ -941,7 +941,7 @@ A high-signal founder gets flooded. Imagine a well-known SS attendee gets 50 inc
 
 Not blockers, but worth deciding before day 1.
 
-Are you (Tejas) personally accepted to YC SS 2026? If yes, the launch positioning is "I built this for our cohort." If not, it is "I built this for you." Both work, but they shape copy and outreach.
+Founder is accepted to YC SS 2026. Launch positioning is "I built this for our cohort", confirmed.
 
 Should the first 50 invitees come exclusively from technical hardtech founders (your circle) or be diversified across domains and cities for cohort credibility? Recommendation: diversified, otherwise the early matching will overfit to one shape.
 

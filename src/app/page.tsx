@@ -38,7 +38,7 @@ export default function LandingPage() {
             <div className="inline-flex items-center gap-2 mb-6">
               <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
               <span className="text-xs uppercase tracking-wider text-muted font-semibold">
-                Open to YC Startup School 2026
+                Built by an SS 2026 attendee, for the cohort
               </span>
             </div>
             <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.05]">
