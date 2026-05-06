@@ -4,6 +4,7 @@ import { Textarea } from "@/components/primitive/Input";
 import { Pill } from "@/components/primitive/Pill";
 import { Avatar } from "@/components/primitive/Avatar";
 import { StepDots } from "@/components/ProgressBar";
+import { FounderPass } from "@/components/FounderPass";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { saveMe, DEFAULT_ME } from "@/lib/mock/me";
@@ -65,12 +66,23 @@ export default function CardReviewStep() {
         <p className="text-xxs uppercase tracking-wider text-accent font-semibold mt-3">
           Step 4 of 4
         </p>
-        <h1 className="font-display text-3xl text-ink leading-tight mt-1">Your Founder Card</h1>
+        <h1 className="font-display text-3xl text-ink leading-tight mt-1">Your Founder Pass</h1>
         <p className="text-sm text-muted mt-2">
-          Drafted from your interview. Edit any line, change any tag, then save.
+          Drafted from your interview. Edit any line, change any tag, then save. The pass is what
+          other verified attendees see when the matchmaker scores you against them.
         </p>
 
-        <div className="surface mt-6 p-5 rounded-2xl">
+        {/* Live FounderPass preview, identity-only mode (no four-line content
+            on the face). Pulls the moment-of-delight forward by one screen
+            so the user sees their admit-one ticket take shape during
+            onboarding rather than waiting until /you. Closes DX top fix #5. */}
+        <div className="mt-6 mb-8">
+          <FounderPass card={card} showCardLines={false} />
+        </div>
+
+        <p className="ed-serial mb-3">Edit the four lines below</p>
+
+        <div className="surface mt-2 p-5 rounded-2xl">
           <div className="flex items-center gap-3">
             <Avatar name={card.name} size={52} />
             <div>

@@ -14,7 +14,9 @@
     "eval:onboarding": "tsx evals/onboarding-interviewer.eval.ts",
     "test:e2e": "playwright test",
     "db:generate": "tsx scripts/generate-types.ts",
-    "db:seed": "tsx scripts/seed-cohort.ts"
+    "db:seed": "tsx scripts/seed-cohort.ts",
+    "db:migrate": "supabase db push",
+    "db:migrate:dry": "supabase db push --dry-run"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.40.1",

@@ -43,11 +43,14 @@ export async function GET(req: Request) {
   //   2. For each row, delete the storage object
   //   3. UPDATE verifications SET artifact_url = NULL, artifact_expires_at = NULL WHERE id = $1
   //   4. INSERT a row into a retention_audit table
-
-  return Response.json({
-    ok: true,
-    deleted: 0,
-    note: "wired but no rows to expire",
-    ran_at: new Date().toISOString(),
-  });
+  //
+  // Until the deletion logic is implemented, return 503 with a clear
+  // RETENTION_NOT_IMPLEMENTED code so synthetic monitors fail loudly
+  // instead of staying green for days while screenshots pile up. Closes
+  // DevOps audit blocker #4 (cron lying about success).
+  return jsonError(
+    503,
+    "RETENTION_NOT_IMPLEMENTED",
+    "Supabase is configured but the retention deletion logic at src/app/api/cron/retention/route.ts is still a TODO. Deletion of expired acceptance-screenshot artifacts must be wired before going live. The 503 keeps monitors honest."
+  );
 }

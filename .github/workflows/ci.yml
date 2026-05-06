@@ -19,13 +19,19 @@ jobs:
       - name: typecheck
         run: bun run typecheck
       - name: lint
-        run: bun run lint || echo "lint warnings"
+        # Closes DevOps audit finding: lint failures should block CI, not be
+        # swallowed with a soft echo. The custom loop.sh enforces voice rules
+        # (em-dashes, console.log, etc.) and a regression there should fail
+        # the build, not append a friendly note.
+        run: bun run lint
       - name: build
         run: bun run build
 
   evals:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    # Run on every push to master too so a direct push without a PR doesn't
+    # bypass eval gating. Closes DevOps audit finding (PR-only was a hole).
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
