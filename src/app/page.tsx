@@ -5,9 +5,17 @@ import { Marquee } from "@/components/Marquee";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { MagneticButton } from "@/components/MagneticButton";
 import { Reveal } from "@/components/Reveal";
-import { TypewriterText } from "@/components/TypewriterText";
+import { BlurReveal } from "@/components/BlurReveal";
 import { GlobeLazy } from "@/components/GlobeLazy";
+import { StampSeal } from "@/components/primitive/StampSeal";
 import Link from "next/link";
+
+// Editorial restraint: per The Fool red-team, three additions cut from the
+// landing surface. SmokeBackground (WebGL noise = Vegas not FT Weekend),
+// TypeAsImage (260px italic break adds zero new information between
+// sections), RotatingWord (cohort composition list at section 04 already
+// names the archetypes; rotating them again dilutes that beat).
+// Keepers: BlurReveal (one h2 italic only), StampSeal (one CTA usage).
 
 export default function LandingPage() {
   const sample = MOCK_COHORT.slice(0, 3);
@@ -54,9 +62,9 @@ export default function LandingPage() {
             </Reveal>
             <Reveal delay={0.08}>
               <p className="mt-7 text-lg text-muted max-w-2xl leading-relaxed">
-                The unofficial global attendee graph for SS 2026. One curated founder match every
-                other day, Monday, Wednesday, Friday at 09:00 PT. With a one-line on why you
-                should meet and an opener already half-written.
+                The unofficial global attendee graph for SS 2026. One curated founder match three
+                times a week, Monday, Wednesday, and Friday at 09:00 PT. With a one-line on why
+                you should meet and an opener already half-written.
               </p>
             </Reveal>
             <Reveal delay={0.16}>
@@ -152,7 +160,7 @@ export default function LandingPage() {
         <Reveal>
           <div className="ed-masthead">
             <span className="ed-serial">§ 02 / How it works</span>
-<span className="ed-serial hidden sm:inline">Drops land Mon · Wed · Fri at 0900 PT</span>
+<span className="ed-serial hidden sm:inline">Drops land Mon · Wed · Fri at 09:00 PT</span>
           </div>
         </Reveal>
         <Reveal>
@@ -202,11 +210,11 @@ export default function LandingPage() {
               <h2 className="font-display text-4xl sm:text-5xl leading-[1.06]">
                 One pass.{" "}
                 <span className="italic text-accent">
-                  <TypewriterText
+                  <BlurReveal
                     text="The matchmaker reads it forever."
-                    speedMs={26}
-                    delayMs={400}
-                    cursor={false}
+                    staggerSec={0.07}
+                    durationSec={1.3}
+                    blurPx={12}
                   />
                 </span>
               </h2>
@@ -323,7 +331,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA - solid espresso, no gradient */}
+      {/* CTA - solid espresso, no shader. Per Fool red-team: animated
+          background competes with the italic accent and the brand thesis
+          is editorial restraint. Authority comes from typography. */}
       <section className="container-wide py-16 sm:py-24">
         <Reveal>
           <div className="bg-espresso text-bg rounded-2xl px-8 py-14 sm:px-14 sm:py-20 relative overflow-hidden">
@@ -341,7 +351,7 @@ export default function LandingPage() {
                 The cohort gets denser every day.{" "}
                 <span className="italic text-accent">Get on the list.</span>
               </h2>
-              <div className="mt-10 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+              <div className="mt-10 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                 <MagneticButton href="/signup" variant="lg" tone="cream" intensity={0.05}>
                   Get my Founder Drop
                   <svg
@@ -360,7 +370,16 @@ export default function LandingPage() {
                     />
                   </svg>
                 </MagneticButton>
-                <span className="ed-serial text-bg/60">Verified SS 2026 attendees only</span>
+                <div className="flex items-center gap-3">
+                  <StampSeal
+                    topLabel="Verified"
+                    bottomLabel="SS 2026"
+                    size={48}
+                    rotate={-10}
+                    className="text-accent shrink-0"
+                  />
+                  <span className="ed-serial text-bg/60">Verified SS 2026 attendees only</span>
+                </div>
               </div>
             </div>
           </div>
