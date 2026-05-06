@@ -44,6 +44,11 @@ try {
         $result = [Power]::SetThreadExecutionState($flags)
         if ($result -eq 0) {
             "$(Get-Date -Format 'o') WARN SetThreadExecutionState returned 0 (failed)" | Out-File -FilePath $logFile -Append -Encoding utf8
+        } else {
+            # Heartbeat line every tick so verify-stack.sh can detect liveness
+            # via log mtime. Without this, the file mtime never refreshes after
+            # the initial "started" line and the cron flags us as stale.
+            "$(Get-Date -Format 'o') ok flags=$flags result=$result" | Out-File -FilePath $logFile -Append -Encoding utf8
         }
         Start-Sleep -Seconds 30
     }

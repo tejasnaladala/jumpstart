@@ -95,6 +95,10 @@ $processes = @(
 Log-Event -name "watchdog" -event "started"
 
 while ($true) {
+    # Heartbeat so verify-stack.sh can detect watchdog liveness via log
+    # mtime. Without a heartbeat the watchdog only writes when something
+    # changes, and the cron flags us as stale during quiet windows.
+    Log-Event -name "watchdog" -event "tick"
     foreach ($p in $processes) {
         try {
             $alive = & $p.check

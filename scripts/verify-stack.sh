@@ -75,7 +75,11 @@ fi
 HUMAN_QUEUE=${HUMAN_QUEUE:-0}
 
 # 5. Assertion health (last 30 cycles)
-ASSERT_RECENT_FAILS=$(tail -50 experiments/harness-assertions.jsonl 2>/dev/null | grep -c '"passed":false' || echo 0)
+ASSERT_RECENT_FAILS=$(tail -50 experiments/harness-assertions.jsonl 2>/dev/null | grep -c '"passed":false' | tr -d '\n')
+# Set sane defaults so unbound or empty values don't crash arithmetic.
+: "${SIGNUPS_30M:=0}" "${INTROS_30M:=0}" "${ACCEPTS_30M:=0}" "${MEETINGS_30M:=0}"
+: "${COORD_FINDINGS:=0}" "${COORD_APPLIED:=0}" "${COORD_QUEUED:=0}"
+: "${ASSERT_RECENT_FAILS:=0}" "${HUMAN_QUEUE:=0}"
 
 # 6. Verdict
 VERDICT="green"
