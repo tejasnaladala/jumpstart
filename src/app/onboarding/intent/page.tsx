@@ -107,6 +107,8 @@ export default function IntentInterviewStep() {
             onChange={(e) => setAnswers((s) => ({ ...s, [current.key]: e.target.value }))}
             rows={4}
             className="ml-7"
+            maxLength={600}
+            showCounter
             onKeyDown={(e) => {
               if ((e.metaKey || e.ctrlKey) && e.key === "Enter") next();
             }}

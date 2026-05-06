@@ -48,7 +48,7 @@ export default function LandingPage() {
               <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
               <span className="ed-serial">No. 001 / Cohort SS 2026</span>
             </div>
-            <span className="ed-serial hidden sm:inline">Filed Mon · Wed · Fri at 09:00 PT</span>
+            <span className="ed-serial hidden sm:inline whitespace-nowrap">Filed Mon, Wed, Fri at 09:00 PT</span>
           </div>
         </Reveal>
 
@@ -124,7 +124,7 @@ export default function LandingPage() {
           "Drops every other day",
           "Built by an attendee",
           "Verified founders only",
-          "Mon · Wed · Fri at 09:00 PT",
+          "Mon, Wed, Fri at 09:00 PT",
           "Not affiliated with Y Combinator",
         ]}
         variant="espresso"
@@ -160,7 +160,9 @@ export default function LandingPage() {
         <Reveal>
           <div className="ed-masthead">
             <span className="ed-serial">§ 02 / How it works</span>
-<span className="ed-serial hidden sm:inline">Drops land Mon · Wed · Fri at 09:00 PT</span>
+            <span className="ed-serial hidden sm:inline whitespace-nowrap">
+              Drops land Mon, Wed, Fri at 09:00 PT
+            </span>
           </div>
         </Reveal>
         <Reveal>
@@ -344,7 +346,7 @@ export default function LandingPage() {
             />
             <div className="relative">
               <div className="ed-rule pt-3 mb-10 flex items-center justify-between text-bg/70">
-                <span className="ed-serial text-bg/70">Mon · Wed · Fri at 09:00 PT</span>
+                <span className="ed-serial text-bg/70 whitespace-nowrap">Mon, Wed, Fri at 09:00 PT</span>
                 <span className="ed-serial hidden sm:inline text-bg/70">No. 001 / Drop pending</span>
               </div>
               <h2 className="font-display text-4xl sm:text-6xl max-w-3xl leading-[1.04] text-bg">

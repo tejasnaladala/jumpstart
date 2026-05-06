@@ -42,13 +42,46 @@ export default function MatchDetailPage() {
     }
   }, [params.id]);
 
+  // Humanized opener variants. Per user feedback ("the reaching out
+  // responses feel AI generated"), these are written to sound like an
+  // actual person typing on a Saturday morning, not a templated outreach
+  // bot. No "Curious if a quick chat makes sense for you", no "30 min
+  // sometime soon", no "I came across your card" framing. Each variant
+  // names a specific shared thing and proposes one concrete next step.
   function regenerateOpener() {
     if (!match) return;
-    const variants = [
-      match.suggested_opener,
-      `Hey ${match.candidate.name.split(" ")[0]}, Jumpstart matched us this week. Curious if a quick chat about your work makes sense for you?`,
-      `Saw your card on Jumpstart. The angle on ${match.candidate.tags[0] ?? "your space"} is interesting. 20 min sometime soon?`,
-    ];
+    const candidate = match.candidate;
+    const firstName = candidate.name.split(" ")[0] || candidate.name;
+    const overlapTag = candidate.tags.find((t) => loadMe().tags.includes(t));
+    const candidateTag = candidate.tags[0];
+
+    const variants: string[] = [match.suggested_opener];
+
+    // Variant 2: builds on shared tag if there's overlap, falls back to
+    // the candidate's first tag with a more conversational frame.
+    if (overlapTag) {
+      variants.push(
+        `${firstName} - we both put ${overlapTag.replace(/-/g, " ")} on our cards. I'd love to compare notes for 20 min before SS. Free this week or next?`
+      );
+    } else if (candidateTag) {
+      // Avoid the awkward "the angle on ai-agents is interesting" issue
+      // by addressing the candidate's work directly without the slug.
+      variants.push(
+        `Hey ${firstName} - the way you described what you're building grabbed me. Worth a 20-min call? I'll keep it tight.`
+      );
+    }
+
+    // Variant 3: in-person at the event, leaning into the user's framing
+    // that the 2-day event is the culmination.
+    variants.push(
+      `${firstName} - if you're at Chase Center either day of SS, want to grab 15 min between sessions? Easier in person, but happy to do video before too.`
+    );
+
+    // Variant 4: short and direct, for founders who hate preamble.
+    variants.push(
+      `${firstName}, Jumpstart paired us. Worth a call?`
+    );
+
     const next = variants[(variants.indexOf(opener) + 1) % variants.length]!;
     setOpener(next);
   }
@@ -251,6 +284,8 @@ export default function MatchDetailPage() {
           placeholder={opener}
           value={note}
           onChange={(e) => setNote(e.target.value)}
+          maxLength={500}
+          showCounter
         />
         <div className="flex items-center justify-between gap-2 mt-2">
           <DraftIndicator status={noteStatus} />
