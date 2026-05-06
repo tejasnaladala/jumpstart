@@ -66,12 +66,18 @@ async function withMutex<T>(key: string, fn: () => Promise<T> | T): Promise<T> {
   const next = new Promise<void>((r) => {
     release = r;
   });
-  memMutex.set(key, prior.then(() => next));
+  const chain = prior.then(() => next);
+  memMutex.set(key, chain);
   await prior;
   try {
     return await fn();
   } finally {
     release();
+    // Drop the entry if we are still the head of the chain. Prevents the
+    // map from growing one entry per unique caller forever.
+    if (memMutex.get(key) === chain) {
+      memMutex.delete(key);
+    }
   }
 }
 

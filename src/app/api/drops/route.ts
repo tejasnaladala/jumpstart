@@ -28,10 +28,18 @@ export async function POST() {
   }
 
   // In stub mode, the user card is read from server-side default. In prod,
-  // this MUST read from founder_cards. The function explicitly throws if
-  // called outside stub mode without a real DB wired up to prevent silent
-  // wrong-card drops.
-  const me: FounderCard = isStubMode() ? DEFAULT_ME : await loadMeFromDb();
+  // this MUST read from founder_cards. Wrap so the explicit throw returns
+  // a clean jsonError instead of a 500 stack to the caller.
+  let me: FounderCard;
+  try {
+    me = isStubMode() ? DEFAULT_ME : await loadMeFromDb();
+  } catch {
+    return jsonError(
+      503,
+      "DROPS_NOT_IMPLEMENTED",
+      "Drop generation requires Supabase. Wire the production DB read before deploying."
+    );
+  }
 
   const matches = generateLocalDrop(me);
   return Response.json({

@@ -28,6 +28,12 @@ on verifications for insert to authenticated
 with check (user_id = auth.uid());
 
 -- MEETINGS
+-- Both participants can READ. Each writes feedback attributed to themselves
+-- via author_id. Closes Fool CP2 finding #6 (one party pre-writing the
+-- other's outcome).
+
+alter table meetings add column if not exists author_id uuid references users (id) on delete cascade;
+create unique index if not exists meetings_intro_author_idx on meetings (intro_id, author_id);
 
 create policy "participants read meeting"
 on meetings for select to authenticated
@@ -39,15 +45,37 @@ using (
   )
 );
 
-create policy "participants insert meeting feedback"
+create policy "participants insert own meeting feedback"
 on meetings for insert to authenticated
 with check (
-  exists (
+  author_id = auth.uid()
+  and exists (
     select 1 from intros
     where intros.id = meetings.intro_id
       and (intros.requester_id = auth.uid() or intros.recipient_id = auth.uid())
   )
 );
+
+create policy "authors update own meeting feedback"
+on meetings for update to authenticated
+using (author_id = auth.uid())
+with check (author_id = auth.uid());
+
+-- DELETE policies for GDPR right-to-erasure. Users can delete their own
+-- artifacts. Cascades from users.deleted_at handle the rest at the data
+-- layer; these policies cover direct authenticated deletes.
+
+create policy "users delete own card"
+on founder_cards for delete to authenticated
+using (user_id = auth.uid());
+
+create policy "users delete own intros"
+on intros for delete to authenticated
+using (requester_id = auth.uid());
+
+create policy "users delete own meeting feedback"
+on meetings for delete to authenticated
+using (author_id = auth.uid());
 
 -- REPORTS
 
