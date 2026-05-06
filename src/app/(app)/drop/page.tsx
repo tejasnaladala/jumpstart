@@ -25,6 +25,10 @@ export default function DropPage() {
   const today = new Date();
   const longDate = today.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
   const isoStamp = today.toISOString().slice(0, 16).replace("T", " ");
+  // Cadence: drops land Monday, Wednesday, Friday at 09:00 PT.
+  // Compute the next drop day from "now" so the press-card stays accurate
+  // without a server round-trip.
+  const nextDropLabel = computeNextDropLabel(today);
 
   return (
     <>
@@ -37,16 +41,17 @@ export default function DropPage() {
         {/* Editorial masthead for the drop, like a press release filing */}
         <div className="ed-rule pt-3 pb-4">
           <div className="flex items-center justify-between gap-2">
-            <span className="ed-serial">Drop No. 14 / 3 of 3</span>
+<span className="ed-serial">This week / 3 picks</span>
             <span className="ed-serial">{isoStamp} UTC</span>
           </div>
           <h2 className="font-display text-3xl text-ink mt-3 leading-tight">
-            Three worth meeting,{" "}
-            <span className="italic text-accent">picked for {meName.split(" ")[0] || "you"}</span>.
+            This week&apos;s picks,{" "}
+            <span className="italic text-accent">scored for {meName.split(" ")[0] || "you"}</span>.
           </h2>
           <p className="text-sm text-muted mt-2 leading-relaxed">
-            Tap a card for the full briefing. Request intro and you both get a single email with
-            contact and a calendar link on accept.
+            One match per drop, Monday, Wednesday, Friday at 09:00 PT. Tap any card for the full
+            briefing. Request intro and you both get a single email with contact and a calendar
+            link on accept.
           </p>
         </div>
 
@@ -87,13 +92,37 @@ export default function DropPage() {
         <div className="mt-10 surface p-6 bg-gradient-to-b from-surface to-accent-soft border-accent-edge relative overflow-hidden">
           <span className="ed-serial absolute top-3 right-4">Next filing</span>
           <p className="font-display text-2xl text-ink leading-tight">
-            Wednesday, <span className="italic">09:00 PT</span>.
+            {nextDropLabel.dayName}, <span className="italic">09:00 PT</span>.
           </p>
           <p className="text-sm text-muted mt-2 max-w-xs leading-relaxed">
-            New three. The matchmaker is scoring the cohort against your card all week.
+            One new pick. The matchmaker is scoring the cohort against your card between drops.
           </p>
         </div>
       </section>
     </>
   );
+}
+
+// Cadence helper. Drops land on Monday, Wednesday, Friday at 09:00 PT.
+// Returns a friendly label for the press-card given the user's local time
+// reference. Computed client-side so it stays in sync without a fetch.
+function computeNextDropLabel(now: Date): { dayName: string; iso: string } {
+  // Drop days: 1=Mon, 3=Wed, 5=Fri (JS getDay weekday indices).
+  const DROP_DAYS = [1, 3, 5] as const;
+  const cursor = new Date(now);
+  // If today is a drop day and the local clock is before 09:00 PT, that
+  // is the next drop. Otherwise, advance day-by-day until we hit one.
+  // We approximate "PT" as the user's local 09:00 since this is just a
+  // human-readable label, not a real schedule trigger.
+  for (let i = 0; i < 7; i++) {
+    const day = cursor.getDay();
+    const isDropDay = DROP_DAYS.includes(day as 1 | 3 | 5);
+    const isFutureToday = i === 0 && now.getHours() < 9;
+    if (isDropDay && (i > 0 || isFutureToday)) {
+      const dayName = cursor.toLocaleDateString(undefined, { weekday: "long" });
+      return { dayName, iso: cursor.toISOString().slice(0, 10) };
+    }
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return { dayName: "Monday", iso: cursor.toISOString().slice(0, 10) };
 }

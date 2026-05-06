@@ -67,9 +67,14 @@
     color: white;
   }
 
+  /* Strong focus ring. Cream backgrounds eat soft outlines, so the focus
+     ring lands a 2.5px solid accent halo plus a hairline divider beneath
+     it. Visible to keyboard users without dominating the chrome. */
   *:focus-visible {
     outline: none;
-    box-shadow: theme("boxShadow.focus");
+    box-shadow:
+      0 0 0 2.5px theme("colors.accent"),
+      0 0 0 4px theme("colors.bg");
     border-radius: 6px;
   }
 

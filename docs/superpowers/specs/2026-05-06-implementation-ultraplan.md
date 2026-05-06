@@ -1,3 +1,4 @@
+<!-- /autoplan restore point: /c/Users/tejas/.gstack/projects/jumpstart/implementation-v1-autoplan-restore-20260506-111532.md -->
 # Implementation ultraplan
 
 Date: 2026-05-06

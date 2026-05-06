@@ -9,12 +9,19 @@ type Props = {
   cursor?: boolean;
 };
 
-// Char-by-char reveal. Triggers when the element scrolls into view.
-// Honors prefers-reduced-motion (renders the full string immediately).
+// Char-by-char reveal. Triggers when the element scrolls into view, with a
+// gentle ease-out on character spacing so the start is brisk and the trail
+// settles into final state. Honors prefers-reduced-motion (renders the full
+// string immediately).
+//
+// Tuning notes (post-feedback): default speedMs trimmed 18 -> 22ms so the
+// pacing breathes; the easing curve clusters chars at the front of the
+// reveal and stretches the last ones so it lands like a typed sentence,
+// not a uniform stream.
 export function TypewriterText({
   text,
-  speedMs = 18,
-  delayMs = 200,
+  speedMs = 22,
+  delayMs = 220,
   className,
   cursor = true,
 }: Props) {
@@ -31,6 +38,7 @@ export function TypewriterText({
     }
     const el = ref.current;
     if (!el) return;
+    const totalDuration = text.length * speedMs;
     const observer = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -43,7 +51,11 @@ export function TypewriterText({
                 requestAnimationFrame(tick);
                 return;
               }
-              const target = Math.min(text.length, Math.floor(elapsed / speedMs));
+              // Ease-out on character index: brisk at the start, slows as
+              // it reaches the end. Feels like deliberate typing.
+              const k = Math.min(1, elapsed / totalDuration);
+              const eased = 1 - Math.pow(1 - k, 1.6);
+              const target = Math.min(text.length, Math.floor(eased * text.length));
               setN(target);
               if (target < text.length) requestAnimationFrame(tick);
             };
@@ -62,7 +74,7 @@ export function TypewriterText({
     <span ref={ref} className={className}>
       {text.slice(0, n)}
       {cursor && n < text.length ? (
-        <span className="inline-block w-[1px] h-[1em] bg-accent align-middle ml-0.5 animate-[blink_0.9s_steps(2)_infinite]" />
+        <span className="inline-block w-[2px] h-[0.95em] bg-accent align-middle ml-0.5 animate-[blink_1.1s_steps(2)_infinite]" />
       ) : null}
     </span>
   );

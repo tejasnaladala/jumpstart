@@ -29,12 +29,12 @@ const mono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Jumpstart for Startup School 2026",
   description:
-    "The unofficial global attendee graph for YC Startup School 2026. Curated founder matches every week.",
+    "The unofficial global attendee graph for YC Startup School 2026. Curated founder matches Monday, Wednesday, Friday at 09:00 PT.",
   metadataBase: new URL("https://jumpstart.dev"),
   openGraph: {
     title: "Jumpstart for Startup School 2026",
     description:
-      "Curated founder matches every week. Built for the SS 2026 cohort.",
+      "Curated founder matches every other day. Built for the SS 2026 cohort.",
     type: "website",
   },
 };
