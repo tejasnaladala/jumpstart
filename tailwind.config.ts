@@ -5,16 +5,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: "#FAFAF7",
-        surface: "#FFFFFF",
-        ink: "#1A1A1A",
-        muted: "#6B6B6B",
-        border: "#E8E6E1",
-        accent: "#C45612",
-        "accent-soft": "#FFF7F0",
-        "accent-edge": "#F3D9BF",
-        success: "#2E7D32",
-        error: "#C62828",
+        // Pulled from the YC Startup School 2026 events stylesheet
+        // (bookface-static.ycombinator.com/vite/assets/tailwind-*.css).
+        bg: "#F4F1DB", // warm cream, the SS hero background
+        surface: "#FDFDF8", // pale off-white for cards and sheets
+        ink: "#16140F", // warm near-black, primary text
+        muted: "#463325", // warm dark brown, secondary text
+        border: "#E8E3CC", // tinted divider derived from the cream
+        accent: "#FF6600", // the iconic YC orange
+        "accent-soft": "#FFF0E9", // pale peach for accent backgrounds
+        "accent-edge": "#FB651E", // hotter orange for hovers and edges
+        success: "#48B584",
+        error: "#E4544B",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],

@@ -3,6 +3,11 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAdmin } from "@/lib/auth/admin";
 
+// Always render dynamically. The auth check must run per request, never
+// from a baked-in build-time prerender (which would cache a redirect when
+// the build environment lacks runtime admin env vars).
+export const dynamic = "force-dynamic";
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   // Gate every /admin/* route on the admin allowlist.
   const admin = await getAdmin();
