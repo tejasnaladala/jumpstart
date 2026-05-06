@@ -601,16 +601,14 @@ Next best action: edit a field or close.
 
 ## 17. Match types and matching algorithm
 
-The matcher considers these match types per pair. A drop must include at least 2 distinct types to avoid feeling repetitive.
+Four match types in v1. A drop must include at least two distinct types to keep the three matches from feeling like the same person three times.
 
-- Domain peer (same building space, similar stage)
-- Cofounder shape (complementary skills, mutual interest)
-- Technical collaborator (one builds, the other has a problem)
-- GTM collaborator (one ships, the other distributes)
-- Local city match (same city, both going to the same in person event)
-- India to global bridge (one in India, one in SF or another hub, both interested)
-- Weird adjacent collision (different domains, shared shape, surprising)
-- Accountability partner (similar stage, different domains, both solo)
+- Domain peer (same building space, similar stage, mutual learning)
+- Cofounder shape (complementary skills, mutual interest in starting together)
+- Weird adjacent collision (different domains, shared shape, surprising lift)
+- City match (same city or both going to a known event date)
+
+The earlier 8-type list (technical collaborator, GTM collaborator, India bridge, accountability partner) collapsed into these four. Anything more granular is a tag-level signal that feeds the score, not a separate type. Adding more types in v2 only if data shows the four are too coarse.
 
 The score for a candidate B for user A is:
 score(A, B) = w1 * tag_overlap + w2 * intent_compatibility + w3 * embedding_similarity + w4 * cohort_segment_overlap + w5 * intro_fatigue_penalty + w6 * trust_score_floor + w7 * taste_personalization
