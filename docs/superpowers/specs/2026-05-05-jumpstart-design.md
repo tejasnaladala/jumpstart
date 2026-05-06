@@ -19,7 +19,7 @@ YC creates the density. Jumpstart routes it.
 
 Jumpstart is one thing. An AI matchmaker that delivers a small curated list of founders worth your time, learns from what happens after, and gets sharper every week.
 
-It looks nothing like a networking app. The home is a curated drop, not a directory. There is no swipe pile or social feed. The intro flow is structured (request, accept, contact unlock) and the AI is the matchmaker, not a chatbot you talk to.
+It looks nothing like a networking app. The home is a curated drop, not a directory. There is no swipe pile or social feed. The intro flow is structured (request, accept, both get an email with the other person's contact and a calendar link) and the AI is the matchmaker, not a chatbot you talk to.
 
 It also does not compete with YC Cofounder Matching. YC Cofounder Matching is for the lifelong commitment, the search anyone is willing to spend a year on. Jumpstart is for the next 90 days, the people inside this cohort whose paths cross yours during the program. Different time horizon, different shape of relationship, different surface area.
 
@@ -29,7 +29,7 @@ The wedge against networking apps is exact:
 
 - The home is a curated drop, not a directory.
 - There is no infinite scroll, no swipe pile, no follower count.
-- The intro flow is structured (request, accept, contact unlock), not freeform DM.
+- The intro flow is structured (request, accept, both get a single email with contact details and a calendar link), not freeform DM.
 - The AI is the matchmaker, not a chatbot you talk to.
 - Every drop teaches the system. By drop three, your matches are personalized to your taste, not just your tags.
 - The cohort is bounded. Only verified SS 2026 attendees. The smallness is the value.
@@ -159,14 +159,14 @@ Metric: drop open rate, intro request rate per drop, "not relevant" rate (lower 
 Input: user A taps Request Intro on user B's match card. Optional 1 line note.
 AI layer: Safety Classifier reads the note for spam, harassment, tone. Match Explainer writes the recipient-side framing ("here is why we recommended you to A").
 Human role: user B accepts, declines, or saves.
-Output: on accept, contact info exchange unlocked (email + scheduling link), both parties notified.
+Output: on accept, both parties immediately receive a single email with the other person's contact and a calendar link. No intermediate unlock step.
 Feedback loop: meeting confirmation (did this happen) is fed back to W3.
 Stored memory: full request, accept/decline, follow-up status.
 Metric: request to accept rate (target 40%+), accept to actual meeting rate (target 60%+).
 
 ### W5: Post meeting feedback
 
-Input: 48 hours after an unlocked intro, the user gets one prompt, "did you meet?" If yes, "was it useful?" with three buckets (worth my time, neutral, waste).
+Input: 48 hours after an accepted intro, the user gets one prompt, "did you meet?" If yes, "was it useful?" with three buckets (worth my time, neutral, waste).
 AI layer: Feedback Learner agent rolls feedback into per-user taste embeddings.
 Human role: 1 tap response.
 Output: updated taste profile.
@@ -769,7 +769,7 @@ Ships in v1.
 - Founder Card (auto-generated, editable)
 - Drop home (3 matches per cycle)
 - Match detail (why + opener + request)
-- Intro request and accept (email-based contact unlock)
+- Intro request and accept (single email to both parties on accept)
 - Browse with tag filter (filter icon, no search bar in v1)
 - You tab (card view, edit, settings)
 - Email notifications (drop ready, intro request, intro accepted, weekly digest)
@@ -1133,8 +1133,8 @@ Drop ready notification (email):
 Match request to recipient:
 > [Sender name] wants to meet you. We recommended you because [reason].
 
-Intro accepted, contact unlocked:
-> [Recipient name] accepted. Here is their email and a calendar link.
+Intro accepted (single email to both):
+> [Recipient name] accepted. Here is their email and a calendar link. They have your details too.
 
 Verification pending:
 > You have provisional access. Full visibility unlocks after we review your acceptance proof. Usually under 24 hours.
