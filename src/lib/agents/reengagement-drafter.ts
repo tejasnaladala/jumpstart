@@ -56,8 +56,8 @@ Draft the re-engagement email.
     if (typeof j.email_subject !== "string" || j.email_subject.length === 0) {
       throw new Error("missing email_subject");
     }
-    if (j.email_subject.length > 80) {
-      throw new Error("subject too long");
+    if (j.email_subject.length > 60) {
+      throw new Error("subject over 60 chars (system prompt cap)");
     }
     if (typeof j.email_body !== "string" || j.email_body.length < 60) {
       throw new Error("body too short");

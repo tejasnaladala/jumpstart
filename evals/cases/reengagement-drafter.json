@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "description": "Golden cases for Re-engagement Drafter. Verifies the email subject is concise, body references both the user's stated intent and a specific cohort signal, and the voice is direct and founder-shaped.",
+  "cases": [
+    {
+      "id": "reengage_after_three_weeks",
+      "input": {
+        "user": {
+          "name": "Maya Chen",
+          "intent_summary": "Eval infra for AI agents. Looking for other infra builders, autonomous-systems researchers.",
+          "last_active_iso": "2026-04-15T10:00:00Z",
+          "drops_unopened": 3
+        },
+        "recent_cohort_signal": "Three new agent-evals founders joined this week. One is a YC W26 acceptance from Brooklyn building deterministic eval suites for production LLM apps."
+      },
+      "subject_max_chars": 60,
+      "body_must_contain_any": ["evals", "infra", "agents", "eval"],
+      "body_must_not_contain": ["—", "we miss you", "great to have", "checking in"],
+      "body_must_have_call_to_action": true
+    },
+    {
+      "id": "reengage_quiet_user",
+      "input": {
+        "user": {
+          "name": "Devansh Rao",
+          "intent_summary": "India manufacturing automation. Wants US distributors and India founders going to SF.",
+          "last_active_iso": "2026-04-01T08:00:00Z",
+          "drops_unopened": 5
+        },
+        "recent_cohort_signal": "Two SF-bound India founders verified this week, both manufacturing-adjacent."
+      },
+      "subject_max_chars": 60,
+      "body_must_contain_any": ["India", "manufacturing", "SF"],
+      "body_must_not_contain": ["—", "we miss you"],
+      "body_must_have_call_to_action": true
+    }
+  ]
+}

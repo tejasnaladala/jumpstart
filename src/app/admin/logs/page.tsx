@@ -21,9 +21,24 @@ type Row = {
 };
 
 async function loadRecent(): Promise<Row[]> {
-  const file = path.resolve(process.cwd(), ".jumpstart-logs", "agent.jsonl");
+  const cwd = process.cwd();
+  const root = await fs.realpath(cwd).catch(() => cwd);
+  const file = path.join(root, ".jumpstart-logs", "agent.jsonl");
+
   try {
-    const raw = await fs.readFile(file, "utf-8");
+    const realFile = await fs.realpath(file);
+    if (!realFile.startsWith(root)) return [];
+
+    const stat = await fs.stat(realFile);
+    if (stat.size === 0) return [];
+    // Cap at 5 MB so a runaway log cannot balloon the request.
+    const cap = 5 * 1024 * 1024;
+    const start = Math.max(0, stat.size - cap);
+    const fh = await fs.open(realFile, "r");
+    const buf = Buffer.alloc(stat.size - start);
+    await fh.read(buf, 0, buf.length, start);
+    await fh.close();
+    const raw = buf.toString("utf-8");
     const lines = raw.trim().split("\n").slice(-200).reverse();
     return lines
       .map((l) => {
