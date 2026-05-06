@@ -1,1 +1,25 @@
 .superpowers/
+external/inspection/
+node_modules/
+.next/
+.env
+.env.local
+.env.*.local
+.vercel/
+.DS_Store
+*.log
+.turbo/
+dist/
+out/
+coverage/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+
+# autoresearch session artifacts (per driveline convention)
+autoresearch.jsonl
+autoresearch-dashboard.md
+autoresearch.md
+autoresearch.sh
+experiments/
+plots/
