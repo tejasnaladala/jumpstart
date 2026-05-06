@@ -103,12 +103,10 @@ Wants other domain peers (rare in the cohort) and the right adjacent collisions 
 In priority order.
 
 1. Help me figure out who in this cohort is actually worth my time.
-2. Give me a reason to message someone, not just a list to browse.
-3. Remember the people I meet so I do not lose them.
-4. Tell me when someone interesting joins the cohort or changes their card.
-5. Translate my vague intent into matches I would not have searched for.
+2. Translate my vague intent into matches I would not have searched for myself.
+3. Give me a reason to message a specific person, with the line already half-written.
 
-The product is built for job 1 first. Everything else is in service of that.
+The product is built for job 1 first. Two and three exist only to serve it.
 
 ## 6. AI-first operating model
 
