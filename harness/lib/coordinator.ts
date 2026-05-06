@@ -122,6 +122,11 @@ export async function onboardPersona(persona: Persona): Promise<PersonaState> {
       await signUp(session);
       state.signed_up = true;
       state.last_action = new Date().toISOString();
+      // Save IMMEDIATELY after signup so a mid-onboard failure doesn't
+      // re-trigger signup on the next call. Closes the partial-state
+      // bug spotted on the first harness round (Omar/Yusuf/Jordan
+      // double-signup when their onboard step blew up).
+      saveState(state);
       logActivity({ persona_id: persona.id, event: "signed_up" });
     }
     if (!state.onboarded) {
@@ -131,9 +136,9 @@ export async function onboardPersona(persona: Persona): Promise<PersonaState> {
       await reviewAndSaveCard(session);
       state.onboarded = true;
       state.last_action = new Date().toISOString();
+      saveState(state);
       logActivity({ persona_id: persona.id, event: "onboarded" });
     }
-    saveState(state);
     return state;
   } finally {
     await session.close();

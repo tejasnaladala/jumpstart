@@ -95,6 +95,18 @@ export async function openSession(persona: Persona): Promise<PersonaSession> {
   };
 }
 
+function normalizeUrl(raw: string): string {
+  // The signup LinkedIn field is type="url" so HTML5 validation
+  // rejects values without a protocol. Persona seeds use the natural
+  // shape ("linkedin.com/in/foo") that real users would type, so we
+  // prepend https:// here. If the raw value already has a protocol,
+  // pass it through unchanged.
+  const trimmed = raw.trim();
+  if (!trimmed) return trimmed;
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 export async function signUp(s: PersonaSession): Promise<void> {
   await s.page.goto(`${BASE_URL}/signup`);
   await s.page
@@ -106,7 +118,7 @@ export async function signUp(s: PersonaSession): Promise<void> {
   if (s.persona.identity.publicLink) {
     const linkField = s.page.getByPlaceholder(/linkedin/i);
     if (await linkField.count()) {
-      await linkField.first().fill(s.persona.identity.publicLink);
+      await linkField.first().fill(normalizeUrl(s.persona.identity.publicLink));
     }
   }
   await s.page.getByRole("button", { name: /Send magic link/i }).click();
@@ -128,6 +140,10 @@ export async function fillIdentity(s: PersonaSession): Promise<void> {
   if (s.persona.identity.publicLink) {
     const linkField = s.page.getByPlaceholder(/linkedin\.com\/in\/you/i);
     if (await linkField.count()) {
+      // Identity step renders publicLink as-is on the Pass, so we
+      // pass through the raw seed value here (no protocol prepend).
+      // The signup step's URL-typed field is the only one that needs
+      // normalization.
       await linkField.first().fill(s.persona.identity.publicLink);
     }
   }
@@ -136,37 +152,63 @@ export async function fillIdentity(s: PersonaSession): Promise<void> {
 }
 
 export async function fillVerification(s: PersonaSession): Promise<void> {
+  // Verification page has TWO required gates: a "proof" (email subject
+  // line OR referral code) AND at least one location toggle. The form
+  // uses useDraftState with a versioned envelope, so we can write the
+  // draft directly to localStorage and skip the form interaction —
+  // same pattern fillIntent uses for the conversational interview.
+  // This is robust to button-text changes and removes the need to
+  // maintain selectors for every toggle.
   await s.page.goto(`${BASE_URL}/onboarding/verification`);
-  // Verification toggles are present as Pill components. They default
-  // to off, so we click each one the persona wants on.
-  // The page accepts continuation after at least one toggle is set.
-  const toggleNames: { key: keyof Persona["intent"]; label: RegExp }[] = [
-    { key: "going_to_sf", label: /going to SF/i },
-    { key: "attended_india", label: /Startup School India/i },
-    { key: "remote_global", label: /remote/i },
-    { key: "open_to_async", label: /async/i },
-    { key: "open_to_in_person", label: /in[- ]person/i },
-  ];
-  for (const t of toggleNames) {
-    if (s.persona.intent[t.key]) {
-      const pill = s.page.getByRole("button", { name: t.label }).first();
-      if (await pill.count()) {
-        await pill.click().catch(() => {
-          // Pill might already be active in some flows; ignore.
-        });
-      }
-    }
-  }
-  // Continue past verification.
+  await s.page.evaluate((opts) => {
+    const envelope = {
+      v: 1,
+      ts: Date.now(),
+      data: {
+        emailSubject: "Welcome to YC Startup School 2026",
+        referral: "",
+        opts: {
+          sf: opts.sf,
+          india: opts.india,
+          remote: opts.remote,
+          notSure: false,
+          asyncOk: opts.asyncOk,
+          inPerson: opts.inPerson,
+        },
+      },
+    };
+    window.localStorage.setItem(
+      "jumpstart.onboarding.verification",
+      JSON.stringify(envelope)
+    );
+  }, {
+    sf: s.persona.intent.going_to_sf,
+    india: s.persona.intent.attended_india,
+    remote: s.persona.intent.remote_global,
+    asyncOk: s.persona.intent.open_to_async,
+    inPerson: s.persona.intent.open_to_in_person,
+  });
+  // Reload so the page picks up the new draft, then click Continue.
+  await s.page.reload();
+  await s.page.waitForLoadState("domcontentloaded");
   const continueBtn = s.page.getByRole("button", { name: /Continue/i });
-  if (await continueBtn.count()) {
-    await continueBtn.click();
-    await s.page
-      .waitForURL(/\/onboarding\/intent/, { timeout: 10_000 })
-      .catch(() => {
-        // Some flows skip directly to /onboarding/card.
-      });
+  await continueBtn
+    .waitFor({ state: "visible", timeout: 5_000 })
+    .catch(() => null);
+  // The button should be enabled now; if not, give the draft a beat
+  // to hydrate then try again.
+  for (let i = 0; i < 3; i++) {
+    if (await continueBtn.isEnabled().catch(() => false)) break;
+    await s.page.waitForTimeout(250);
   }
+  await continueBtn.click({ timeout: 5_000 }).catch(() => null);
+  await s.page
+    .waitForURL(/\/onboarding\/intent/, { timeout: 10_000 })
+    .catch(() => {
+      // If verification didn't advance, the run will fail on the
+      // next step's URL wait. We don't throw here so other personas
+      // can keep going.
+    });
 }
 
 export async function fillIntent(s: PersonaSession): Promise<void> {
