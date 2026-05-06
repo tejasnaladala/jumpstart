@@ -935,6 +935,8 @@ A user mass-saves cards then signs up to a competitor product. Mitigation: rate 
 
 A user is being harassed via intro requests. Mitigation: block and report flow, classifier reads every intro note, repeat offenders banned.
 
+A high-signal founder gets flooded. Imagine a well-known SS attendee gets 50 incoming requests in week one, ignores 45 of them. Forty-five other founders feel ghosted, half churn. Mitigation has three layers. First, a per-recipient cap of 8 incoming requests per week so the inbox stays human-sized. Second, the Matchmaker reads recipient response history and quietly routes around founders who decline most requests, so they keep getting recommended only to the strongest pair candidates. Third, the recipient never sees a "decline" button as a hard reject, only "save for later", which the sender sees as "not now" instead of "no". The intent is to let attention scarcity exist without amplifying its emotional cost.
+
 ## 30. Open questions before build
 
 Not blockers, but worth deciding before day 1.
