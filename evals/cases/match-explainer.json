@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "description": "Golden cases for the Match Explainer agent. Each case has a known-good explanation pattern and a known-bad anti-pattern. The eval runs the agent on the input, then scores against the patterns.",
+  "cases": [
+    {
+      "id": "explainer_domain_peer_ai_agents",
+      "input": {
+        "user_card": {
+          "name": "Tejas",
+          "building": "Plasmax. Autonomous R and D systems for hardtech.",
+          "looking_for": "Hardtech founders, AI infra builders.",
+          "tags": ["hardtech", "ai-agents", "research"]
+        },
+        "candidate_card": {
+          "name": "Maya Chen",
+          "building": "Eval infrastructure for AI agents. Tests for trust, drift, and goal preservation.",
+          "looking_for": "Other infra builders, autonomous systems researchers.",
+          "can_help_with": "Eval design, golden set construction, agent observability.",
+          "talk_to_me_if": "you ship agents and quietly worry they will hallucinate something expensive.",
+          "tags": ["ai-agents", "infra", "evals", "research"]
+        },
+        "match_type": "domain_peer",
+        "reasoning_trace": "shared tags ai-agents, research, both think about agent reliability"
+      },
+      "must_contain_any": ["evals", "Maya", "agent reliability", "trust", "drift", "research"],
+      "must_not_contain": ["—", "you both build AI", "stands as", "represents a", "vibrant", "groundbreaking"],
+      "min_chars": 80,
+      "max_chars": 350
+    },
+    {
+      "id": "explainer_cofounder_shape",
+      "input": {
+        "user_card": {
+          "name": "Jordan",
+          "building": "Autonomous lab assistant for biotech wet labs.",
+          "looking_for": "Robotics or ML cofounder.",
+          "tags": ["hardtech", "robotics", "biotech", "cofounder"]
+        },
+        "candidate_card": {
+          "name": "Ren Yamada",
+          "building": "Robotics plus LLMs for warehouse automation. Robot arms that learn picking from a single demonstration.",
+          "looking_for": "Robotics researchers, ML-for-control people.",
+          "can_help_with": "Robotics SDK selection, sim-to-real, manipulation policy training.",
+          "talk_to_me_if": "you think the gap between LLM-as-planner and a robot that actually picks a thing is a fun problem.",
+          "tags": ["robotics", "ai-agents", "manufacturing"]
+        },
+        "match_type": "cofounder_shape",
+        "reasoning_trace": "both robotics, complementary domains (biotech vs warehouse)"
+      },
+      "must_contain_any": ["robot", "Ren", "manipulation", "sim-to-real", "complement"],
+      "must_not_contain": ["—", "you both build robots", "stands as"],
+      "min_chars": 80,
+      "max_chars": 350
+    },
+    {
+      "id": "explainer_weird_adjacent",
+      "input": {
+        "user_card": {
+          "name": "Sara",
+          "building": "Climate financing API for SMEs in emerging markets.",
+          "looking_for": "Climate operators, fintech infra people.",
+          "tags": ["climate", "fintech", "emerging-markets"]
+        },
+        "candidate_card": {
+          "name": "Devansh Rao",
+          "building": "Manufacturing automation for India SME factories. AI-driven QA on shop floors.",
+          "looking_for": "Hardware founders, US distributors, India founders going to SF.",
+          "can_help_with": "India supply chain, hardware sourcing in Shenzhen, SME founder intros.",
+          "talk_to_me_if": "you want a reality check on building hardware out of India.",
+          "tags": ["hardtech", "india", "manufacturing", "sme"]
+        },
+        "match_type": "weird_adjacent",
+        "reasoning_trace": "different domains (climate vs hardtech) but both serve SMEs in emerging markets"
+      },
+      "must_contain_any": ["SME", "India", "emerging market", "Devansh", "shop floor", "supply chain"],
+      "must_not_contain": ["—", "different yet similar", "interestingly"],
+      "min_chars": 80,
+      "max_chars": 350
+    }
+  ]
+}
