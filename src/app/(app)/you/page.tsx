@@ -1,6 +1,7 @@
 "use client";
 import { TopBar } from "@/components/TopBar";
 import { FounderCardView } from "@/components/FounderCard";
+import { FounderPass } from "@/components/FounderPass";
 import { Button } from "@/components/primitive/Button";
 import { Pill } from "@/components/primitive/Pill";
 import { useEffect, useState } from "react";
@@ -29,15 +30,37 @@ export default function YouPage() {
     return (
       <>
         <TopBar title="You" />
-        <div className="container-app py-10 text-sm text-muted">Loading your card...</div>
+        <section className="container-app pt-5 pb-6">
+          <div className="surface p-5 animate-pulse">
+            <div className="h-3 w-1/3 skeleton mb-3" />
+            <div className="h-3 w-2/3 skeleton" />
+            <div className="h-24 w-full skeleton mt-4" />
+          </div>
+        </section>
       </>
     );
   }
 
   return (
     <>
-      <TopBar title="You" subtitle="Your Founder Card and settings" />
+      <TopBar title="You" subtitle="Your Founder Pass and Card" />
       <section className="container-app pt-5 pb-6">
+        {/* Founder Pass: the editorial admit-one ticket. Identity object,
+            shown above the structured Founder Card data. */}
+        <div className="ed-rule pt-3 mb-4 flex items-baseline justify-between">
+          <span className="ed-serial">No. 001 / Founder Pass</span>
+          <span className="ed-serial hidden sm:inline">SS 2026</span>
+        </div>
+        <FounderPass
+          name={card.name}
+          cohort="Startup School 2026"
+          venue="Chase Center, SF · July 25-26"
+        />
+
+        <div className="ed-rule pt-3 mt-8 mb-4 flex items-baseline justify-between">
+          <span className="ed-serial">The four lines</span>
+          <span className="ed-serial hidden sm:inline">Editable</span>
+        </div>
         <FounderCardView card={card} />
 
         <div className="surface mt-4 p-4">

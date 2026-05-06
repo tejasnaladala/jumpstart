@@ -1,5 +1,6 @@
 import { Logo } from "@/components/Logo";
 import { FounderCardView } from "@/components/FounderCard";
+import { FounderPass } from "@/components/FounderPass";
 import { MOCK_COHORT } from "@/lib/mock/cohort";
 import { Marquee } from "@/components/Marquee";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
@@ -188,11 +189,43 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Section 03 - Founder Card */}
+      {/* Section 03 - Founder Pass */}
       <section className="container-wide py-20">
         <Reveal>
           <div className="ed-masthead">
-            <span className="ed-serial">§ 03 / Founder Card</span>
+            <span className="ed-serial">§ 03 / Founder Pass</span>
+            <span className="ed-serial hidden sm:inline">Your admit-one to the cohort</span>
+          </div>
+        </Reveal>
+        <Reveal>
+          <h2 className="font-display text-4xl sm:text-5xl max-w-3xl leading-[1.06]">
+            One pass. One cohort.{" "}
+            <span className="italic text-accent">Eight thousand founders worth meeting.</span>
+          </h2>
+        </Reveal>
+        <Reveal delay={0.08}>
+          <p className="text-muted mt-5 text-lg leading-relaxed max-w-2xl">
+            Your Founder Pass is the identity object. It says you are in the cohort, what city you
+            are anchored to, and the dates of the in-person Demo Day. The matchmaker scores every
+            pass against yours between drops.
+          </p>
+        </Reveal>
+        <Reveal delay={0.16}>
+          <div className="mt-12">
+            <FounderPass
+              name="Jordan Park"
+              cohort="Startup School 2026"
+              venue="Chase Center, SF · July 25-26"
+            />
+          </div>
+        </Reveal>
+      </section>
+
+      {/* Section 04 - Founder Card */}
+      <section className="container-wide py-20">
+        <Reveal>
+          <div className="ed-masthead">
+            <span className="ed-serial">§ 04 / Founder Card</span>
             <span className="ed-serial hidden sm:inline">The four lines</span>
           </div>
         </Reveal>
@@ -213,9 +246,9 @@ export default function LandingPage() {
             </Reveal>
             <Reveal delay={0.08}>
               <p className="text-muted mt-5 text-lg leading-relaxed">
-                No follower count. No vanity metrics. No public profile. Just the four lines that
-                tell the AI who you are and who is worth your time. Other verified attendees see
-                it. That is the entire audience.
+                The Pass is your seat in the room. The Card is what the matchmaker reads. Four
+                lines, free text. No follower count, no vanity metrics, no public profile. Other
+                verified attendees see it. That is the entire audience.
               </p>
             </Reveal>
             <Reveal delay={0.16}>
@@ -240,11 +273,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Section 04 - Cohort composition (was "Who it is for") */}
+      {/* Section 05 - Cohort composition (was "Who it is for") */}
       <section className="container-wide py-20">
         <Reveal>
           <div className="ed-masthead">
-            <span className="ed-serial">§ 04 / Cohort composition</span>
+            <span className="ed-serial">§ 05 / Cohort composition</span>
             <span className="ed-serial hidden sm:inline">60+ countries verifying</span>
           </div>
         </Reveal>
@@ -275,11 +308,11 @@ export default function LandingPage() {
         </Reveal>
       </section>
 
-      {/* Section 05 - Counter-positioning */}
+      {/* Section 06 - Counter-positioning */}
       <section className="container-wide py-20">
         <Reveal>
           <div className="ed-masthead">
-            <span className="ed-serial">§ 05 / Counter-positioning</span>
+            <span className="ed-serial">§ 06 / Counter-positioning</span>
             <span className="ed-serial hidden sm:inline">What this is and isn&apos;t</span>
           </div>
         </Reveal>
