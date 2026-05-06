@@ -30,10 +30,14 @@ export default defineConfig({
   webServer: {
     command: "bun run dev",
     url: BASE_URL,
-    reuseExistingServer: true,
+    // CI never reuses an existing server. Locally we still reuse so the
+    // dev server stays warm, but e2e specs assume stub mode; if someone
+    // is running with real keys, those test runs will hit live agents.
+    reuseExistingServer: !process.env.CI,
     timeout: 60_000,
     env: {
       JUMPSTART_ALLOW_STUB: "1",
+      JUMPSTART_FORCE_STUBS: "1",
       PORT,
     },
   },

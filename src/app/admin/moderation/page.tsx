@@ -57,7 +57,7 @@ export default function ModerationQueuePage() {
               <div className="flex items-center gap-2">
                 <Pill size="sm" accent>{c.kind}</Pill>
                 <span className="text-xs text-muted font-mono">{c.id}</span>
-                <span className="text-xs text-muted">{relativeFor(c.created_at ?? c.submitted_at!)}</span>
+                <span className="text-xs text-muted">{relativeFor(c.created_at ?? c.submitted_at ?? "")}</span>
               </div>
               <div className="flex items-center gap-2">
                 <button className="text-xs px-3 h-8 rounded-md border border-border bg-surface hover:border-ink/40">
@@ -122,8 +122,10 @@ function CaseBody({ c }: { c: (typeof MOCK_QUEUE)[number] }) {
 }
 
 function relativeFor(iso: string) {
-  const d = new Date(iso).getTime();
-  const diff = Math.max(0, Date.now() - d);
+  if (!iso) return "unknown";
+  const t = Date.parse(iso);
+  if (Number.isNaN(t)) return "unknown";
+  const diff = Math.max(0, Date.now() - t);
   const hr = Math.floor(diff / 3_600_000);
   if (hr < 1) return "<1h ago";
   if (hr < 24) return `${hr}h ago`;

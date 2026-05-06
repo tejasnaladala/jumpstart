@@ -60,10 +60,12 @@ test.describe("happy path", () => {
     await expect(page.getByText(/Filter by tag/i)).toBeVisible();
   });
 
-  test("you tab shows founder card and trust tier", async ({ page }) => {
+  test("you tab shows trust tier and signout", async ({ page }) => {
     await page.goto("/you");
-    await expect(page.getByText(/Your Founder Card/i).first()).toBeVisible().catch(() => {});
+    // Trust tier is the deterministic anchor here; the card heading copy
+    // varies with the user's Founder Card content.
     await expect(page.getByText(/Trust tier/i)).toBeVisible();
+    await expect(page.getByRole("button", { name: /Sign out/i })).toBeVisible();
   });
 });
 
