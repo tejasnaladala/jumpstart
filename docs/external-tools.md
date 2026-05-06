@@ -98,6 +98,17 @@ Andrej Karpathy's original autoresearch repo, where the pattern came from. Not i
 
 If you ever need the original training code (you probably won't for Jumpstart), reference it directly from the clone. Do not vendor it into the project.
 
+## kyegomez/OpenMythos (reference only)
+
+A theoretical PyTorch reconstruction of a fictional "Claude Mythos" architecture: Recurrent-Depth Transformer with three stages (Prelude, looped Recurrent Block, Coda), switchable MLA or GQA attention, fine-grained MoE FFN with shared and routed experts, LTI-constrained injection for stability, and Adaptive Computation Time halting. Pre-configured variants from 1B to 1T parameters with FineWeb-Edu training scripts.
+
+**Why this is reference only.** Jumpstart calls the Anthropic API. Every agent in the design spec is a Claude prompt, not a custom transformer. Training a model from scratch (or fine-tuning at the architecture level) is many orders of magnitude out of scope. Token budget for the entire product at 8000 users is approximately $2400 per week. A single OpenMythos pretraining run would dwarf that.
+
+**The narrow case it might come back.** If Jumpstart ever decides to fine-tune a small custom embedder for cohort-specific matching (instead of using off-the-shelf Voyage, Cohere, or OpenAI embeddings), this repo plus the Parcae paper plus Karpathy's autoresearch loop would be the reading list. That decision is months away at earliest. By default we use a hosted embeddings API.
+
+**Source:** https://github.com/kyegomez/OpenMythos
+**Reference clone:** `external/inspection/openmythos/`
+
 ## Inspection clones
 
 All three repos have read-only clones at `external/inspection/`. Gitignored, kept locally for reference. Safe to delete if disk pressure, just re-clone when needed.
