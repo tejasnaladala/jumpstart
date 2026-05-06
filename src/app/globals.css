@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-bg text-ink font-sans;
+    font-feature-settings: "ss01", "cv01", "cv11";
+  }
+
+  ::selection {
+    background: theme("colors.accent");
+    color: white;
+  }
+
+  *:focus-visible {
+    outline: none;
+    box-shadow: theme("boxShadow.focus");
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  .container-app {
+    @apply mx-auto w-full max-w-[440px] px-4 sm:px-5;
+  }
+
+  .container-wide {
+    @apply mx-auto w-full max-w-[1080px] px-5 sm:px-8;
+  }
+
+  .surface {
+    @apply bg-surface border border-border rounded-lg;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2.5 py-0.5 text-xs text-muted transition-colors;
+  }
+
+  .pill-on {
+    @apply border-ink bg-ink text-white;
+  }
+
+  .pill-accent {
+    @apply border-accent-edge bg-accent-soft text-accent;
+  }
+
+  .row-divide > * + * {
+    @apply border-t border-border;
+  }
+
+  .grain {
+    background-image: radial-gradient(
+      rgba(26, 26, 26, 0.025) 0.5px,
+      transparent 0.5px
+    );
+    background-size: 3px 3px;
+  }
+
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      #f1efea 0px,
+      #f7f5f0 40px,
+      #f1efea 80px
+    );
+    background-size: 468px 100%;
+    @apply animate-shimmer rounded-sm;
+  }
+}
