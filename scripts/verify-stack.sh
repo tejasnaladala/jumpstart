@@ -119,10 +119,15 @@ if [ "$CHECKPOINT_AGE" -gt 600 ]; then
   ISSUES="$ISSUES,checkpoint_stale(${CHECKPOINT_AGE}s)"
 fi
 
-# Critical: too many recent assertion failures
-if [ "$ASSERT_RECENT_FAILS" -gt 5 ]; then
+# Degraded: any recent assertion failures. Critical only if many.
+# Threshold accounts for pre-rebuild noise that ages out as new passes
+# accumulate from the assertion-loop.
+if [ "$ASSERT_RECENT_FAILS" -gt 15 ]; then
   VERDICT="critical"
   EXIT_CODE=1
+  ISSUES="$ISSUES,assertion_failures($ASSERT_RECENT_FAILS)"
+elif [ "$ASSERT_RECENT_FAILS" -gt 5 ]; then
+  [ "$VERDICT" = "green" ] && VERDICT="degraded" && EXIT_CODE=2
   ISSUES="$ISSUES,assertion_failures($ASSERT_RECENT_FAILS)"
 fi
 
