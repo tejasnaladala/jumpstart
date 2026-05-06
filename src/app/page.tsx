@@ -62,9 +62,8 @@ export default function LandingPage() {
             </Reveal>
             <Reveal delay={0.08}>
               <p className="mt-7 text-lg text-muted max-w-2xl leading-relaxed">
-                The unofficial global attendee graph for SS 2026. One curated founder match three
-                times a week, Monday, Wednesday, and Friday at 09:00 PT. With a one-line on why
-                you should meet and an opener already half-written.
+                One curated founder match three times a week, Monday, Wednesday, and Friday at
+                09:00 PT.
               </p>
             </Reveal>
             <Reveal delay={0.16}>
