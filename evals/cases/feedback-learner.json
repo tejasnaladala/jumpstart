@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "description": "Golden cases for Feedback Learner. Verifies the agent does not collapse to a single match type and always emits diversity_inject tags outside the user's cluster.",
+  "cases": [
+    {
+      "id": "fb_does_not_collapse_to_single_type",
+      "input": {
+        "user_id": "u_test",
+        "prior_taste_profile": "",
+        "drop_history": [
+          {
+            "week": "2026-W18",
+            "matches": [
+              { "candidate_user_id": "u_a", "tags": ["ai-agents", "infra"], "match_type": "domain_peer", "action": "request", "meeting_outcome": "worth" },
+              { "candidate_user_id": "u_b", "tags": ["ai-agents", "voice"], "match_type": "domain_peer", "action": "request", "meeting_outcome": "worth" },
+              { "candidate_user_id": "u_c", "tags": ["climate"], "match_type": "weird_adjacent", "action": "skip", "meeting_outcome": null }
+            ]
+          },
+          {
+            "week": "2026-W19",
+            "matches": [
+              { "candidate_user_id": "u_d", "tags": ["ai-agents", "evals"], "match_type": "domain_peer", "action": "save", "meeting_outcome": null },
+              { "candidate_user_id": "u_e", "tags": ["ai-agents"], "match_type": "domain_peer", "action": "request", "meeting_outcome": "neutral" },
+              { "candidate_user_id": "u_f", "tags": ["fintech"], "match_type": "weird_adjacent", "action": "not_relevant", "meeting_outcome": null }
+            ]
+          }
+        ]
+      },
+      "min_preferred_types": 2,
+      "diversity_inject_must_have_at_least": 1,
+      "diversity_inject_must_not_only_be": ["ai-agents", "infra", "evals", "voice"]
+    },
+    {
+      "id": "fb_picks_up_strong_negative",
+      "input": {
+        "user_id": "u_test",
+        "prior_taste_profile": "User leans technical, prefers domain peers.",
+        "drop_history": [
+          {
+            "week": "2026-W18",
+            "matches": [
+              { "candidate_user_id": "u_a", "tags": ["ai-agents", "voice"], "match_type": "domain_peer", "action": "not_relevant", "meeting_outcome": null },
+              { "candidate_user_id": "u_b", "tags": ["voice"], "match_type": "domain_peer", "action": "not_relevant", "meeting_outcome": null },
+              { "candidate_user_id": "u_c", "tags": ["voice", "healthtech"], "match_type": "domain_peer", "action": "not_relevant", "meeting_outcome": null }
+            ]
+          }
+        ]
+      },
+      "taste_profile_must_contain": ["voice"],
+      "taste_profile_must_indicate_negative": true
+    }
+  ]
+}

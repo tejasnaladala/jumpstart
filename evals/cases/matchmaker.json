@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "description": "Golden cases for Matchmaker. Verifies diversity rule (2+ distinct types), no-repeat exclusion, and tag-overlap enforcement for non-weird-adjacent picks.",
+  "cases": [
+    {
+      "id": "mm_three_distinct_types_with_diverse_pool",
+      "input": {
+        "user_id": "u_tejas",
+        "user_card_summary": "Building Plasmax, autonomous R and D for hardtech. Looking for hardtech founders, AI infra builders, India manufacturing.",
+        "user_tags": ["hardtech", "ai-agents", "research", "fusion", "cofounder", "sf"],
+        "user_intents": ["cofounder", "collaborator"],
+        "candidates": [
+          { "user_id": "u_maya", "card_summary": "Eval infra for AI agents", "tags": ["ai-agents", "infra", "evals"], "intents": ["collaborator"], "city": "toronto", "prior_score": 9 },
+          { "user_id": "u_jordan", "card_summary": "Autonomous lab assistant for biotech, looking for cofounder", "tags": ["hardtech", "robotics", "biotech", "cofounder"], "intents": ["cofounder"], "city": "san francisco", "prior_score": 8 },
+          { "user_id": "u_devansh", "card_summary": "India manufacturing automation", "tags": ["hardtech", "india", "manufacturing"], "intents": ["collaborator"], "city": "bangalore", "prior_score": 7 },
+          { "user_id": "u_ren", "card_summary": "Robotics + LLMs warehouse", "tags": ["robotics", "ai-agents", "manufacturing"], "intents": ["collaborator"], "city": "tokyo", "prior_score": 6 },
+          { "user_id": "u_sara", "card_summary": "Climate financing API for emerging markets", "tags": ["climate", "fintech", "emerging-markets"], "intents": ["collaborator"], "city": "london", "prior_score": 5 }
+        ],
+        "recent_shown_user_ids": []
+      },
+      "exact_pick_count": 3,
+      "min_distinct_types": 2,
+      "must_pick_one_of": ["u_maya", "u_jordan", "u_devansh", "u_ren"],
+      "must_not_pick": []
+    },
+    {
+      "id": "mm_excludes_recently_shown",
+      "input": {
+        "user_id": "u_tejas",
+        "user_card_summary": "Plasmax",
+        "user_tags": ["hardtech", "ai-agents"],
+        "user_intents": ["cofounder"],
+        "candidates": [
+          { "user_id": "u_maya", "card_summary": "Eval infra", "tags": ["ai-agents"], "intents": ["collaborator"], "city": "toronto", "prior_score": 9 },
+          { "user_id": "u_jordan", "card_summary": "Lab robotics cofounder seeking", "tags": ["hardtech", "cofounder"], "intents": ["cofounder"], "city": "sf", "prior_score": 8 },
+          { "user_id": "u_devansh", "card_summary": "India mfg", "tags": ["hardtech", "india"], "intents": ["collaborator"], "city": "bangalore", "prior_score": 7 },
+          { "user_id": "u_ren", "card_summary": "Robotics", "tags": ["robotics", "ai-agents"], "intents": ["collaborator"], "city": "tokyo", "prior_score": 6 }
+        ],
+        "recent_shown_user_ids": ["u_maya"]
+      },
+      "exact_pick_count": 3,
+      "must_not_pick": ["u_maya"]
+    }
+  ]
+}

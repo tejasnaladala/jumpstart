@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "description": "Golden cases for Onboarding Interviewer. Verifies the agent asks substantive follow-ups, knows when to stop, never asks the same thing twice, and matches the user's voice.",
+  "cases": [
+    {
+      "id": "interviewer_first_question_after_hardtech_oneliner",
+      "input": {
+        "identity": {
+          "name": "Tejas N.",
+          "location": "Seattle, going to SF",
+          "oneLine": "Plasmax. Autonomous R and D for hardtech."
+        },
+        "history": [],
+        "questionsAsked": 0
+      },
+      "must_contain_any": ["building", "what", "doing", "in your own words"],
+      "must_not_contain": ["—", "great question", "wonderful"],
+      "must_be_final": false,
+      "min_chars": 20,
+      "max_chars": 220
+    },
+    {
+      "id": "interviewer_followup_after_generic_answer",
+      "input": {
+        "identity": {
+          "name": "Maya Chen",
+          "location": "Toronto",
+          "oneLine": "AI infra startup."
+        },
+        "history": [
+          { "role": "interviewer", "content": "What are you building, in your own words?" },
+          { "role": "user", "content": "We are building AI infrastructure for the future of agents." }
+        ],
+        "questionsAsked": 1
+      },
+      "must_contain_any": ["specific", "concrete", "particular", "what part", "which", "for example"],
+      "must_not_contain": ["—", "fascinating", "thanks for sharing"],
+      "must_be_final": false
+    },
+    {
+      "id": "interviewer_terminates_after_seven_questions",
+      "input": {
+        "identity": {
+          "name": "Ananya V",
+          "location": "Bangalore",
+          "oneLine": "Edtech for Indian high schoolers."
+        },
+        "history": [
+          { "role": "interviewer", "content": "What are you building?" },
+          { "role": "user", "content": "AI tutor adapted to Indian board syllabi." },
+          { "role": "interviewer", "content": "Who would make SS worth it?" },
+          { "role": "user", "content": "Other young founders, edtech operators, India distribution help." },
+          { "role": "interviewer", "content": "What can you uniquely help others with?" },
+          { "role": "user", "content": "Indian school system context, undergrad founder mistakes." },
+          { "role": "interviewer", "content": "Are there shapes of founder you actively do NOT want matched with?" },
+          { "role": "user", "content": "People who pitch instead of learn." },
+          { "role": "interviewer", "content": "Which India cities matter most for your work?" },
+          { "role": "user", "content": "Bangalore, Pune, and Delhi NCR." },
+          { "role": "interviewer", "content": "Async or in person preference?" },
+          { "role": "user", "content": "Both work, mostly async." },
+          { "role": "interviewer", "content": "Any specific stage of founder you want to avoid?" },
+          { "role": "user", "content": "Pre-product types who only want to talk." }
+        ],
+        "questionsAsked": 7
+      },
+      "must_be_final": true
+    }
+  ]
+}
