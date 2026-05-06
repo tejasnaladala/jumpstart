@@ -19,15 +19,17 @@ YC creates the density. Jumpstart routes it.
 
 Jumpstart is one thing. An AI matchmaker that delivers a small curated list of founders worth your time, learns from what happens after, and gets sharper every week.
 
-It looks nothing like a networking app. The home is a curated drop, not a directory. There is no swipe pile or social feed. The intro flow is structured (request, accept, contact unlock) and the AI is the matchmaker, not a chatbot you talk to.
+It looks nothing like a networking app. The home is a curated drop, not a directory. There is no swipe pile or social feed. The intro flow is structured (request, accept, both get an email with the other person's contact and a calendar link) and the AI is the matchmaker, not a chatbot you talk to.
 
-It also does not compete with YC Cofounder Matching. The cohort here is bounded to verified SS 2026 attendees, the goal is breadth across the cohort (cofounder being one of many match types), and the time horizon is the three months of the program.
+It also does not compete with YC Cofounder Matching. YC Cofounder Matching is for the lifelong commitment, the search anyone is willing to spend a year on. Jumpstart is for the next 90 days, the people inside this cohort whose paths cross yours during the program. Different time horizon, different shape of relationship, different surface area.
+
+It also is not Bookface. Bookface is alumni only and lifelong, fragmented across batches and continents. Jumpstart is open to every accepted SS 2026 attendee from day one and decays gracefully when the cohort disperses. The whole point is the bounded window.
 
 The wedge against networking apps is exact:
 
 - The home is a curated drop, not a directory.
 - There is no infinite scroll, no swipe pile, no follower count.
-- The intro flow is structured (request, accept, contact unlock), not freeform DM.
+- The intro flow is structured (request, accept, both get a single email with contact details and a calendar link), not freeform DM.
 - The AI is the matchmaker, not a chatbot you talk to.
 - Every drop teaches the system. By drop three, your matches are personalized to your taste, not just your tags.
 - The cohort is bounded. Only verified SS 2026 attendees. The smallness is the value.
@@ -101,12 +103,10 @@ Wants other domain peers (rare in the cohort) and the right adjacent collisions 
 In priority order.
 
 1. Help me figure out who in this cohort is actually worth my time.
-2. Give me a reason to message someone, not just a list to browse.
-3. Remember the people I meet so I do not lose them.
-4. Tell me when someone interesting joins the cohort or changes their card.
-5. Translate my vague intent into matches I would not have searched for.
+2. Translate my vague intent into matches I would not have searched for myself.
+3. Give me a reason to message a specific person, with the line already half-written.
 
-The product is built for job 1 first. Everything else is in service of that.
+The product is built for job 1 first. Two and three exist only to serve it.
 
 ## 6. AI-first operating model
 
@@ -159,14 +159,14 @@ Metric: drop open rate, intro request rate per drop, "not relevant" rate (lower 
 Input: user A taps Request Intro on user B's match card. Optional 1 line note.
 AI layer: Safety Classifier reads the note for spam, harassment, tone. Match Explainer writes the recipient-side framing ("here is why we recommended you to A").
 Human role: user B accepts, declines, or saves.
-Output: on accept, contact info exchange unlocked (email + scheduling link), both parties notified.
+Output: on accept, both parties immediately receive a single email with the other person's contact and a calendar link. No intermediate unlock step.
 Feedback loop: meeting confirmation (did this happen) is fed back to W3.
 Stored memory: full request, accept/decline, follow-up status.
 Metric: request to accept rate (target 40%+), accept to actual meeting rate (target 60%+).
 
 ### W5: Post meeting feedback
 
-Input: 48 hours after an unlocked intro, the user gets one prompt, "did you meet?" If yes, "was it useful?" with three buckets (worth my time, neutral, waste).
+Input: 48 hours after an accepted intro, the user gets one prompt, "did you meet?" If yes, "was it useful?" with three buckets (worth my time, neutral, waste).
 AI layer: Feedback Learner agent rolls feedback into per-user taste embeddings.
 Human role: 1 tap response.
 Output: updated taste profile.
@@ -601,16 +601,14 @@ Next best action: edit a field or close.
 
 ## 17. Match types and matching algorithm
 
-The matcher considers these match types per pair. A drop must include at least 2 distinct types to avoid feeling repetitive.
+Four match types in v1. A drop must include at least two distinct types to keep the three matches from feeling like the same person three times.
 
-- Domain peer (same building space, similar stage)
-- Cofounder shape (complementary skills, mutual interest)
-- Technical collaborator (one builds, the other has a problem)
-- GTM collaborator (one ships, the other distributes)
-- Local city match (same city, both going to the same in person event)
-- India to global bridge (one in India, one in SF or another hub, both interested)
-- Weird adjacent collision (different domains, shared shape, surprising)
-- Accountability partner (similar stage, different domains, both solo)
+- Domain peer (same building space, similar stage, mutual learning)
+- Cofounder shape (complementary skills, mutual interest in starting together)
+- Weird adjacent collision (different domains, shared shape, surprising lift)
+- City match (same city or both going to a known event date)
+
+The earlier 8-type list (technical collaborator, GTM collaborator, India bridge, accountability partner) collapsed into these four. Anything more granular is a tag-level signal that feeds the score, not a separate type. Adding more types in v2 only if data shows the four are too coarse.
 
 The score for a candidate B for user A is:
 score(A, B) = w1 * tag_overlap + w2 * intent_compatibility + w3 * embedding_similarity + w4 * cohort_segment_overlap + w5 * intro_fatigue_penalty + w6 * trust_score_floor + w7 * taste_personalization
@@ -771,7 +769,7 @@ Ships in v1.
 - Founder Card (auto-generated, editable)
 - Drop home (3 matches per cycle)
 - Match detail (why + opener + request)
-- Intro request and accept (email-based contact unlock)
+- Intro request and accept (single email to both parties on accept)
 - Browse with tag filter (filter icon, no search bar in v1)
 - You tab (card view, edit, settings)
 - Email notifications (drop ready, intro request, intro accepted, weekly digest)
@@ -936,6 +934,8 @@ A user from outside the cohort signs up via referral chain. Detection: referrals
 A user mass-saves cards then signs up to a competitor product. Mitigation: rate limit Browse, no card export, watermarks.
 
 A user is being harassed via intro requests. Mitigation: block and report flow, classifier reads every intro note, repeat offenders banned.
+
+A high-signal founder gets flooded. Imagine a well-known SS attendee gets 50 incoming requests in week one, ignores 45 of them. Forty-five other founders feel ghosted, half churn. Mitigation has three layers. First, a per-recipient cap of 8 incoming requests per week so the inbox stays human-sized. Second, the Matchmaker reads recipient response history and quietly routes around founders who decline most requests, so they keep getting recommended only to the strongest pair candidates. Third, the recipient never sees a "decline" button as a hard reject, only "save for later", which the sender sees as "not now" instead of "no". The intent is to let attention scarcity exist without amplifying its emotional cost.
 
 ## 30. Open questions before build
 
@@ -1133,8 +1133,8 @@ Drop ready notification (email):
 Match request to recipient:
 > [Sender name] wants to meet you. We recommended you because [reason].
 
-Intro accepted, contact unlocked:
-> [Recipient name] accepted. Here is their email and a calendar link.
+Intro accepted (single email to both):
+> [Recipient name] accepted. Here is their email and a calendar link. They have your details too.
 
 Verification pending:
 > You have provisional access. Full visibility unlocks after we review your acceptance proof. Usually under 24 hours.
