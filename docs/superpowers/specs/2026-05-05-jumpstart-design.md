@@ -21,7 +21,9 @@ Jumpstart is one thing. An AI matchmaker that delivers a small curated list of f
 
 It looks nothing like a networking app. The home is a curated drop, not a directory. There is no swipe pile or social feed. The intro flow is structured (request, accept, contact unlock) and the AI is the matchmaker, not a chatbot you talk to.
 
-It also does not compete with YC Cofounder Matching. The cohort here is bounded to verified SS 2026 attendees, the goal is breadth across the cohort (cofounder being one of many match types), and the time horizon is the three months of the program.
+It also does not compete with YC Cofounder Matching. YC Cofounder Matching is for the lifelong commitment, the search anyone is willing to spend a year on. Jumpstart is for the next 90 days, the people inside this cohort whose paths cross yours during the program. Different time horizon, different shape of relationship, different surface area.
+
+It also is not Bookface. Bookface is alumni only and lifelong, fragmented across batches and continents. Jumpstart is open to every accepted SS 2026 attendee from day one and decays gracefully when the cohort disperses. The whole point is the bounded window.
 
 The wedge against networking apps is exact:
 
