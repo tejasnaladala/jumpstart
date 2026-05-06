@@ -3,6 +3,7 @@ import { safetyClassifier } from "@/lib/agents/safety-classifier";
 import { IntroRequestSchema, jsonError, genericValidationErrors } from "@/lib/api/schema";
 import { requireSession, UnauthorizedError } from "@/lib/auth/session";
 import { checkLimit } from "@/lib/auth/rate-limit";
+import { recordSafetyBlock } from "@/lib/agents/log";
 
 export async function POST(req: Request) {
   let session;
@@ -88,9 +89,9 @@ export async function POST(req: Request) {
   }
 
   if (recommendation === "block" || recommendation === "escalate") {
-    // Server-side log keeps the reasons. Wire body tells the user nothing
-    // useful (no oracle for tuning attacks).
-    console.warn("[safety-block]", { requester_id, recipient_id, risk_score, reasons });
+    // Structured server-side log via the agent log writer. Response body
+    // stays generic (no attacker oracle).
+    void recordSafetyBlock({ requester_id, recipient_id, risk_score, reasons });
     return jsonError(400, "SAFETY_BLOCK", "Your note was flagged. Please rewrite without sales language or external links.");
   }
 

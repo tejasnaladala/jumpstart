@@ -22,6 +22,13 @@ async function ensureDir() {
   if (dirReady) return;
   try {
     await fs.mkdir(LOG_DIR, { recursive: true });
+    // Containment: realpath both the log dir and the project root and
+    // refuse to use the dir if it escapes (symlink trick). Fool CP2 #3.
+    const realLog = await fs.realpath(LOG_DIR);
+    const realRoot = await fs.realpath(process.cwd());
+    if (!realLog.startsWith(realRoot)) {
+      return;
+    }
     dirReady = true;
   } catch {
     // best effort; if we cannot create the dir, log writes silently no-op
@@ -54,6 +61,34 @@ type LogEntry = {
   result: RunResult<unknown>;
   input_summary: string;
 };
+
+// Structured safety-block writer. Used by the intros route when the safety
+// classifier flags or escalates. Goes to the same log file so the founder
+// dashboard sees it without spreading across 5 files.
+export async function recordSafetyBlock(info: {
+  requester_id: string;
+  recipient_id: string;
+  risk_score: number;
+  reasons: string[];
+}): Promise<void> {
+  await ensureDir();
+  if (!dirReady) return;
+  const line =
+    JSON.stringify({
+      ts: new Date().toISOString(),
+      kind: "safety_block",
+      requester_id: info.requester_id,
+      recipient_id: info.recipient_id,
+      risk_score: info.risk_score,
+      reasons: info.reasons,
+    }) + "\n";
+  try {
+    await rotateIfNeeded();
+    await fs.appendFile(LOG_FILE, line, "utf-8");
+  } catch {
+    // never throw from a log writer
+  }
+}
 
 export async function logAgentRun(entry: LogEntry): Promise<void> {
   const supabaseConfigured = Boolean(

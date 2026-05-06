@@ -60,7 +60,7 @@ Write the opener.
     if (j.opener.length > 280) {
       throw new Error("opener over 280 chars");
     }
-    if (j.opener.includes("—")) {
+    if (j.opener.includes("\u2014")) {
       throw new Error("em dash in opener");
     }
     return { opener: j.opener.trim() };

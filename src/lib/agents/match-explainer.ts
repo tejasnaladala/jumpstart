@@ -86,7 +86,7 @@ Write the explanation now.
     if (typeof j.specificity_anchor !== "string" || !j.specificity_anchor.trim()) {
       throw new Error("missing specificity_anchor");
     }
-    if (j.explanation.includes("—")) {
+    if (j.explanation.includes("\u2014")) {
       throw new Error("em dash detected, voice rule violation");
     }
     return { explanation: j.explanation, specificity_anchor: j.specificity_anchor };
