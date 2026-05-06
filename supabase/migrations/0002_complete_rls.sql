@@ -112,9 +112,21 @@ revoke all on agent_logs from authenticated, anon;
 -- INTROS: allow inserts where the requester is the session user, and
 -- updates where the recipient is the session user (for accept/decline).
 
+-- INSERT policy on intros must not just check requester_id; it must also
+-- verify the match exists, belongs to the requester, and that the
+-- recipient_id equals the candidate on that match. Closes Codex challenge
+-- P1 #2 (cold-spam path that bypassed the API ownership check).
 create policy "user requests own intro"
 on intros for insert to authenticated
-with check (requester_id = auth.uid());
+with check (
+  requester_id = auth.uid()
+  and exists (
+    select 1 from matches
+    where matches.id = intros.match_id
+      and matches.user_id = auth.uid()
+      and matches.candidate_user_id = intros.recipient_id
+  )
+);
 
 create policy "recipient updates response"
 on intros for update to authenticated
@@ -139,7 +151,6 @@ on matches for insert to authenticated
 with check (user_id = auth.uid());
 
 -- USERS: read own row, update own row.
-
 alter table users enable row level security;
 
 create policy "users read own user row"
@@ -150,6 +161,45 @@ create policy "users update own user row"
 on users for update to authenticated
 using (id = auth.uid())
 with check (id = auth.uid());
+
+-- Prevent self-promotion: revoke UPDATE on the trust_tier column from
+-- authenticated users. Service role retains full update for admin paths.
+-- Closes Codex challenge P1 #1 (any signed-in user could set their own
+-- trust_tier='verified' and unlock founder_cards visibility).
+revoke update (trust_tier) on users from authenticated;
+
+-- SECURITY DEFINER function that returns whether a target user_id has a
+-- verified-or-peer-vouched trust_tier. Bypasses RLS so the founder_cards
+-- visibility policy can call it without depending on cross-user reads.
+-- Closes Codex CP4 finding #3.
+
+create or replace function public.is_verified_user(target_id uuid)
+returns boolean
+language sql
+security definer
+set search_path = public
+stable
+as $$
+  select exists (
+    select 1 from users
+    where id = target_id
+      and trust_tier in ('verified', 'peer_vouched')
+      and deleted_at is null
+  );
+$$;
+
+revoke all on function public.is_verified_user(uuid) from public;
+grant execute on function public.is_verified_user(uuid) to authenticated;
+
+-- Replace the original founder_cards visibility policy to use the function.
+drop policy if exists "verified can read verified cards" on founder_cards;
+
+create policy "verified can read verified cards"
+on founder_cards for select to authenticated
+using (
+  public.is_verified_user(auth.uid())
+  and public.is_verified_user(founder_cards.user_id)
+);
 
 -- FOUNDER CARDS: ensure the existing "verified can read verified cards"
 -- policy from 0001 stays as the SELECT policy. Add explicit insert on top.
