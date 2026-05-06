@@ -15,6 +15,13 @@ export default {
         accent: "#FF6600", // the iconic YC orange
         "accent-soft": "#FFF0E9", // pale peach for accent backgrounds
         "accent-edge": "#FB651E", // hotter orange for hovers and edges
+        // Espresso scale for dark sections (footer band, hero contrast strips,
+        // big-typography surfaces). Used as the inverted background color.
+        espresso: {
+          DEFAULT: "#2D2417",
+          deep: "#1F1A11",
+          warm: "#3A2C1C",
+        },
         success: "#48B584",
         error: "#E4544B",
       },
@@ -64,6 +71,10 @@ export default {
         shimmer: {
           "0%": { backgroundPosition: "-468px 0" },
           "100%": { backgroundPosition: "468px 0" },
+        },
+        marquee: {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-33.333%)" },
         },
       },
     },

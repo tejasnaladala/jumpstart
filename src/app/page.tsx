@@ -3,6 +3,9 @@ import { FounderCardView } from "@/components/FounderCard";
 import { Pill } from "@/components/primitive/Pill";
 import { Avatar } from "@/components/primitive/Avatar";
 import { MOCK_COHORT } from "@/lib/mock/cohort";
+import { CohortGlobe } from "@/components/CohortGlobe";
+import { Marquee } from "@/components/Marquee";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
 import Link from "next/link";
 
 export default function LandingPage() {
@@ -77,41 +80,48 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Drop preview card, styled as a press-release filing */}
+          {/* Globe + drop preview */}
           <div className="lg:col-span-5">
-            <div className="relative">
-              <div className="absolute -top-2 -left-2 -right-2 -bottom-2 bg-accent-soft rounded-[20px] rotate-1 opacity-60" aria-hidden />
-              <div className="relative surface p-6 rounded-[20px] shadow-hover">
-                <div className="flex items-baseline justify-between mb-2">
-                  <span className="ed-serial">This Wednesday / Drop No. 14</span>
-                  <span className="ed-serial">3 of 3</span>
-                </div>
-                <h3 className="font-display text-2xl text-ink leading-tight">
-                  Your Founder Drop
-                </h3>
-                <div className="ed-rule mt-4 mb-2" />
-                <ul className="row-divide">
-                  {sample.map((c, i) => (
-                    <li key={c.id} className="py-3 first:pt-0 last:pb-0 flex items-start gap-3">
-                      <span className="text-xs font-mono text-muted pt-1.5 w-3">{i + 1}</span>
-                      <Avatar name={c.name} size={36} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-ink">{c.name}</p>
-                        <p className="text-xs text-muted">{c.location}</p>
-                        <p className="text-xs text-ink/70 mt-1 line-clamp-2">
-                          {c.building_summary}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                <div className="border-t border-border mt-3 pt-3 flex items-center justify-between text-xs text-muted">
-                  <span>Drops Wednesday at 9:00 AM</span>
-                  <span className="text-accent font-semibold">Locked for verified attendees</span>
-                </div>
+            <div className="relative flex flex-col items-center gap-6">
+              <div className="relative">
+                <div
+                  aria-hidden
+                  className="absolute -inset-4 rounded-full bg-accent-soft opacity-50 blur-xl"
+                />
+                <CohortGlobe size={420} />
               </div>
+              <p className="ed-serial mt-4">12 anchor cities · 60+ countries verifying</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Espresso marquee band: like the YC SS 2026 footer strip */}
+      <Marquee
+        items={[
+          "Cohort SS 2026",
+          "Weekly drops",
+          "Built by an attendee",
+          "Verified founders only",
+          "Three matches every Wednesday",
+          "Not affiliated with Y Combinator",
+        ]}
+        variant="espresso"
+      />
+
+      {/* Animated counters */}
+      <section className="container-wide py-16 border-b border-border">
+        <p className="text-xxs uppercase tracking-wider text-accent font-semibold ed-serial">
+          By the numbers
+        </p>
+        <h2 className="font-display text-4xl sm:text-5xl mt-3 max-w-3xl">
+          A bounded cohort. A weekly ritual. <span className="italic text-accent">Eight thousand</span> of the world&apos;s best young builders.
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
+          <Stat label="Verified attendees" value={8000} suffix="" />
+          <Stat label="Anchor cities" value={60} suffix="+" />
+          <Stat label="Drops per week" value={3} />
+          <Stat label="Days the cohort exists" value={90} />
         </div>
       </section>
 
@@ -274,6 +284,17 @@ export default function LandingPage() {
         </div>
       </footer>
     </main>
+  );
+}
+
+function Stat({ label, value, suffix = "" }: { label: string; value: number; suffix?: string }) {
+  return (
+    <div className="ed-rule pt-4">
+      <p className="font-display text-5xl sm:text-6xl text-ink leading-none">
+        <AnimatedCounter value={value} suffix={suffix} />
+      </p>
+      <p className="text-xs uppercase tracking-wider text-muted font-semibold mt-3">{label}</p>
+    </div>
   );
 }
 
