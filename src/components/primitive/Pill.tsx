@@ -25,11 +25,11 @@ export function Pill({
       type={interactive ? "button" : undefined}
       onClick={onClick}
       className={cn(
-        "pill",
-        size === "sm" ? "text-xxs px-2 py-px" : "text-xs px-2.5 py-0.5",
+        "pill transition-colors duration-150",
+        size === "sm" ? "text-xxs px-2 py-1" : "text-xs px-2.5 py-1",
         active && "pill-on",
         accent && !active && "pill-accent",
-        interactive && "cursor-pointer hover:border-ink/40",
+        interactive && "cursor-pointer hover:border-ink/40 tap-44",
         className
       )}
     >

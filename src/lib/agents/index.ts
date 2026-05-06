@@ -14,6 +14,7 @@ import { openerDrafter } from "./opener-drafter";
 import { feedbackLearner } from "./feedback-learner";
 import { safetyClassifier } from "./safety-classifier";
 import { cohortAnalyst } from "./cohort-analyst";
+import { reengagementDrafter } from "./reengagement-drafter";
 
 export const AGENTS = {
   onboardingInterviewer,
@@ -24,6 +25,7 @@ export const AGENTS = {
   feedbackLearner,
   safetyClassifier,
   cohortAnalyst,
+  reengagementDrafter,
 } as const;
 
 export type AgentName = keyof typeof AGENTS;

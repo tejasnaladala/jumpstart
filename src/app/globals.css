@@ -11,11 +11,18 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    text-size-adjust: 100%;
   }
 
   body {
     @apply bg-bg text-ink font-sans;
     font-feature-settings: "ss01", "cv01", "cv11";
+    line-height: 1.55; /* readable body line-height per ui-ux-pro-max */
+  }
+
+  /* Body copy line-length cap inside prose blocks */
+  p, li {
+    max-width: 70ch;
   }
 
   ::selection {
@@ -27,6 +34,28 @@
     outline: none;
     box-shadow: theme("boxShadow.focus");
     border-radius: 6px;
+  }
+
+  /* Honor prefers-reduced-motion: all transitions and animations collapse */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Touch target safety: any clickable that is too small for finger taps
+     gets a hit-area expansion via ::before. Apply with `.tap-44` class. */
+  .tap-44 {
+    position: relative;
+  }
+  .tap-44::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    pointer-events: auto;
   }
 }
 

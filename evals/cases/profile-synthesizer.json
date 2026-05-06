@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "description": "Golden cases for Profile Synthesizer. Verifies the agent produces specific, voice-matching card prose without inventing facts.",
+  "cases": [
+    {
+      "id": "synth_hardtech_full_intake",
+      "input": {
+        "identity": {
+          "name": "Tejas N.",
+          "location": "Seattle, going to SF",
+          "oneLine": "Plasmax, autonomous R and D systems for hardtech."
+        },
+        "intent_transcript": [
+          { "role": "interviewer", "content": "What are you building, in your own words?" },
+          { "role": "user", "content": "Plasmax is autonomous R and D agents for plasma and hardtech labs. The system designs experiments, runs them, and iterates without a human in the loop." },
+          { "role": "interviewer", "content": "Who would make SS worth it?" },
+          { "role": "user", "content": "Hardtech founders shipping real things, AI infra people who care about agent reliability, India manufacturing operators, cracked undergrads." },
+          { "role": "interviewer", "content": "What can you uniquely help with?" },
+          { "role": "user", "content": "Hardware prototyping, plasma reactor design, agent orchestration for research, YC application review." },
+          { "role": "interviewer", "content": "Who would waste your time?" },
+          { "role": "user", "content": "People who pitch instead of build, anyone who talks about AI without shipping." }
+        ]
+      },
+      "must_contain_any_in_building": ["plasma", "autonomous", "hardtech", "R and D"],
+      "must_contain_any_in_looking_for": ["hardtech", "AI infra", "India", "undergrad"],
+      "must_not_contain_anywhere": ["—", "vibrant", "groundbreaking", "passionate", "we believe"],
+      "tags_min": 4,
+      "tags_max": 8
+    },
+    {
+      "id": "synth_voice_matches_undergrad",
+      "input": {
+        "identity": {
+          "name": "Ananya V",
+          "location": "Bangalore",
+          "oneLine": "Edtech for Indian high schoolers."
+        },
+        "intent_transcript": [
+          { "role": "user", "content": "AI tutor for Indian school kids. ICSE and CBSE syllabi specifically. I am 19 and solo." },
+          { "role": "user", "content": "Other young founders. Edtech operators. India ops people." },
+          { "role": "user", "content": "Indian school system context, mistakes I have made (a lot), young community building." },
+          { "role": "user", "content": "Pre-product types who only want to talk." }
+        ]
+      },
+      "must_contain_any_in_building": ["edtech", "tutor", "ICSE", "CBSE", "Indian school", "high schooler"],
+      "must_contain_any_in_talk_to_me_if": ["young", "solo", "build", "ship"],
+      "must_not_contain_anywhere": ["—", "leverage", "synergy", "ecosystem"],
+      "tags_min": 3
+    }
+  ]
+}

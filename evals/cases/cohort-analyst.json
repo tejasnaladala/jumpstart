@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "description": "Golden cases for Cohort Analyst. Verifies digest stays under 200 words, opens with a verdict, contains an explicit numbers section, and produces actionable callouts.",
+  "cases": [
+    {
+      "id": "analyst_normal_day",
+      "input": {
+        "date": "2026-05-12",
+        "cohort_metrics": {
+          "verified_total": 312,
+          "drops_sent_yesterday": 312,
+          "intros_requested_yesterday": 84,
+          "intros_accepted_yesterday": 51,
+          "meetings_useful_pct_7d": 67,
+          "moderation_queue": 2
+        },
+        "weekly_top_tags": [
+          { "tag": "ai-agents", "count": 142 },
+          { "tag": "hardtech", "count": 89 },
+          { "tag": "india", "count": 73 }
+        ],
+        "flagged_anomalies": [],
+        "prior_summary": "Quiet weekend. Mid-week cycle continues."
+      },
+      "digest_max_words": 200,
+      "must_contain_any": ["312", "intro", "accept"],
+      "must_not_contain": ["—", "dear founder", "let me know if"],
+      "callouts_max": 3
+    },
+    {
+      "id": "analyst_anomaly_day",
+      "input": {
+        "date": "2026-05-13",
+        "cohort_metrics": {
+          "verified_total": 318,
+          "drops_sent_yesterday": 318,
+          "intros_requested_yesterday": 240,
+          "intros_accepted_yesterday": 38,
+          "meetings_useful_pct_7d": 64,
+          "moderation_queue": 12
+        },
+        "weekly_top_tags": [
+          { "tag": "ai-agents", "count": 158 }
+        ],
+        "flagged_anomalies": [
+          "intro request rate 3x baseline, possible scrape attempt",
+          "single user u_x123 sent 47 intros in 2 hours"
+        ],
+        "prior_summary": "Steady mid-week."
+      },
+      "digest_max_words": 220,
+      "must_contain_any": ["240", "scrape", "u_x123", "anomaly"],
+      "callouts_min": 1,
+      "callouts_max": 3
+    },
+    {
+      "id": "analyst_quiet_day",
+      "input": {
+        "date": "2026-05-14",
+        "cohort_metrics": {
+          "verified_total": 320,
+          "drops_sent_yesterday": 0,
+          "intros_requested_yesterday": 4,
+          "intros_accepted_yesterday": 2,
+          "meetings_useful_pct_7d": null,
+          "moderation_queue": 0
+        },
+        "weekly_top_tags": [],
+        "flagged_anomalies": [],
+        "prior_summary": "Yesterday: 51 accepted intros."
+      },
+      "digest_max_words": 100,
+      "must_contain_any": ["slow", "quiet", "nothing", "act"],
+      "callouts_max": 2
+    }
+  ]
+}

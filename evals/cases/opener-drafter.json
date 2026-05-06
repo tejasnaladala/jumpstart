@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "description": "Golden cases for Opener Drafter. Verifies length, voice anchor adherence, shared-thread reference, no em dashes, and a clear ask.",
+  "cases": [
+    {
+      "id": "opener_domain_peer_evals",
+      "input": {
+        "user_voice_anchor": "Building plasmax, autonomous R and D systems. Talk to me if you ship things and hate generic startup advice.",
+        "candidate_first_name": "Maya",
+        "candidate_building": "Eval infrastructure for AI agents",
+        "match_type": "domain_peer",
+        "shared_thread": "agent reliability from opposite angles, you are research, she is enterprise"
+      },
+      "must_contain_any": ["evals", "agent", "reliability", "research"],
+      "must_not_contain": ["—", "Hi Maya, my name is", "I am", "Greetings"],
+      "must_have_call_to_action": true,
+      "max_chars": 280
+    },
+    {
+      "id": "opener_cofounder_shape",
+      "input": {
+        "user_voice_anchor": "Solo founder, biotech wet lab autonomy. Direct, ships fast.",
+        "candidate_first_name": "Ren",
+        "candidate_building": "Robotics plus LLMs for warehouse picking",
+        "match_type": "cofounder_shape",
+        "shared_thread": "manipulation policy plus LLM-as-planner"
+      },
+      "must_contain_any": ["cofounder", "complement", "team", "build together", "conversation"],
+      "must_not_contain": ["—", "casual chat", "let's grab a coffee maybe sometime"],
+      "max_chars": 280
+    },
+    {
+      "id": "opener_city_match",
+      "input": {
+        "user_voice_anchor": "Going to SF, hardtech, looking for in-person collisions.",
+        "candidate_first_name": "Lior",
+        "candidate_building": "Plasma reactor design tooling for fusion",
+        "match_type": "city_match",
+        "shared_thread": "plasma physics plus simulation tooling, both in SF"
+      },
+      "must_contain_any": ["SF", "coffee", "in person", "this week", "your neighborhood"],
+      "must_not_contain": ["—", "phone call only", "remote only"],
+      "max_chars": 280
+    }
+  ]
+}
