@@ -30,7 +30,7 @@ export default function IdentityStep() {
         <p className="text-xxs uppercase tracking-wider text-accent font-semibold mt-3">
           Step 1 of 4
         </p>
-        <h1 className="text-2xl font-semibold tracking-tight mt-1">Who are you?</h1>
+        <h1 className="font-display text-3xl text-ink leading-tight mt-1">Who are you?</h1>
         <p className="text-sm text-muted mt-2">
           Three lines. Free text. We will use these to build your Founder Card on the next screen.
         </p>

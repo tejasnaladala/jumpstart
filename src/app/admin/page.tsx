@@ -24,7 +24,7 @@ export default function AdminHome() {
       <p className="text-xxs uppercase tracking-wider text-accent font-semibold">
         CohortOS
       </p>
-      <h1 className="text-3xl font-semibold tracking-tight mt-1">Admin home</h1>
+      <h1 className="font-display text-4xl text-ink leading-tight mt-1">Admin home</h1>
       <p className="text-muted text-sm mt-2 max-w-2xl">
         Founder-only operational surface. Read-mostly. The agents do the work,
         you review the output.

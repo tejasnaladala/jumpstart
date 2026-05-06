@@ -25,7 +25,7 @@ export default function CohortDashboardPage() {
   return (
     <div className="container-wide">
       <p className="text-xxs uppercase tracking-wider text-accent font-semibold">CohortOS</p>
-      <h1 className="text-3xl font-semibold tracking-tight mt-1">Cohort dashboard</h1>
+      <h1 className="font-display text-4xl text-ink leading-tight mt-1">Cohort dashboard</h1>
       <p className="text-muted text-sm mt-2 max-w-2xl">
         Live numbers across the verified cohort. Stub mode renders from the mock fixture.
         Production uses Cohort Analyst plus a read replica of Supabase.

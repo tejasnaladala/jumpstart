@@ -15,7 +15,7 @@ export default function AppError({
       <TopBar back={{ href: "/drop" }} title="Hit a snag" />
       <section className="container-app pt-8 pb-10 text-center">
         <p className="text-xxs uppercase tracking-wider text-error font-semibold">Error</p>
-        <h1 className="text-xl font-semibold mt-2">This screen failed to load.</h1>
+        <h1 className="font-display text-2xl text-ink leading-tight mt-2">This screen failed to load.</h1>
         <p className="text-muted text-sm mt-3 leading-relaxed">
           The rest of the app is fine. Try again or head back to your Drop.
         </p>

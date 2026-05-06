@@ -41,7 +41,7 @@ export default function ModerationQueuePage() {
           <p className="text-xxs uppercase tracking-wider text-accent font-semibold">
             Trust and safety
           </p>
-          <h1 className="text-3xl font-semibold tracking-tight mt-1">Moderation queue</h1>
+          <h1 className="font-display text-4xl text-ink leading-tight mt-1">Moderation queue</h1>
         </div>
         <div className="flex items-center gap-2 text-xs text-muted">
           <span>SLA: under 4 hours</span>

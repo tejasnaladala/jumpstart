@@ -23,8 +23,7 @@ export function MatchCard({ match, index }: Props) {
     <Link
       href={`/match/${match.id}`}
       className={cn(
-        "block surface p-4 transition-shadow duration-200",
-        "hover:shadow-hover"
+        "block surface p-4 card-interactive"
       )}
     >
       <div className="flex items-start gap-3">

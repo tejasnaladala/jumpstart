@@ -12,7 +12,7 @@ export default function NotFound() {
       <div className="flex-1 flex items-center justify-center px-5 py-12">
         <div className="text-center max-w-md">
           <p className="text-xxs uppercase tracking-wider text-accent font-semibold">404</p>
-          <h1 className="text-3xl font-semibold tracking-tight mt-2">Not in the cohort</h1>
+          <h1 className="font-display text-4xl text-ink leading-tight mt-2">Not in the cohort</h1>
           <p className="text-muted mt-3">
             That page either does not exist or you do not have access. Head back to the Drop.
           </p>

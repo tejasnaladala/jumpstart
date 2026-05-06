@@ -1,4 +1,5 @@
 import { BottomNav } from "@/components/BottomNav";
+import { RouteTransition } from "@/components/RouteTransition";
 import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 
@@ -14,7 +15,7 @@ export default async function AppShellLayout({ children }: { children: React.Rea
 
   return (
     <div className="min-h-svh bg-bg pb-24">
-      {children}
+      <RouteTransition>{children}</RouteTransition>
       <BottomNav />
     </div>
   );

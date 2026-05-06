@@ -42,6 +42,19 @@ export default function BrowsePage() {
         }
       />
 
+      <div className="container-app pt-4">
+        <div className="ed-rule pt-3 flex items-baseline justify-between gap-4">
+          <span className="ed-serial">
+            § Index / {filtered.length} of {MOCK_COHORT.length}
+          </span>
+          <span className="ed-serial hidden sm:inline">
+            {selected.length === 0
+              ? "All segments"
+              : `${selected.length} filter${selected.length === 1 ? "" : "s"} on`}
+          </span>
+        </div>
+      </div>
+
       {selected.length > 0 ? (
         <div className="container-app pt-3">
           <div className="flex flex-wrap gap-1.5">
@@ -67,11 +80,21 @@ export default function BrowsePage() {
           </div>
         ) : (
           <ul className="flex flex-col gap-3">
-            {filtered.map((c) => (
+            {filtered.map((c, i) => (
               <li key={c.id}>
-                <Link href={`/browse/${c.id}`} className="block transition-all hover:-translate-y-px">
+                <Link
+                  href={`/browse/${c.id}`}
+                  className="block card-interactive rounded-lg"
+                >
                   <FounderCardView card={c} variant="compact" />
                 </Link>
+                {(i + 1) % 6 === 0 && i < filtered.length - 1 ? (
+                  <div className="ed-rule pt-3 mt-3">
+                    <span className="ed-serial">
+                      Batch {String(Math.floor(i / 6) + 1).padStart(2, "0")} / {String(Math.floor(filtered.length / 6) + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                ) : null}
               </li>
             ))}
           </ul>
