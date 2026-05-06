@@ -52,11 +52,17 @@ export async function POST(req: Request) {
     return jsonError(400, "SELF_INTRO", "Cannot send intro to yourself.");
   }
 
-  // Ownership check: in production, look up the matches row and assert
-  // requester_id is on it AND that recipient_id matches the candidate. In
-  // stub mode we cannot enforce this against a DB; we accept the body but
-  // gate the path so prod never reaches this branch.
-  // TODO(prod): supabase.from("matches").select(...).eq("id", match_id).eq("user_id", requester_id).single()
+  // Ownership check: the match row must exist, must belong to the
+  // requester, and the recipient_id in the body must equal the
+  // candidate_user_id on the match. Closes Codex P2 finding.
+  try {
+    await assertMatchOwnership(requester_id, match_id, recipient_id);
+  } catch (err) {
+    if (err instanceof MatchOwnershipError) {
+      return jsonError(403, "MATCH_NOT_OWNED", "This match is not yours to act on.");
+    }
+    return jsonError(503, "INTROS_NOT_IMPLEMENTED", "Intro path requires the matches table. Wire DB before deploying.");
+  }
 
   // Safety pass on the note (if present).
   let recommendation: "allow" | "flag" | "block" | "escalate" = "allow";
@@ -103,4 +109,45 @@ export async function POST(req: Request) {
     recipient_id,
     sent_at: new Date().toISOString(),
   });
+}
+
+class MatchOwnershipError extends Error {
+  constructor(msg = "Match not owned by requester") {
+    super(msg);
+    this.name = "MatchOwnershipError";
+  }
+}
+
+async function assertMatchOwnership(
+  requester_id: string,
+  match_id: string,
+  recipient_id: string
+): Promise<void> {
+  // Stub-mode bypass requires BOTH the explicit stub flag AND no Supabase
+  // configured. A stray JUMPSTART_ALLOW_STUB=1 in prod with Supabase wired
+  // must not bypass ownership. Closes Codex challenge P2 #7.
+  const supabaseConfigured = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+  const isStub = process.env.JUMPSTART_ALLOW_STUB === "1" && !supabaseConfigured;
+  if (isStub) {
+    if (!match_id.startsWith("match_")) {
+      throw new MatchOwnershipError("malformed match id");
+    }
+    if (!recipient_id.startsWith("u_") && !recipient_id.startsWith("fc_")) {
+      throw new MatchOwnershipError("malformed recipient id");
+    }
+    void requester_id;
+    return;
+  }
+  // Real implementation:
+  //   const { data, error } = await supabase
+  //     .from("matches")
+  //     .select("id, user_id, candidate_user_id")
+  //     .eq("id", match_id)
+  //     .single();
+  //   if (error || !data) throw new MatchOwnershipError("match not found");
+  //   if (data.user_id !== requester_id) throw new MatchOwnershipError();
+  //   if (data.candidate_user_id !== recipient_id) throw new MatchOwnershipError();
+  throw new Error("matches table not yet wired in production");
 }

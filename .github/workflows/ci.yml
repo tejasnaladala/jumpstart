@@ -33,10 +33,11 @@ jobs:
           bun-version: latest
       - name: install
         run: bun install
-      - name: agent evals (stub mode if no key)
+      - name: agent evals (stub mode if no key, strict on regressions)
         run: bun run eval
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          STRICT: "1"
 
   e2e:
     runs-on: ubuntu-latest

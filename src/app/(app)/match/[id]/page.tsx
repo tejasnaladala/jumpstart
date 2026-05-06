@@ -45,12 +45,38 @@ export default function MatchDetailPage() {
   }
 
   async function sendRequest() {
+    if (!match) return;
     setSending(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setSending(false);
-    setRequestOpen(false);
-    setRequested(true);
-    toast.push("Request sent. We will email you when they accept.", "success");
+    try {
+      const res = await fetch("/api/intros", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          match_id: match.id,
+          recipient_id: match.candidate.user_id,
+          note: note.trim(),
+        }),
+      });
+      const body = await res.json();
+      if (!res.ok) {
+        const code = body.code as string | undefined;
+        if (code === "SAFETY_BLOCK") {
+          toast.push("Your note was flagged. Try without sales language or links.", "error");
+        } else if (code === "RATE_LIMITED") {
+          toast.push("Too many requests right now. Try later.", "error");
+        } else {
+          toast.push(body.error || "Could not send the request.", "error");
+        }
+        return;
+      }
+      setRequestOpen(false);
+      setRequested(true);
+      toast.push("Request sent. We will email you when they accept.", "success");
+    } catch {
+      toast.push("Network issue. Try again.", "error");
+    } finally {
+      setSending(false);
+    }
   }
 
   const overlapTags = useMemo(() => {

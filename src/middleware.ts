@@ -10,7 +10,11 @@
 
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_API_ROUTES = ["/api/health"];
+// Routes that bypass the cookie-presence check. /api/health is public.
+// /api/cron/* uses CRON_SECRET bearer auth in the route handler instead of
+// session cookies, so the middleware must not 401 it (Vercel Cron requests
+// carry an Authorization Bearer header, not a Supabase auth cookie).
+const PUBLIC_API_ROUTES = ["/api/health", "/api/cron"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -40,9 +44,12 @@ export async function middleware(req: NextRequest) {
 
   // Fast cookie presence check. This is NOT real auth; the route handler
   // calls requireSession() which validates the cookie with Supabase.
+  // Supabase SSR can chunk auth cookies as `sb-...-auth-token.0`,
+  // `sb-...-auth-token.1`, so the suffix check accepts both `-auth-token`
+  // and `-auth-token.<n>`. Closes Codex challenge P2 #8.
   const hasAuthCookie = req.cookies
     .getAll()
-    .some((c) => c.name.startsWith("sb-") && c.name.endsWith("-auth-token"));
+    .some((c) => c.name.startsWith("sb-") && /-auth-token(?:\.\d+)?$/.test(c.name));
 
   if (!hasAuthCookie) {
     return NextResponse.json(

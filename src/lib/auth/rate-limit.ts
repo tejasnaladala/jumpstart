@@ -143,6 +143,14 @@ export async function checkLimit(
       help: conf.help,
     };
   }
+  // Hard guard: production must use Upstash. The in-memory limiter is
+  // bypassable across serverless cold starts and instances. Closes Codex
+  // challenge P2 #9.
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "Upstash is required in production. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN, or set NODE_ENV != 'production' for local dev."
+    );
+  }
   const allowed = await memCheck(key, identifier);
   const bucket = memBuckets.get(`${key}:${identifier}`) ?? [];
   return {

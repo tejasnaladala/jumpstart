@@ -1,6 +1,6 @@
 -- Jumpstart initial schema. Section 18 of docs/superpowers/specs/2026-05-05-jumpstart-design.md.
 
-create extension if not exists pgvector;
+create extension if not exists vector;
 
 -- ENUMS
 
