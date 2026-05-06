@@ -2,6 +2,9 @@
 import { Button } from "@/components/primitive/Button";
 import { Textarea } from "@/components/primitive/Input";
 import { StepDots } from "@/components/ProgressBar";
+import { DraftIndicator } from "@/components/primitive/DraftIndicator";
+import { Kbd } from "@/components/primitive/Kbd";
+import { useDraftState } from "@/lib/hooks/useDraftState";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
@@ -28,9 +31,19 @@ const QUESTIONS = [
   },
 ];
 
+type Answers = Record<string, string>;
+
 export default function IntentInterviewStep() {
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  // Auto-saved drafts: every keystroke debounce-saves to localStorage so a
+  // mid-flow refresh or accidental nav-away doesn't lose the user's answers.
+  // Hydrates on mount: if a previous session was abandoned mid-onboarding,
+  // the user picks up where they left off.
+  const [answers, setAnswers, draftStatus] = useDraftState<Answers>(
+    "jumpstart.onboarding.intent",
+    {},
+    { debounceMs: 300 }
+  );
   const [thinking, setThinking] = useState(false);
   const router = useRouter();
   const taRef = useRef<HTMLTextAreaElement>(null);
@@ -50,9 +63,10 @@ export default function IntentInterviewStep() {
     if (step < QUESTIONS.length - 1) {
       setStep(step + 1);
     } else {
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("jumpstart.onboarding.intent", JSON.stringify(answers));
-      }
+      // Final submit. The draft is already in localStorage via useDraftState;
+      // we keep it through to /onboarding/card so the next step can read it
+      // and pre-fill the founder card draft. /onboarding/card clears the
+      // intent draft after a successful card save.
       router.push("/onboarding/card");
     }
   }
@@ -108,8 +122,16 @@ export default function IntentInterviewStep() {
         </div>
       </div>
       <div className="border-t border-border bg-surface sticky bottom-0">
-        <div className="container-app py-3 flex items-center justify-between">
-          <span className="text-xs text-muted">⌘ + Enter to continue</span>
+        <div className="container-app py-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="text-xs text-muted whitespace-nowrap inline-flex items-center gap-1.5">
+              <Kbd>⌘</Kbd>
+              <span className="opacity-60">+</span>
+              <Kbd>↵</Kbd>
+              <span className="ml-1">to continue</span>
+            </span>
+            <DraftIndicator status={draftStatus} className="hidden sm:inline-flex" />
+          </div>
           <Button onClick={next} disabled={!answer.trim()} loading={thinking}>
             {step < QUESTIONS.length - 1 ? "Next question" : "Build my card"}
           </Button>

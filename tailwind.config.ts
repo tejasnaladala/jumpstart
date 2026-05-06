@@ -5,7 +5,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Pulled from the YC Startup School 2026 events stylesheet
+        // == YC Startup School 2026 base palette ==
+        // Pulled directly from the YC SS 2026 events stylesheet
         // (bookface-static.ycombinator.com/vite/assets/tailwind-*.css).
         bg: "#F4F1DB", // warm cream, the SS hero background
         surface: "#FDFDF8", // pale off-white for cards and sheets
@@ -15,15 +16,32 @@ export default {
         accent: "#FF6600", // the iconic YC orange
         "accent-soft": "#FFF0E9", // pale peach for accent backgrounds
         "accent-edge": "#FB651E", // hotter orange for hovers and edges
-        // Espresso scale for dark sections (footer band, hero contrast strips,
-        // big-typography surfaces). Used as the inverted background color.
+        success: "#48B584",
+        error: "#E4544B",
+
+        // == Jumpstart brand extensions (NOT from YC palette) ==
+        // These are extra shades layered on top of the YC base for editorial
+        // depth. Inspired by huashu-design (Chinese editorial restraint,
+        // ink-stamp orange) and taste-skill (espresso depth scale, layered
+        // surfaces). They are derived from the YC base hues, not introduced
+        // as new colors. If you want a stricter YC-only render, prefer the
+        // base tokens above.
+        ivory: "#F8F5E3", // half-shade lighter than bg for layered cards
+        "surface-deep": "#FFFCEE", // contrast surface for stacked-card depth
+        "muted-soft": "#6B5840", // lighter brown for secondary chrome
+        "border-strong": "#D9D2B0", // stronger divider for editorial punctuation
+        stamp: "#C44C00", // deep ink-stamp orange (huashu seal motif)
+
+        // == Espresso scale ==
+        // Dark inverted-surface used in CTA blocks, marquee bands, and
+        // dark-mode elements. The base #2D2417 is derived to read warm
+        // alongside the YC cream. Three sub-shades give layered depth.
         espresso: {
           DEFAULT: "#2D2417",
           deep: "#1F1A11",
           warm: "#3A2C1C",
+          dust: "#4A3B2A", // lightest, for inset dark-on-dark elements
         },
-        success: "#48B584",
-        error: "#E4544B",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],

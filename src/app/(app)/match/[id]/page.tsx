@@ -6,6 +6,8 @@ import { Button } from "@/components/primitive/Button";
 import { Sheet } from "@/components/primitive/Sheet";
 import { Textarea } from "@/components/primitive/Input";
 import { useToast } from "@/components/primitive/Toast";
+import { DraftIndicator } from "@/components/primitive/DraftIndicator";
+import { useDraftState } from "@/lib/hooks/useDraftState";
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { loadMe } from "@/lib/mock/me";
@@ -20,7 +22,14 @@ export default function MatchDetailPage() {
   const [match, setMatch] = useState<Match | null>(null);
   const [opener, setOpener] = useState("");
   const [requestOpen, setRequestOpen] = useState(false);
-  const [note, setNote] = useState("");
+  // Note (the personalized intro request body) is auto-saved per-match so a
+  // user typing a thoughtful opener doesn't lose it on accidental nav-away.
+  // Keyed by match id so each conversation has its own draft.
+  const [note, setNote, noteStatus, clearNote] = useDraftState<string>(
+    `jumpstart.intro.note.${params.id}`,
+    "",
+    { debounceMs: 350, maxAgeMs: 7 * 24 * 60 * 60 * 1000 }
+  );
   const [sending, setSending] = useState(false);
   const [requested, setRequested] = useState(false);
 
@@ -71,6 +80,9 @@ export default function MatchDetailPage() {
       }
       setRequestOpen(false);
       setRequested(true);
+      // Successful send: clear the auto-saved draft so it doesn't haunt
+      // the next time this match is opened.
+      clearNote();
       toast.push("Request sent. We will email you when they accept.", "success");
     } catch {
       toast.push("Network issue. Try again.", "error");
@@ -240,6 +252,12 @@ export default function MatchDetailPage() {
           value={note}
           onChange={(e) => setNote(e.target.value)}
         />
+        <div className="flex items-center justify-between gap-2 mt-2">
+          <DraftIndicator status={noteStatus} />
+          <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-muted">
+            Auto-saved per match
+          </span>
+        </div>
         <p className="text-xs text-muted mt-3 leading-relaxed">
           The Safety Classifier reads every intro note before it sends. Spam, harassment, and
           obvious fakes get flagged.
