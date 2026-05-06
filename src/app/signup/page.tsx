@@ -50,6 +50,8 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              maxLength={120}
+              showCounter
             />
             <Input
               label="LinkedIn URL"
@@ -58,6 +60,8 @@ export default function SignupPage() {
               value={linkedin}
               onChange={(e) => setLinkedin(e.target.value)}
               hint="Used as a soft verification signal alongside your acceptance email."
+              maxLength={200}
+              showCounter
             />
             <Button type="submit" size="lg" loading={loading} block>
               Send magic link

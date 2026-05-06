@@ -98,12 +98,16 @@ export default function VerificationStep() {
             value={emailSubject}
             onChange={(e) => set("emailSubject", e.target.value)}
             hint="The subject line of the YC email confirming your acceptance."
+            maxLength={120}
+            showCounter
           />
           <Input
             label="Referral code (optional)"
             placeholder="From a verified attendee"
             value={referral}
             onChange={(e) => set("referral", e.target.value)}
+            maxLength={40}
+            showCounter
           />
         </div>
 

@@ -6,9 +6,14 @@ import { DraftIndicator } from "@/components/primitive/DraftIndicator";
 import { useDraftState } from "@/lib/hooks/useDraftState";
 import { useRouter } from "next/navigation";
 
-type IdentityDraft = { name: string; location: string; oneLine: string };
+type IdentityDraft = {
+  name: string;
+  location: string;
+  oneLine: string;
+  publicLink?: string;
+};
 
-const EMPTY: IdentityDraft = { name: "", location: "", oneLine: "" };
+const EMPTY: IdentityDraft = { name: "", location: "", oneLine: "", publicLink: "" };
 
 export default function IdentityStep() {
   // Auto-save every keystroke so a refresh on step 1 does not lose the
@@ -53,6 +58,8 @@ export default function IdentityStep() {
             value={draft.name}
             onChange={(e) => set("name", e.target.value)}
             autoFocus
+            maxLength={60}
+            showCounter
           />
           <Input
             label="Where you are"
@@ -60,12 +67,25 @@ export default function IdentityStep() {
             value={draft.location}
             onChange={(e) => set("location", e.target.value)}
             hint="Example: Seattle, going to SF"
+            maxLength={80}
+            showCounter
           />
           <Input
             label="One line on what you are building"
             placeholder="Plasmax. Autonomous R and D systems for hardtech."
             value={draft.oneLine}
             onChange={(e) => set("oneLine", e.target.value)}
+            maxLength={140}
+            showCounter
+          />
+          <Input
+            label="Public link (optional)"
+            placeholder="linkedin.com/in/you, or your portfolio"
+            value={draft.publicLink || ""}
+            onChange={(e) => set("publicLink", e.target.value)}
+            hint="Shows on your Founder Pass so people you send manual invites can verify you on a third surface."
+            maxLength={120}
+            showCounter
           />
         </div>
       </div>

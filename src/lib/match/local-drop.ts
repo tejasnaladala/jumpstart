@@ -46,18 +46,38 @@ const EXPLAIN_TEMPLATES: Record<MatchType, (m: FounderCard, o: FounderCard) => s
     `${o.name.split(" ")[0]} is in the same city as you and going to overlapping in-person things. Easiest possible coffee, the kind of intro that tends to actually happen rather than sit in a saved list forever.`,
 };
 
+// Humanized opener templates. Per user feedback ("AI generated feel"),
+// these are written to sound like an actual founder typing on a Saturday
+// morning. No "I came across your card", no "Curious if a quick chat
+// makes sense for you", no "30 min sometime soon" templated phrasing.
+// Each opener names a specific shared thing and proposes one concrete
+// next step (call before SS, or in-person at the event). 50 words or
+// fewer to respect the recipient's time.
 const OPENER_TEMPLATES: Record<MatchType, (m: FounderCard, o: FounderCard) => string> = {
   domain_peer: (me, o) => {
-    const overlap = me.tags.filter((t) => o.tags.includes(t))[0] || "this space";
-    return `Saw your work on ${overlap}. Building adjacent stuff and would love to compare notes on what you have learned in the last 90 days. 30 min coffee or call?`;
+    const overlap = me.tags.filter((t) => o.tags.includes(t))[0];
+    const firstName = o.name.split(" ")[0] || o.name;
+    if (overlap) {
+      return `${firstName} - we both put ${overlap.replace(/-/g, " ")} on our cards. I'd love to compare notes for 20 min before SS. Free this week or next?`;
+    }
+    return `${firstName} - the way you described what you're building grabbed me. Worth a 20-min call before SS? Happy to do it whenever works for you.`;
   },
-  cofounder_shape: (me, o) =>
-    `Both of us are looking for a cofounder and our work has interesting overlap. Open to a real conversation about whether there is something here? No pressure, just a serious chat.`,
-  weird_adjacent: (me, o) =>
-    `Our domains do not obviously overlap, which is exactly why I think a conversation would be useful. Free for 30 min this week?`,
+  cofounder_shape: (me, o) => {
+    const firstName = o.name.split(" ")[0] || o.name;
+    return `${firstName} - we're both looking for a cofounder and the domains line up. I'd rather find out fast than waste either of our time, so a real call this week or next?`;
+  },
+  weird_adjacent: (me, o) => {
+    const firstName = o.name.split(" ")[0] || o.name;
+    const theirTag = o.tags.find((t) => !me.tags.includes(t)) || o.tags[0];
+    if (theirTag) {
+      return `${firstName} - your work on ${theirTag.replace(/-/g, " ")} is nowhere near my space, which is the whole reason I want to talk. The non-obvious calls are the ones I learn most from. 20 min?`;
+    }
+    return `${firstName} - we don't obviously overlap, which is exactly why I think a call would be worth it. The non-obvious matches tend to be the best ones. 20 min this week?`;
+  },
   city_match: (me, o) => {
+    const firstName = o.name.split(" ")[0] || o.name;
     const city = locationCity(o.location).split(" ").map((w) => w[0]?.toUpperCase() + w.slice(1)).join(" ");
-    return `Both in ${city}. Coffee this week? Pick a place near you, I will come to you.`;
+    return `${firstName} - we're both in ${city}. Coffee this week? Pick a spot near you, I'll come to you. Or grab 15 min at SS if you'd rather wait.`;
   },
 };
 

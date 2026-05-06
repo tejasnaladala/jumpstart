@@ -22,9 +22,40 @@ export default function CardReviewStep() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
-      const id = JSON.parse(window.localStorage.getItem("jumpstart.onboarding.identity") || "{}");
-      const ver = JSON.parse(window.localStorage.getItem("jumpstart.onboarding.verification") || "{}");
-      const intent = JSON.parse(window.localStorage.getItem("jumpstart.onboarding.intent") || "{}");
+      // useDraftState wraps stored state in a versioned envelope:
+      // { v: 1, ts, data }. Unwrap before synthesis. Falls back to {}
+      // when the key is missing or the envelope is unparseable.
+      const readDraft = (key: string): Record<string, unknown> => {
+        const raw = window.localStorage.getItem(key);
+        if (!raw) return {};
+        try {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === "object" && "v" in parsed && "data" in parsed) {
+            return (parsed.data as Record<string, unknown>) ?? {};
+          }
+          // legacy un-enveloped format (intent step before useDraftState
+          // landed). Treat as the data directly.
+          return parsed as Record<string, unknown>;
+        } catch {
+          return {};
+        }
+      };
+      const id = readDraft("jumpstart.onboarding.identity") as {
+        name?: string;
+        location?: string;
+        oneLine?: string;
+        publicLink?: string;
+      };
+      const ver = readDraft("jumpstart.onboarding.verification") as {
+        opts?: {
+          sf?: boolean;
+          india?: boolean;
+          remote?: boolean;
+          asyncOk?: boolean;
+          inPerson?: boolean;
+        };
+      };
+      const intent = readDraft("jumpstart.onboarding.intent") as Record<string, string>;
       const synth = synthesizeCardLocal({ identity: id, verification: ver, intent });
       const tags = extractTags({ identity: id, intent });
       setCard({
@@ -41,6 +72,9 @@ export default function CardReviewStep() {
         can_help_with: synth.can_help_with,
         talk_to_me_if: synth.talk_to_me_if,
         tags: tags.length ? tags : DEFAULT_ME.tags,
+        // Public link survives from the identity step into the saved card
+        // and renders on the Founder Pass.
+        public_link: id.publicLink || undefined,
         trust_tier: "provisional",
         updated_at: new Date().toISOString(),
       });
@@ -77,7 +111,7 @@ export default function CardReviewStep() {
             so the user sees their admit-one ticket take shape during
             onboarding rather than waiting until /you. Closes DX top fix #5. */}
         <div className="mt-6 mb-8">
-          <FounderPass card={card} showCardLines={false} />
+          <FounderPass card={card} />
         </div>
 
         <p className="ed-serial mb-3">Edit the four lines below</p>
@@ -174,7 +208,13 @@ function EditableSection({
         </button>
       </div>
       {editing ? (
-        <Textarea value={value} onChange={(e) => onChange(e.target.value)} rows={3} />
+        <Textarea
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          rows={3}
+          maxLength={220}
+          showCounter
+        />
       ) : (
         <p className="text-sm text-ink leading-relaxed">{value || <span className="text-muted italic">No answer yet.</span>}</p>
       )}

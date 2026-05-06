@@ -32,6 +32,11 @@ export type FounderCard = {
   tags: string[];
   intents: Intent[];
   trust_tier: TrustTier;
+  // Optional public link (LinkedIn URL, personal site, or portfolio).
+  // Renders on the Founder Pass as a discrete mono-caps line. Useful for
+  // manual invites where a recipient lands on /pass/<user_id> and wants
+  // to verify the sender on a third surface.
+  public_link?: string;
   updated_at: string;
 };
 

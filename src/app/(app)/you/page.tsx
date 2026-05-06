@@ -25,6 +25,42 @@ export default function YouPage() {
     router.push("/");
   }
 
+  // Build the public Pass URL using the user's card id (or "me" as a
+  // dev fallback). On real prod this would be a stable user_id.
+  function getPassUrl() {
+    if (typeof window === "undefined") return "";
+    const id = card?.user_id || card?.id || "me";
+    return `${window.location.origin}/pass/${id}`;
+  }
+
+  // Manual invite: copies the public Pass URL to the clipboard so the
+  // user can DM / email / paste it anywhere. The recipient lands on a
+  // public read-only Pass with a "Get my own pass" CTA back to /signup.
+  async function shareMyPass() {
+    const url = getPassUrl();
+    if (!url) return;
+    // Prefer Web Share API on mobile so iOS/Android present the native
+    // share sheet (Messages, WhatsApp, mail, etc). Fall back to clipboard.
+    if (typeof navigator !== "undefined" && "share" in navigator) {
+      try {
+        await navigator.share({
+          title: "My Founder Pass",
+          text: `${card?.name?.split(" ")[0] ?? "I"} sent you a Founder Pass via Jumpstart.`,
+          url,
+        });
+        return;
+      } catch {
+        // user cancelled the share sheet; fall through to clipboard copy
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.push("Pass link copied. Paste it anywhere.", "success");
+    } catch {
+      toast.push("Could not copy. Long-press the URL bar to copy manually.", "error");
+    }
+  }
+
   if (!card) {
     return (
       <>
@@ -52,6 +88,36 @@ export default function YouPage() {
           <span className="ed-serial hidden sm:inline">Editable below</span>
         </div>
         <FounderPass card={card} />
+
+        {/* Share-pass row. Primary surface for the manual invite flow:
+            tap to either trigger the native share sheet (mobile) or copy
+            the public Pass URL to clipboard. The recipient lands on a
+            read-only /pass/<user_id> view. */}
+        <div className="surface mt-4 p-4 flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-xxs uppercase tracking-wider text-muted font-semibold mb-0.5">
+              Share your Pass
+            </p>
+            <p className="text-xs text-muted leading-relaxed">
+              Send your Pass to anyone. They see your four lines and your public link in
+              a read-only view. Use it to introduce yourself before SS.
+            </p>
+          </div>
+          <Button onClick={shareMyPass} size="sm" variant="ghost" className="shrink-0">
+            <span className="inline-flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M11 5l-3-3-3 3M8 2v9M3 10v3a1 1 0 001 1h8a1 1 0 001-1v-3"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span>Share</span>
+            </span>
+          </Button>
+        </div>
 
         <div className="surface mt-4 p-4">
           <div className="flex items-center justify-between mb-1">

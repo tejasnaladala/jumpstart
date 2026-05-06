@@ -24,6 +24,7 @@ export const DEFAULT_ME: FounderCard = {
   tags: ["hardtech", "ai-agents", "research", "fusion", "cofounder", "sf"],
   intents: ["cofounder", "collaborator"],
   trust_tier: "verified",
+  public_link: "linkedin.com/in/tejasnaladala",
   updated_at: "2026-05-05T22:00:00Z",
 };
 
