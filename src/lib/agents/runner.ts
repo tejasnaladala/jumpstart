@@ -219,9 +219,13 @@ function summarize(input: unknown): string {
   }
 }
 
+// Anthropic price card per the public docs (https://docs.claude.com/en/docs/about-claude/pricing).
+// Closes the Codex CEO-review finding that the original Haiku 4.5 prices
+// (0.8 / 4.0) were stale. Sonnet 4.5 unchanged. Update this table when the
+// list price moves.
 const PRICE_PER_MTOK: Record<AgentDef<unknown, unknown>["model"], { in: number; out: number }> = {
   "claude-sonnet-4-5": { in: 3.0, out: 15.0 },
-  "claude-haiku-4-5": { in: 0.8, out: 4.0 },
+  "claude-haiku-4-5": { in: 1.0, out: 5.0 },
 };
 
 function estimateCost(

@@ -1,12 +1,12 @@
 import { Logo } from "@/components/Logo";
 import { FounderCardView } from "@/components/FounderCard";
 import { MOCK_COHORT } from "@/lib/mock/cohort";
-import { CohortGlobe } from "@/components/CohortGlobe";
 import { Marquee } from "@/components/Marquee";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { MagneticButton } from "@/components/MagneticButton";
 import { Reveal } from "@/components/Reveal";
 import { TypewriterText } from "@/components/TypewriterText";
+import { GlobeLazy } from "@/components/GlobeLazy";
 import Link from "next/link";
 
 export default function LandingPage() {
@@ -40,7 +40,7 @@ export default function LandingPage() {
               <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
               <span className="ed-serial">No. 001 / Cohort SS 2026</span>
             </div>
-            <span className="ed-serial hidden sm:inline">Filed Wednesdays at 09:00 PT</span>
+            <span className="ed-serial hidden sm:inline">Filed Mon · Wed · Fri at 09:00 PT</span>
           </div>
         </Reveal>
 
@@ -54,14 +54,14 @@ export default function LandingPage() {
             </Reveal>
             <Reveal delay={0.08}>
               <p className="mt-7 text-lg text-muted max-w-2xl leading-relaxed">
-                The unofficial global attendee graph for SS 2026. Three curated founder matches
-                every Wednesday, with a one-line on why you should meet and an opener already
-                half-written.
+                The unofficial global attendee graph for SS 2026. One curated founder match every
+                other day, Monday, Wednesday, Friday at 09:00 PT. With a one-line on why you
+                should meet and an opener already half-written.
               </p>
             </Reveal>
             <Reveal delay={0.16}>
               <div className="flex flex-col sm:flex-row gap-3 mt-8">
-                <MagneticButton href="/signup" variant="lg">
+                <MagneticButton href="/signup" variant="lg" intensity={0.05}>
                   Get my Founder Drop
                   <svg className="ml-1.5" width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path
@@ -100,7 +100,7 @@ export default function LandingPage() {
                     aria-hidden
                     className="absolute -inset-4 rounded-full bg-accent-soft opacity-50 blur-xl"
                   />
-                  <CohortGlobe size={420} />
+                  <GlobeLazy size={420} />
                 </div>
                 <p className="ed-serial mt-4">12 anchor cities · 60+ countries verifying</p>
               </div>
@@ -113,10 +113,10 @@ export default function LandingPage() {
       <Marquee
         items={[
           "Cohort SS 2026",
-          "Weekly drops",
+          "Drops every other day",
           "Built by an attendee",
           "Verified founders only",
-          "Three matches every Wednesday",
+          "Mon · Wed · Fri at 09:00 PT",
           "Not affiliated with Y Combinator",
         ]}
         variant="espresso"
@@ -132,7 +132,7 @@ export default function LandingPage() {
         </Reveal>
         <Reveal>
           <h2 className="font-display text-4xl sm:text-5xl max-w-3xl">
-            A bounded cohort. A weekly ritual.{" "}
+            A bounded cohort. A three-times-a-week ritual.{" "}
             <span className="italic text-accent">Eight thousand</span> of the world&apos;s best
             young builders.
           </h2>
@@ -142,7 +142,7 @@ export default function LandingPage() {
             <Stat label="Verified attendees" value={8000} suffix="" />
             <Stat label="Anchor cities" value={60} suffix="+" />
             <Stat label="Drops per week" value={3} />
-            <Stat label="Days the cohort exists" value={90} />
+            <Stat label="Days the cohort runs" value={90} />
           </div>
         </Reveal>
       </section>
@@ -152,7 +152,7 @@ export default function LandingPage() {
         <Reveal>
           <div className="ed-masthead">
             <span className="ed-serial">§ 02 / How it works</span>
-            <span className="ed-serial hidden sm:inline">Drop lands at 0900 PT</span>
+<span className="ed-serial hidden sm:inline">Drops land Mon · Wed · Fri at 0900 PT</span>
           </div>
         </Reveal>
         <Reveal>
@@ -174,8 +174,8 @@ export default function LandingPage() {
           <Reveal delay={0.08}>
             <Step
               n={2}
-              title="Three matches a week"
-              body="Wednesday morning. Three founders worth meeting, with a one-line on why and an opener you can copy."
+              title="A match every other day"
+              body="Monday, Wednesday, Friday at 09:00 PT. One founder worth meeting, with a one-line on why and an opener you can copy."
             />
           </Reveal>
           <Reveal delay={0.16}>
@@ -333,7 +333,7 @@ export default function LandingPage() {
             />
             <div className="relative">
               <div className="ed-rule pt-3 mb-10 flex items-center justify-between text-bg/70">
-                <span className="ed-serial text-bg/70">Wednesday at 09:00 PT</span>
+                <span className="ed-serial text-bg/70">Mon · Wed · Fri at 09:00 PT</span>
                 <span className="ed-serial hidden sm:inline text-bg/70">No. 001 / Drop pending</span>
               </div>
               <h2 className="font-display text-4xl sm:text-6xl max-w-3xl leading-[1.04] text-bg">
@@ -341,7 +341,7 @@ export default function LandingPage() {
                 <span className="italic text-accent">Get on the list.</span>
               </h2>
               <div className="mt-10 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-                <MagneticButton href="/signup" variant="lg" tone="cream">
+                <MagneticButton href="/signup" variant="lg" tone="cream" intensity={0.05}>
                   Get my Founder Drop
                   <svg
                     className="ml-1.5"
@@ -391,8 +391,8 @@ const COHORT_SEGMENTS: { label: string; note: string }[] = [
 ];
 
 const COUNTER_PAIRS: { not: string; instead: string }[] = [
-  { not: "Directory you scroll", instead: "Curated weekly drop" },
-  { not: "Swipe pile", instead: "Three picks, with reasons" },
+  { not: "Directory you scroll", instead: "Curated drop, three times a week" },
+  { not: "Swipe pile", instead: "One pick at a time, with the reason" },
   { not: "Follower counts", instead: "No public profile, ever" },
   { not: "Open DMs", instead: "Structured intro request" },
   { not: "Chatbot you talk to", instead: "Matchmaker that learns" },

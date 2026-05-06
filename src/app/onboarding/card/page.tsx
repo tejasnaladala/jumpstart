@@ -52,7 +52,7 @@ export default function CardReviewStep() {
 
   function finalize() {
     saveMe(card);
-    toast.push("Founder Card created. First Drop arrives Wednesday.", "success");
+    toast.push("Founder Card created. Your first drop arrives at the next 09:00 PT (Mon, Wed, or Fri).", "success");
     router.push("/drop");
   }
 

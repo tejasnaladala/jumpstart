@@ -68,7 +68,7 @@ export default function OG() {
               letterSpacing: -0.02,
             }}
           >
-            Three founder matches every <em style={{ color: "#FF6600" }}>Wednesday</em>.
+            One founder match <em style={{ color: "#FF6600" }}>every other day</em>.
           </h1>
           <p
             style={{
