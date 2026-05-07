@@ -7,7 +7,7 @@
 > hand-picked attendees**. Treat any reference in this document to "8,000
 > users", "8000 founders", "90-day cohort", or "Days the cohort runs: 90"
 > as outdated. The product is a **pre-event matchmaker** with ~8 weeks of
-> matchmaking lead-in (Mon, Wed, Fri at 09:00 PT), denser scheduling
+> matchmaking lead-in (Mon, Wed, Fri at 9pm PT), denser scheduling
 > support during the 2 days on-site, and a follow-up window post-event.
 > See `CLAUDE.md` for the corrected facts. Sections of this spec that hinge
 > on the 90-day premise (cost projections, growth targets, retention
