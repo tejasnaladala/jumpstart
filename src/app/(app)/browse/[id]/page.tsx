@@ -17,6 +17,7 @@ import {
   toggleUpvote,
   type Post,
 } from "@/lib/forum/posts";
+import { enqueue } from "@/lib/moderation/queue";
 
 export default function PostDetailPage() {
   const params = useParams<{ id: string }>();
@@ -59,13 +60,20 @@ export default function PostDetailPage() {
     if (body.length < 1) return;
     setPosting(true);
     try {
-      const updated = appendComment(post!.id, {
+      const result = appendComment(post!.id, {
         author_user_id: meRef.current.user_id,
         author_name: meRef.current.name || "Anonymous",
         body,
       });
-      if (updated) setPost(updated);
+      if (!result.ok) {
+        toast.push("Comment blocked. Rewrite without targeting language.", "error");
+        return;
+      }
+      setPost(result.post);
       setDraft("");
+      if (result.flagged) {
+        toast.push("Posted. An admin will review the language.", "info");
+      }
     } catch {
       toast.push("Could not post comment. Try again.", "error");
     } finally {
@@ -92,7 +100,7 @@ export default function PostDetailPage() {
           <p className="text-sm text-ink leading-relaxed whitespace-pre-wrap">
             {post.body}
           </p>
-          <div className="flex items-center gap-3 mt-5 pt-4 border-t border-border">
+          <div className="flex items-center gap-3 mt-5 pt-4 border-t border-border flex-wrap">
             <button
               onClick={vote}
               className={`inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md border transition-colors ${
@@ -110,6 +118,31 @@ export default function PostDetailPage() {
               <Avatar name={post.author_name} size={18} />
               {post.author_name}
             </span>
+            <button
+              onClick={() => {
+                // Per founder direction: any user can flag a post for
+                // admin review. Goes into the same /admin/moderation
+                // queue as the auto-flagged ones.
+                const reason = window.prompt(
+                  "Why are you reporting this post? (one short sentence)"
+                );
+                if (!reason || !reason.trim()) return;
+                enqueue({
+                  kind: "reported_post",
+                  triggered_by: meRef.current.user_id,
+                  target_id: post.id,
+                  target_kind: "post",
+                  target_label: post.title,
+                  target_snippet: post.body.slice(0, 140),
+                  reasons: [reason.trim()],
+                  severity: "medium",
+                });
+                toast.push("Reported. An admin will review.", "info");
+              }}
+              className="ml-auto inline-flex items-center gap-1 text-xxs text-muted hover:text-error transition-colors"
+            >
+              Report
+            </button>
           </div>
         </div>
 
