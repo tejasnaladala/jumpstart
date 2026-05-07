@@ -1,0 +1,778 @@
+[
+  {
+    "id": "repo:jumpstart",
+    "label": "jumpstart",
+    "type": "Repository",
+    "path": ".",
+    "summary": "Next.js App Router product for curated YC Startup School 2026 founder matching.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "dir:src/app",
+    "label": "src/app",
+    "type": "Directory",
+    "path": "src/app",
+    "summary": "Next.js App Router pages, layouts, route groups, and API handlers.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "dir:src/components",
+    "label": "src/components",
+    "type": "Directory",
+    "path": "src/components",
+    "summary": "Product components, visual components, and local UI primitives.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "dir:src/lib",
+    "label": "src/lib",
+    "type": "Directory",
+    "path": "src/lib",
+    "summary": "Domain logic, auth, agents, schemas, mock data, local stores, and utilities.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "dir:supabase",
+    "label": "supabase",
+    "type": "Directory",
+    "path": "supabase",
+    "summary": "Supabase Postgres migrations, RLS policies, and pgvector schema.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "dir:pocketbase",
+    "label": "pocketbase",
+    "type": "Directory",
+    "path": "pocketbase",
+    "summary": "PocketBase schema for the proposed closed-beta backend path.",
+    "owner": "backend",
+    "importance": "medium",
+    "confidence": "high"
+  },
+  {
+    "id": "file:package.json",
+    "label": "package.json",
+    "type": "Config",
+    "path": "package.json",
+    "summary": "Bun scripts, dependencies, Next.js version, test and harness commands.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "file:vercel.json",
+    "label": "vercel.json",
+    "type": "DeploymentUnit",
+    "path": "vercel.json",
+    "summary": "Vercel build/install/dev commands, cron, region, and security headers.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "file:env.example",
+    "label": ".env.example",
+    "type": "Config",
+    "path": ".env.example",
+    "summary": "Documented env vars and load-bearing mode flags.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "file:middleware",
+    "label": "middleware.ts",
+    "type": "BackendService",
+    "path": "src/middleware.ts",
+    "summary": "Fast-fail middleware for /api routes, with health and cron bypasses.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "layout:root",
+    "label": "RootLayout",
+    "type": "FrontendPage",
+    "path": "src/app/layout.tsx",
+    "summary": "Root HTML, fonts, metadata, ToastProvider, MotionConfig, and ELU analytics script.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "layout:app-shell",
+    "label": "AppShellLayout",
+    "type": "AuthFlow",
+    "path": "src/app/(app)/layout.tsx",
+    "summary": "Authenticated app shell that calls getSession and renders bottom nav.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "layout:admin",
+    "label": "AdminLayout",
+    "type": "AuthFlow",
+    "path": "src/app/admin/layout.tsx",
+    "summary": "Admin shell that calls getAdmin and gates all admin pages.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "page:landing",
+    "label": "LandingPage",
+    "type": "FrontendPage",
+    "path": "src/app/page.tsx",
+    "summary": "Public product landing page using mock cohort samples and editorial components.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "page:signup",
+    "label": "SignupPage",
+    "type": "FrontendPage",
+    "path": "src/app/signup/page.tsx",
+    "summary": "Demo signup form that clears jumpstart localStorage and stores email/linkedin.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "page:onboarding-identity",
+    "label": "Onboarding Identity",
+    "type": "FrontendPage",
+    "path": "src/app/onboarding/identity/page.tsx",
+    "summary": "Identity draft step with name, age, city, region, oneLine, and publicLink.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "page:onboarding-verification",
+    "label": "Onboarding Verification",
+    "type": "FrontendPage",
+    "path": "src/app/onboarding/verification/page.tsx",
+    "summary": "Client-side OTP, screenshot upload, verification moderation enqueue.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "page:onboarding-intent",
+    "label": "Onboarding Intent",
+    "type": "FrontendPage",
+    "path": "src/app/onboarding/intent/page.tsx",
+    "summary": "Four hardcoded intake questions saved through useDraftState.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "page:onboarding-card",
+    "label": "Onboarding Card Review",
+    "type": "FrontendPage",
+    "path": "src/app/onboarding/card/page.tsx",
+    "summary": "Synthesizes local Founder Card, saves jumpstart.me, sets next eligible Drop.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "page:drop",
+    "label": "DropPage",
+    "type": "FrontendPage",
+    "path": "src/app/(app)/drop/page.tsx",
+    "summary": "Countdown and one manually delivered localStorage match.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "page:match-detail",
+    "label": "MatchDetailPage",
+    "type": "FrontendPage",
+    "path": "src/app/(app)/match/[id]/page.tsx",
+    "summary": "Match detail and intro request UI that POSTs /api/intros.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "page:feed",
+    "label": "Browse Feed",
+    "type": "FrontendPage",
+    "path": "src/app/(app)/browse/page.tsx",
+    "summary": "LocalStorage feed, composer, categories, voting.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "page:post-detail",
+    "label": "Post Detail",
+    "type": "FrontendPage",
+    "path": "src/app/(app)/browse/[id]/page.tsx",
+    "summary": "LocalStorage post detail, comments, and report flow.",
+    "owner": "frontend",
+    "importance": "medium",
+    "confidence": "high"
+  },
+  {
+    "id": "page:inbox",
+    "label": "InboxPage",
+    "type": "FrontendPage",
+    "path": "src/app/(app)/inbox/page.tsx",
+    "summary": "Local incoming, active, and sent thread tabs.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "page:thread",
+    "label": "ThreadPage",
+    "type": "FrontendPage",
+    "path": "src/app/(app)/inbox/[id]/page.tsx",
+    "summary": "Local in-app message thread, report, and block controls.",
+    "owner": "frontend",
+    "importance": "medium",
+    "confidence": "high"
+  },
+  {
+    "id": "page:you",
+    "label": "YouPage",
+    "type": "FrontendPage",
+    "path": "src/app/(app)/you/page.tsx",
+    "summary": "User Founder Pass, share link, settings stubs, sign out.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "page:public-pass",
+    "label": "Public Founder Pass",
+    "type": "FrontendPage",
+    "path": "src/app/pass/[id]/page.tsx",
+    "summary": "Public read-only pass from mock cohort or DEFAULT_ME with noindex metadata.",
+    "owner": "shared",
+    "importance": "medium",
+    "confidence": "high"
+  },
+  {
+    "id": "page:admin-health",
+    "label": "Admin Health",
+    "type": "FrontendPage",
+    "path": "src/app/admin/health/page.tsx",
+    "summary": "Admin health dashboard polling /api/health.",
+    "owner": "backend",
+    "importance": "medium",
+    "confidence": "high"
+  },
+  {
+    "id": "page:admin-curate",
+    "label": "Admin Curate",
+    "type": "FrontendPage",
+    "path": "src/app/admin/curate/page.tsx",
+    "summary": "Founder manual match curation backed by localStorage delivery.",
+    "owner": "shared",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "page:admin-moderation",
+    "label": "Admin Moderation",
+    "type": "FrontendPage",
+    "path": "src/app/admin/moderation/page.tsx",
+    "summary": "LocalStorage moderation queue and members list.",
+    "owner": "shared",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "page:admin-logs",
+    "label": "Admin Logs",
+    "type": "FrontendPage",
+    "path": "src/app/admin/logs/page.tsx",
+    "summary": "Server-side page reading recent .jumpstart-logs/agent.jsonl rows.",
+    "owner": "backend",
+    "importance": "medium",
+    "confidence": "high"
+  },
+  {
+    "id": "api:health",
+    "label": "GET /api/health",
+    "type": "BackendRoute",
+    "path": "src/app/api/health/route.ts",
+    "summary": "Public readiness endpoint probing Supabase, Anthropic, and Upstash.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "api:browse",
+    "label": "GET /api/browse",
+    "type": "BackendRoute",
+    "path": "src/app/api/browse/route.ts",
+    "summary": "Authenticated mock cohort tag search route, currently unconsumed.",
+    "owner": "backend",
+    "importance": "medium",
+    "confidence": "high"
+  },
+  {
+    "id": "api:drops",
+    "label": "POST /api/drops",
+    "type": "BackendRoute",
+    "path": "src/app/api/drops/route.ts",
+    "summary": "Authenticated drop route using local stub only; production DB read is TODO.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "api:intros",
+    "label": "POST /api/intros",
+    "type": "BackendRoute",
+    "path": "src/app/api/intros/route.ts",
+    "summary": "Authenticated intro request route with validation, rate limit, safety classifier, and DB TODO.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "api:onboarding-interview",
+    "label": "POST /api/onboarding/interview",
+    "type": "BackendRoute",
+    "path": "src/app/api/onboarding/interview/route.ts",
+    "summary": "Authenticated onboarding interviewer agent route, currently unconsumed by frontend.",
+    "owner": "backend",
+    "importance": "medium",
+    "confidence": "high"
+  },
+  {
+    "id": "api:cron-retention",
+    "label": "GET /api/cron/retention",
+    "type": "BackendRoute",
+    "path": "src/app/api/cron/retention/route.ts",
+    "summary": "Bearer-auth Vercel cron route for retention; deletion logic is TODO.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "service:session",
+    "label": "Session service",
+    "type": "BackendService",
+    "path": "src/lib/auth/session.ts",
+    "summary": "Supabase SSR session reader and explicit stub-mode dev session.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "service:admin-auth",
+    "label": "Admin auth",
+    "type": "BackendService",
+    "path": "src/lib/auth/admin.ts",
+    "summary": "Admin email allowlist and dev/private-beta admin bypass.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "service:rate-limit",
+    "label": "Rate limiter",
+    "type": "BackendService",
+    "path": "src/lib/auth/rate-limit.ts",
+    "summary": "Upstash rate limits with guarded in-memory fallback.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "service:api-schema",
+    "label": "API schemas",
+    "type": "APIContract",
+    "path": "src/lib/api/schema.ts",
+    "summary": "Zod schemas for intro, interview, drop, browse, and JSON error helper.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "service:agent-runner",
+    "label": "Agent runner",
+    "type": "BackendService",
+    "path": "src/lib/agents/runner.ts",
+    "summary": "Anthropic SDK runner with stubs, retries, timeouts, cost estimation, and logging.",
+    "owner": "backend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "service:agent-log",
+    "label": "Agent log writer",
+    "type": "BackendService",
+    "path": "src/lib/agents/log.ts",
+    "summary": "JSONL file logging with rotation, Supabase insert TODO.",
+    "owner": "backend",
+    "importance": "medium",
+    "confidence": "high"
+  },
+  {
+    "id": "service:local-drop",
+    "label": "Local drop generator",
+    "type": "BackendService",
+    "path": "src/lib/match/local-drop.ts",
+    "summary": "Deterministic mock match scoring, explanations, openers, and lookup.",
+    "owner": "shared",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "store:mock-me",
+    "label": "Local user store",
+    "type": "BackendService",
+    "path": "src/lib/mock/me.ts",
+    "summary": "DEFAULT_ME and jumpstart.me localStorage helpers.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "store:mock-cohort",
+    "label": "Mock cohort",
+    "type": "DatabaseModel",
+    "path": "src/lib/mock/cohort.ts",
+    "summary": "Twelve mock founder cards and cohort tag taxonomy.",
+    "owner": "shared",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "store:forum-posts",
+    "label": "Forum local store",
+    "type": "BackendService",
+    "path": "src/lib/forum/posts.ts",
+    "summary": "localStorage feed posts, votes, comments, seeding, and safety preflight.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "store:inbox-threads",
+    "label": "Inbox local store",
+    "type": "BackendService",
+    "path": "src/lib/inbox/threads.ts",
+    "summary": "localStorage threads, messages, accept/decline, and demo seeds.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "store:moderation",
+    "label": "Moderation local store",
+    "type": "BackendService",
+    "path": "src/lib/moderation/queue.ts",
+    "summary": "localStorage moderation queue and block list.",
+    "owner": "shared",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "store:otp",
+    "label": "OTP local store",
+    "type": "BackendService",
+    "path": "src/lib/verification/otp.ts",
+    "summary": "Client-side stub OTP generation, verification, and localStorage records.",
+    "owner": "shared",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "store:drop-delivery",
+    "label": "Drop delivery local store",
+    "type": "BackendService",
+    "path": "src/lib/drop/delivery.ts",
+    "summary": "Manual match delivery via jumpstart.drop.delivered_match localStorage keys.",
+    "owner": "shared",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "component:founder-pass",
+    "label": "FounderPass",
+    "type": "FrontendComponent",
+    "path": "src/components/FounderPass.tsx",
+    "summary": "Ticket-shaped pass component rendering identity, card lines, tags, and public link.",
+    "owner": "frontend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "component:match-card",
+    "label": "MatchCard",
+    "type": "FrontendComponent",
+    "path": "src/components/MatchCard.tsx",
+    "summary": "Clickable match preview card.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "component:top-bar",
+    "label": "TopBar",
+    "type": "FrontendComponent",
+    "path": "src/components/TopBar.tsx",
+    "summary": "Sticky page masthead with hero and compact variants.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "component:bottom-nav",
+    "label": "BottomNav",
+    "type": "FrontendComponent",
+    "path": "src/components/BottomNav.tsx",
+    "summary": "Floating primary nav for Drop, Feed, Inbox, and You.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "component:filter-panel",
+    "label": "FilterPanel",
+    "type": "FrontendComponent",
+    "path": "src/components/FilterPanel.tsx",
+    "summary": "Legacy or future cohort tag filter panel, not imported by current Browse feed.",
+    "owner": "frontend",
+    "importance": "low",
+    "confidence": "medium"
+  },
+  {
+    "id": "db:supabase-users",
+    "label": "users",
+    "type": "DatabaseModel",
+    "path": "supabase/migrations/0001_init.sql",
+    "summary": "User identity, email, phone, trust tier, verification pointer.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "db:supabase-founder-cards",
+    "label": "founder_cards",
+    "type": "DatabaseModel",
+    "path": "supabase/migrations/0001_init.sql",
+    "summary": "Founder card, tags, intents, embedding, meeting preferences.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "db:supabase-drops",
+    "label": "drops",
+    "type": "DatabaseModel",
+    "path": "supabase/migrations/0001_init.sql",
+    "summary": "Per-user drop cycle rows.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "db:supabase-matches",
+    "label": "matches",
+    "type": "DatabaseModel",
+    "path": "supabase/migrations/0001_init.sql",
+    "summary": "Candidate matches within drops.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "db:supabase-intros",
+    "label": "intros",
+    "type": "DatabaseModel",
+    "path": "supabase/migrations/0001_init.sql",
+    "summary": "Intro request and response lifecycle.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "db:supabase-verifications",
+    "label": "verifications",
+    "type": "DatabaseModel",
+    "path": "supabase/migrations/0001_init.sql",
+    "summary": "Verification artifacts, expiry, review decision, classifier score.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "db:supabase-agent-logs",
+    "label": "agent_logs",
+    "type": "DatabaseModel",
+    "path": "supabase/migrations/0001_init.sql",
+    "summary": "Agent prompt, response, token, latency, and cost log table.",
+    "owner": "backend",
+    "importance": "medium",
+    "confidence": "high"
+  },
+  {
+    "id": "db:pocketbase-schema",
+    "label": "PocketBase collections",
+    "type": "DatabaseModel",
+    "path": "pocketbase/schema.json",
+    "summary": "Beta collections for users, founder_cards, drops, threads, posts, moderation.",
+    "owner": "backend",
+    "importance": "medium",
+    "confidence": "high"
+  },
+  {
+    "id": "external:supabase",
+    "label": "Supabase",
+    "type": "ExternalService",
+    "summary": "Auth, Postgres, RLS, planned storage/database backend.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "external:anthropic",
+    "label": "Anthropic",
+    "type": "ExternalService",
+    "summary": "Claude agent calls and health probe.",
+    "owner": "backend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "external:upstash",
+    "label": "Upstash Redis",
+    "type": "ExternalService",
+    "summary": "Rate limiting backend and health probe.",
+    "owner": "backend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "external:vercel",
+    "label": "Vercel",
+    "type": "DeploymentUnit",
+    "summary": "Next.js deployment host and cron scheduler.",
+    "owner": "backend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "external:pocketbase",
+    "label": "PocketBase",
+    "type": "ExternalService",
+    "summary": "Possible beta backend with SQLite, auth, admin UI, realtime, file storage.",
+    "owner": "backend",
+    "importance": "medium",
+    "confidence": "high"
+  },
+  {
+    "id": "external:elu",
+    "label": "ELU Analytics",
+    "type": "ExternalService",
+    "summary": "Third-party analytics script and identify/reset integration.",
+    "owner": "shared",
+    "importance": "medium",
+    "confidence": "high"
+  },
+  {
+    "id": "flow:onboarding",
+    "label": "Signup and onboarding flow",
+    "type": "UserFlow",
+    "summary": "Signup, identity, verification, intent interview, card review, local save.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "flow:drop",
+    "label": "Curated Drop flow",
+    "type": "UserFlow",
+    "summary": "Eligibility timestamp, manual delivery, countdown, notification, match display.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "flow:intro",
+    "label": "Intro request flow",
+    "type": "UserFlow",
+    "summary": "Match detail POSTs /api/intros, then local outgoing thread is created.",
+    "owner": "shared",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "flow:feed",
+    "label": "Feed flow",
+    "type": "UserFlow",
+    "summary": "Local post creation, voting, comments, moderation flags.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "flow:inbox",
+    "label": "Inbox flow",
+    "type": "UserFlow",
+    "summary": "Local incoming/outgoing/accepted threads and messages.",
+    "owner": "frontend",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "risk:prod-db-not-wired",
+    "label": "Production DB paths not wired",
+    "type": "Risk",
+    "summary": "Drops, intros, retention, agent logs, feed, inbox, moderation are not fully persistent.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  },
+  {
+    "id": "risk:onboarding-location",
+    "label": "Onboarding location mismatch",
+    "type": "Risk",
+    "summary": "Identity draft stores city/region, card page reads id.location.",
+    "owner": "shared",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "risk:stale-tests",
+    "label": "Stale e2e tests",
+    "type": "Risk",
+    "path": "tests/e2e/happy-path.spec.ts",
+    "summary": "Tests assert old three-match and filter UI.",
+    "owner": "shared",
+    "importance": "high",
+    "confidence": "high"
+  },
+  {
+    "id": "unknown:backend-choice",
+    "label": "Supabase versus PocketBase",
+    "type": "Unknown",
+    "summary": "Repo contains both as backend directions; final next milestone source of truth needs human decision.",
+    "owner": "backend",
+    "importance": "critical",
+    "confidence": "high"
+  }
+]
