@@ -80,9 +80,12 @@ export default function IntentInterviewStep() {
         <p className="text-xxs uppercase tracking-wider text-accent font-semibold mt-3">
           Step 3 of 4 · Question {step + 1} of {QUESTIONS.length}
         </p>
+        <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl text-ink leading-[1.05] mt-2">
+          What are you here for?
+        </h1>
 
         {/* prior turns */}
-        <div className="mt-6 flex flex-col gap-4">
+        <div className="mt-8 flex flex-col gap-4">
           {QUESTIONS.slice(0, step).map((q) => (
             <div key={q.key} className="flex flex-col gap-2 opacity-60">
               <div className="flex gap-2">

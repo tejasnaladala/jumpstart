@@ -103,14 +103,13 @@
 
 @layer components {
   .container-app {
-    /* Desktop-first per founder direction (May 7 2026, again):
-       "Make this for laptops first, then expand to phones later."
-       Mobile phone (<640) gets the 440 envelope. Tablet/laptop+ gets
-       a wider 720 column with proportional padding. BottomNav hides
-       on lg in favor of a left side rail (see (app)/layout.tsx) so
-       the content + nav both feel laptop-native. Phone scale-down
-       happens automatically because nothing inside the column is
-       width-locked. */
+    /* Single canonical app-column. Phone gets a 440 envelope, tablet
+       a 640, laptop a 720 — proportional padding at each step. Bottom
+       nav (floating pill) is the only nav at every breakpoint; layout
+       wrapper reserves pb-28 to clear it. Mixing widths broke editorial
+       homogeneity in earlier iterations, so every authed page,
+       onboarding step, and signup share this column unless they opt
+       into container-wide for a deliberate hero canvas. */
     @apply mx-auto w-full max-w-[440px] px-4 sm:max-w-[640px] sm:px-6 lg:max-w-[720px];
   }
 

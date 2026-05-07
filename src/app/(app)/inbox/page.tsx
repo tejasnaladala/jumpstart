@@ -61,7 +61,7 @@ export default function InboxPage() {
   return (
     <>
       <TopBar title="Inbox" subtitle="Requests, accepted, sent" />
-      <section className="container-app pt-5 pb-24">
+      <section className="container-app pt-6 pb-12">
         <div className="flex items-center gap-2 mb-5">
           <TabBtn active={tab === "requests"} onClick={() => setTab("requests")} count={incoming.length}>
             Requests

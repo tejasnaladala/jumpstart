@@ -95,7 +95,7 @@ export default function IdentityStep() {
         <p className="text-xxs uppercase tracking-wider text-accent font-semibold mt-3">
           Step 1 of 4
         </p>
-        <h1 className="font-display text-3xl text-ink leading-tight mt-1">Who are you?</h1>
+        <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl text-ink leading-[1.05] mt-2">Who are you?</h1>
         <p className="text-sm text-muted mt-2">
           Quick identity pass. Real name, real location. We use these to build your Founder
           Pass and to score who&apos;s worth meeting.

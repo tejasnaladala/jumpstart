@@ -56,10 +56,11 @@ export default function CuratePage() {
   return (
     <>
       <TopBar
+        variant="compact"
         title="Curate matches"
         subtitle={`${pending.length} pending in the next 9pm PT slot`}
       />
-      <section className="container-app pt-5 pb-10">
+      <section className="container-app pt-6 pb-12">
         {pending.length === 0 ? (
           <div className="surface p-6 text-center">
             <p className="text-sm font-semibold text-ink mb-1">No pending deliveries</p>
@@ -196,10 +197,11 @@ function CuratorView({
   return (
     <>
       <TopBar
+        variant="compact"
         back={{ href: "/admin/curate" }}
         title={`Curate for ${delivery.user_name}`}
       />
-      <section className="container-app pt-5 pb-10">
+      <section className="container-app pt-6 pb-12">
         {/* User card preview */}
         {me ? (
           <div className="surface p-4 mb-5">

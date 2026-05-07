@@ -59,7 +59,7 @@ export default function SignupPage() {
       </header>
       <div className="flex-1 flex items-center justify-center px-5 py-12">
         <div className="w-full max-w-md surface p-8 sm:p-10 rounded-2xl">
-          <h1 className="font-display text-3xl text-ink leading-tight">Get your Founder Drop</h1>
+          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl text-ink leading-[1.05]">Get your Founder Drop</h1>
           <p className="text-sm text-muted mt-2">
             Email and LinkedIn to verify you. Takes ten seconds.
           </p>

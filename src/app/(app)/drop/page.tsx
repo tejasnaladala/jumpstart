@@ -130,12 +130,11 @@ export default function DropPage() {
         subtitle={longDate}
         right={<Logo size={22} withWord={false} href="/" />}
       />
-      {/* Two containers: container-wide (1080) for the dramatic
-          countdown so the envelope hero takes most of the laptop
-          screen; container-app (720) for delivered match + preparing
-          state so they keep the editorial tightness. */}
+      {/* Single canonical column for every drop state. TopBar already
+          carries the page hero (Your Drop / longDate); each section
+          flows underneath at the same width as the rest of the app. */}
       {hydrating ? (
-        <section className="container-app pt-5 pb-10">
+        <section className="container-app pt-6 pb-12 sm:pt-8 lg:pt-10">
           <div className="surface p-6 animate-pulse">
             <div className="h-3 w-1/3 skeleton mb-3" />
             <div className="h-3 w-2/3 skeleton" />
@@ -143,15 +142,15 @@ export default function DropPage() {
           </div>
         </section>
       ) : hasDrop && match ? (
-        <section className="container-app pt-5 pb-10">
+        <section className="container-app pt-6 pb-12 sm:pt-8 lg:pt-10">
           <DeliveredMatch match={match} meName={meName} eligibleAt={eligibleAt} />
         </section>
       ) : eligibleAt && new Date() >= eligibleAt ? (
-        <section className="container-app pt-5 pb-10">
+        <section className="container-app pt-6 pb-12 sm:pt-8 lg:pt-10">
           <PreparingMatch eligibleAt={eligibleAt} />
         </section>
       ) : eligibleAt ? (
-        <section className="container-wide pt-5 pb-10 lg:pt-12">
+        <section className="container-app pt-6 pb-12 sm:pt-8 lg:pt-10">
           <WaitingForDrop
             eligibleAt={eligibleAt}
             onArrived={onArrived}
@@ -214,25 +213,25 @@ function DeliveredMatch({
         day: "numeric",
       })
     : "Today";
+  // Page hero h1 lives in the TopBar (font-display, text-3xl+). This
+  // section is the body: an ed-serial meta line, the match card, and
+  // the next-filing block. No competing h2.
   return (
     <>
-      <div className="ed-rule pt-3 pb-4">
-        <div className="flex items-center justify-between gap-2">
-          <span className="ed-serial">This drop / 1 pick</span>
-          <span className="ed-serial">{deliveredLabel}</span>
-        </div>
-        <h2 className="font-display text-3xl text-ink mt-3 leading-tight">
-          One match,{" "}
-          <span className="italic text-accent">scored for {meName.split(" ")[0] || "you"}</span>.
-        </h2>
-        <p className="text-sm text-muted mt-2 leading-relaxed">
-          The matchmaker spent the last 48 hours scoring the cohort against your card. Read the
-          four lines, decide in 30 seconds. Drops land Mon, Wed, Fri at 9pm PT.
-        </p>
+      <div className="flex items-center justify-between gap-2 mb-4">
+        <span className="ed-serial">This drop / 1 pick</span>
+        <span className="ed-serial">{deliveredLabel}</span>
       </div>
+      <p className="text-sm text-muted leading-relaxed mb-6 max-w-prose">
+        Scored for{" "}
+        <span className="font-display italic text-ink">
+          {meName.split(" ")[0] || "you"}
+        </span>
+        . Read the four lines, decide in 30 seconds. Drops land Mon, Wed, Fri at 9pm PT.
+      </p>
 
       <motion.ul
-        className="flex flex-col gap-3 pt-2"
+        className="flex flex-col gap-3"
         variants={staggerList}
         initial="hidden"
         animate="visible"
@@ -248,10 +247,10 @@ function DeliveredMatch({
       {eligibleAt ? (
         <div className="mt-10 surface p-6 bg-gradient-to-b from-surface to-accent-soft border-accent-edge relative overflow-hidden">
           <span className="ed-serial absolute top-3 right-4">Next filing</span>
-          <p className="font-display text-2xl text-ink leading-tight">
+          <p className="font-display text-2xl sm:text-3xl text-ink leading-tight">
             {formatDropLabel(eligibleAt)}
           </p>
-          <p className="text-sm text-muted mt-2 max-w-xs leading-relaxed">
+          <p className="text-sm text-muted mt-2 max-w-md leading-relaxed">
             One new pick. The matchmaker is scoring the cohort against your card between drops.
           </p>
         </div>
@@ -277,11 +276,9 @@ function WaitingForDrop({
 }) {
   return (
     <>
-      <div className="ed-rule pt-3 pb-4 lg:hidden">
-        <div className="flex items-center justify-between gap-2">
-          <span className="ed-serial">Drop pending</span>
-          <span className="ed-serial">1 pick incoming</span>
-        </div>
+      <div className="flex items-center justify-between gap-2 mb-6">
+        <span className="ed-serial">Drop pending</span>
+        <span className="ed-serial">1 pick incoming</span>
       </div>
 
       <DropCountdown targetIso={eligibleAt.toISOString()} onArrived={onArrived} />
