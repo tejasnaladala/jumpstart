@@ -54,6 +54,7 @@ export type VerifyResult =
         | "mismatch"
         | "rate_limit"
         | "invalid_target"
+        | "config_incomplete"
         | "internal";
       attempts_remaining?: number;
     };
