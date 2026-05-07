@@ -108,9 +108,9 @@ export function WaitlistForm({
       >
         <div aria-hidden className="h-px bg-accent w-12 mb-5" />
         <p className="ed-serial text-accent">On the list</p>
-        <h3 className="font-display text-2xl sm:text-3xl text-ink leading-tight mt-3">
+        <h2 className="font-display text-2xl sm:text-3xl text-ink leading-tight mt-3">
           You&apos;re in. The founder reviews the list by hand.
-        </h3>
+        </h2>
         <p className="text-sm text-muted mt-3 leading-relaxed max-w-prose">
           The first 50 invites are manually curated. If you&apos;re a verified SS 2026 attendee
           who&apos;s built something serious, the invite lands in your inbox within a few days.
@@ -155,9 +155,9 @@ export function WaitlistForm({
       <div aria-hidden className="h-px bg-accent w-12" />
       <div>
         <p className="ed-serial">Join the waitlist</p>
-        <h3 className="font-display text-2xl sm:text-3xl text-ink leading-tight mt-2">
+        <h2 className="font-display text-2xl sm:text-3xl text-ink leading-tight mt-2">
           One curated founder match, three times a week.
-        </h3>
+        </h2>
         <p className="text-sm text-muted mt-2 leading-relaxed max-w-prose">
           Drop your email. The founder reads every entry and invites verified SS 2026 attendees
           first. No spam, no marketing list.
