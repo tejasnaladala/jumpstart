@@ -221,14 +221,6 @@ function WaitingForDrop({
           <span className="ed-serial">Drop pending</span>
           <span className="ed-serial">1 pick incoming</span>
         </div>
-        <h2 className="font-display text-3xl text-ink mt-3 leading-tight">
-          Your first match is{" "}
-          <span className="italic text-accent">on the way</span>.
-        </h2>
-        <p className="text-sm text-muted mt-2 leading-relaxed">
-          The matchmaker is scoring the cohort against your card right now. One pick lands at
-          the next 9pm PT slot. Stay close to the inbox.
-        </p>
       </div>
 
       <DropCountdown targetIso={eligibleAt.toISOString()} onArrived={onArrived} />

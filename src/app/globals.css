@@ -103,13 +103,14 @@
 
 @layer components {
   .container-app {
-    /* Desktop-first: widen to a comfortable laptop column on lg+ so
-       the product fills the canvas instead of looking like a phone
-       strip in a sea of empty cream. Mobile (lg- ) stays at the
-       phone-shaped 440px so when we ship to iPhone the layout
-       collapses gracefully. Per founder direction (May 7 2026): get
-       laptop right first, mobile is a follow-up scale-down pass. */
-    @apply mx-auto w-full max-w-[440px] px-4 sm:px-5 lg:max-w-[720px];
+    /* Single canonical app-column width. Reverted from a lg-widened
+       720 because BottomNav is fixed sm:w-[400px], inbox compose,
+       request sheets, share row, and the Pass surface are all sized
+       for the narrow envelope shape. Mixing widths broke
+       homogeneity. Founder direction: love the minimalist envelope -
+       keep it consistent. The page centers on laptop; the empty cream
+       around it is intentional whitespace, not wasted canvas. */
+    @apply mx-auto w-full max-w-[440px] px-4 sm:px-5;
   }
 
   .container-wide {
