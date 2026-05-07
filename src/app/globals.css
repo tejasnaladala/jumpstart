@@ -103,7 +103,13 @@
 
 @layer components {
   .container-app {
-    @apply mx-auto w-full max-w-[440px] px-4 sm:px-5;
+    /* Desktop-first: widen to a comfortable laptop column on lg+ so
+       the product fills the canvas instead of looking like a phone
+       strip in a sea of empty cream. Mobile (lg- ) stays at the
+       phone-shaped 440px so when we ship to iPhone the layout
+       collapses gracefully. Per founder direction (May 7 2026): get
+       laptop right first, mobile is a follow-up scale-down pass. */
+    @apply mx-auto w-full max-w-[440px] px-4 sm:px-5 lg:max-w-[720px];
   }
 
   .container-wide {

@@ -6,12 +6,14 @@ import { Textarea } from "@/components/primitive/Input";
 import { useToast } from "@/components/primitive/Toast";
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { loadMe } from "@/lib/mock/me";
 import {
   appendMessage,
   findThread,
   type Thread,
 } from "@/lib/inbox/threads";
+import { playSent } from "@/lib/inbox/sound";
 
 export default function ThreadPage() {
   const params = useParams<{ id: string }>();
@@ -91,6 +93,7 @@ export default function ThreadPage() {
       });
       if (updated) setThread(updated);
       setDraft("");
+      playSent();
     } catch {
       toast.push("Could not send. Try again.", "error");
     } finally {
@@ -101,6 +104,11 @@ export default function ThreadPage() {
   return (
     <>
       <TopBar back={{ href: "/inbox" }} title={thread.other.name} subtitle={thread.other.location} />
+      {/* Single column for messages AND compose so they share the same
+          horizontal axis. Previously compose was full-width while
+          messages were centered, which read as misaligned at laptop
+          resolutions. Both now live in container-app (440px on phone,
+          720px on lg+). */}
       <section className="flex flex-col" style={{ height: "calc(100svh - 56px)" }}>
         <div
           ref={scrollRef}
@@ -122,52 +130,70 @@ export default function ThreadPage() {
             </p>
           ) : (
             <div className="flex flex-col gap-2">
-              {thread.messages.map((m, i) => {
-                const mine = m.from_user_id === meRef.current.user_id;
-                return (
-                  <div
-                    key={i}
-                    className={`flex ${mine ? "justify-end" : "justify-start"} items-end gap-2`}
-                  >
-                    {!mine ? <Avatar name={thread.other.name} size={28} /> : null}
-                    <div
-                      className={`max-w-[78%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${
-                        mine
-                          ? "bg-ink text-bg rounded-br-sm"
-                          : "bg-bg border border-border text-ink rounded-bl-sm"
-                      }`}
+              <AnimatePresence initial={false}>
+                {thread.messages.map((m, i) => {
+                  const mine = m.from_user_id === meRef.current.user_id;
+                  return (
+                    <motion.div
+                      key={`${m.ts}-${i}`}
+                      // iMessage-style pop: bubble inflates from a small
+                      // origin point + tiny upward drift. Spring config
+                      // mimics the Apple Messages "tritone" cadence.
+                      initial={{ opacity: 0, scale: 0.7, y: 8 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 520,
+                        damping: 26,
+                        mass: 0.7,
+                      }}
+                      style={{
+                        transformOrigin: mine ? "right center" : "left center",
+                      }}
+                      className={`flex ${mine ? "justify-end" : "justify-start"} items-end gap-2`}
                     >
-                      {m.text}
-                    </div>
-                  </div>
-                );
-              })}
+                      {!mine ? <Avatar name={thread.other.name} size={28} /> : null}
+                      <div
+                        className={`max-w-[78%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${
+                          mine
+                            ? "bg-ink text-bg rounded-br-sm"
+                            : "bg-bg border border-border text-ink rounded-bl-sm"
+                        }`}
+                      >
+                        {m.text}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
             </div>
           )}
         </div>
 
-        <div className="border-t border-border bg-surface px-4 py-3">
-          <div className="flex items-end gap-2">
-            <Textarea
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              placeholder="Type a message"
-              rows={1}
-              maxLength={1000}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  void send();
-                }
-              }}
-            />
-            <Button onClick={send} loading={sending} disabled={!draft.trim()}>
-              Send
-            </Button>
+        <div className="border-t border-border bg-surface">
+          <div className="container-app py-3">
+            <div className="flex items-end gap-2">
+              <Textarea
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                placeholder="Type a message"
+                rows={1}
+                maxLength={1000}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    void send();
+                  }
+                }}
+              />
+              <Button onClick={send} loading={sending} disabled={!draft.trim()}>
+                Send
+              </Button>
+            </div>
+            <p className="text-xxs text-muted mt-1.5">
+              Enter to send. Shift-Enter for a new line.
+            </p>
           </div>
-          <p className="text-xxs text-muted mt-1.5">
-            Enter to send. Shift-Enter for a new line.
-          </p>
         </div>
       </section>
     </>
