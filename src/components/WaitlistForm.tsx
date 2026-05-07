@@ -114,6 +114,8 @@ export function WaitlistForm({
   if (status === "success") {
     return (
       <div
+        role="status"
+        aria-live="polite"
         className={
           "surface p-6 sm:p-8 bg-bg/60 " + (className || "")
         }
@@ -179,6 +181,7 @@ export function WaitlistForm({
       <label className="flex flex-col gap-1.5">
         <span className="text-xxs uppercase tracking-wider text-muted font-semibold">Email</span>
         <input
+          name="email"
           type="email"
           required
           value={email}
@@ -196,11 +199,13 @@ export function WaitlistForm({
           X handle or LinkedIn (optional)
         </span>
         <input
+          name="handle"
           type="text"
           value={handle}
           onChange={(e) => setHandle(e.target.value)}
           placeholder="@yourhandle or linkedin.com/in/you"
           maxLength={160}
+          autoComplete="url"
           className="text-sm h-11 px-3 rounded-md border border-border bg-bg text-ink placeholder:text-muted/70 focus:outline-none focus:border-ink"
         />
       </label>
@@ -210,11 +215,13 @@ export function WaitlistForm({
           What are you building (optional)
         </span>
         <input
+          name="building"
           type="text"
           value={building}
           onChange={(e) => setBuilding(e.target.value)}
           placeholder="One line. Plain English."
           maxLength={280}
+          autoComplete="organization-title"
           className="text-sm h-11 px-3 rounded-md border border-border bg-bg text-ink placeholder:text-muted/70 focus:outline-none focus:border-ink"
         />
       </label>

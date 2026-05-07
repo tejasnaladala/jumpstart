@@ -58,7 +58,7 @@ export default function LandingPage() {
           <div className="lg:col-span-7">
             <Reveal>
               <h1 className="font-display text-5xl sm:text-7xl text-ink leading-[1.02]">
-                YC Startup School brings the world&apos;s best young builders into one cohort.{" "}
+                YC Startup School brings the AI cohort into one room for two days.{" "}
                 <span className="italic text-accent">Jumpstart helps them find each other.</span>
               </h1>
             </Reveal>

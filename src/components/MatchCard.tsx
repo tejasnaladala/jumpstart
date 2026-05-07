@@ -33,9 +33,13 @@ export function MatchCard({ match, index }: Props) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-semibold text-ink truncate">
+            {/* h2 not h3: TopBar gives the page h1, so the match card is the
+                section's primary subhead. Fixes the May 7 a11y rotor jump
+                (h1 → h3 skip flagged by both design-review and architecture
+                audits). */}
+            <h2 className="text-base font-semibold text-ink truncate">
               {match.candidate.name}
-            </h3>
+            </h2>
             <span className="text-xs text-muted">{match.candidate.location}</span>
           </div>
           <p className="text-sm text-ink/80 mt-0.5 line-clamp-1">

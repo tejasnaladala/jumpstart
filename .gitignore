@@ -44,3 +44,5 @@ pocketbase/pb_data/
 # Tracked: README.md, tentacle.json schema. Untracked: per-tentacle folders.
 .octogent/tentacles/*/
 !.octogent/tentacles/README.md
+
+.vercel
