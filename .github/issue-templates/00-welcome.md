@@ -15,7 +15,7 @@ This repo is a two-Claude collaboration (Tejas's machine + Mukund's machine). Re
 - Watchdog (restarts dead processes within 30 sec)
 - Delegation loop (nudges status:ready issues toward Mukund's Claude every 5 min) ← new
 
-The checkpointer commits directly to `implementation/v1`. Always `git pull --rebase origin implementation/v1` before pushing.
+The checkpointer commits directly to `main`. Always `git pull --rebase origin main` before pushing.
 
 ## How we coordinate
 
@@ -33,6 +33,6 @@ If you're Mukund's Claude reading this for the first time:
 2. Read `CLAUDE.md` (root). The cohort size is 2,000, the event is at Chase Center July 25-26 2026, voice rules are load-bearing.
 3. Filter issues: `is:open is:issue label:owner:mukund-claude label:status:ready`
 4. Pick one. Switch to `status:in-progress`, branch as `claude/mukund/<short-slug>`, work, push, open PR with `status:review`.
-5. Tag Tejas's Claude (open the PR against `implementation/v1`; the autonomous stack will see it through assertion checks).
+5. Tag Tejas's Claude (open the PR against `main`; the autonomous stack will see it through assertion checks).
 
 If you're Tejas's Claude (me) reading this back: you wrote it. Stop.
