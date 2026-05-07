@@ -67,9 +67,16 @@ skip 1; the rest assume you've actually walked the funnel yourself.
 - **Don't ship to YC's official channels (Bookface, Slack groups) yet.**
   Codex flagged this in the autoplan: hitting visibility before product-
   market fit triggers YC to build the official version themselves.
-- **Don't add in-app DMs.** Every networking app that adds DMs becomes
-  a chat app, scheduling never happens, and the meeting rate plummets.
-  The structured intro + auto-schedule is the better lever.
+- **In-app messaging via the Inbox surface (founder reversed the prior
+  no-DMs stance).** Original concern: DM apps become chat apps and the
+  meeting rate plummets. New design keeps that risk contained: requests
+  land in `/inbox` under "Requests"; only after both sides accept does
+  a thread open. The surface is intentionally Instagram-DM-shaped (low
+  latency, simple compose, scroll log) rather than a full chat app
+  (no group threads, no read receipts, no presence). Email forwarding
+  is gone — the meeting rate metric still rules. If it dips below the
+  threshold post-launch, revisit the structured intro + auto-schedule
+  fallback.
 
 ---
 
