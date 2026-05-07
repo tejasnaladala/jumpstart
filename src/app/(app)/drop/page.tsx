@@ -6,7 +6,6 @@ import { Button } from "@/components/primitive/Button";
 import { DropCountdown } from "@/components/DropCountdown";
 import { useEffect, useState } from "react";
 import { loadMe } from "@/lib/mock/me";
-import { generateSingleDrop } from "@/lib/match/local-drop";
 import type { Match } from "@/lib/types";
 import { motion, fadeUpItem, staggerList } from "@/components/motion";
 import {
@@ -33,9 +32,12 @@ export default function DropPage() {
   const [askingPerm, setAskingPerm] = useState(false);
   const [permState, setPermState] = useState<string>("default");
 
-  // Hydrate eligibility + match. If the user has no eligible drop set
-  // (because they onboarded before this feature shipped, or storage was
-  // wiped), compute one now from the current time.
+  // Hydrate eligibility. Closed-beta posture (May 7 2026): the founder
+  // curates each match manually for the first ~50 users. There is NO
+  // auto-generation when the countdown reaches zero. The page renders
+  // a "preparing" state until the founder delivers a match into
+  // localStorage at jumpstart.drop.delivered_match.<dropIso>. The 6-hour
+  // buffer (3pm PT cutoff) gives the founder time to curate.
   useEffect(() => {
     const me = loadMe();
     setMeName(me.name);
@@ -50,45 +52,61 @@ export default function DropPage() {
 
     const now = new Date();
     if (now >= elig) {
-      // Drop is live. Compute the match and mark consumed (rolls
-      // eligible_at to the next slot for the post-drop countdown).
-      const m = generateSingleDrop(me);
-      setMatch(m);
-      setHasDrop(true);
-      const consumed = consumeDrop();
-      if (consumed) {
-        setEligibleAt(consumed.next_at);
-      }
-      // Fire browser + in-tab notification once per drop.
+      // Drop time has passed. Look for a manually-curated match the
+      // founder dropped into localStorage. No automatic generation.
       const elIso = elig.toISOString();
-      if (shouldNotifyForDrop(elIso) && m) {
-        fireDropNotification({
-          title: "Your match is in",
-          body: `${m.candidate.name} is your pick for tonight. Read the four lines and decide.`,
-          url: "/drop",
-        });
+      const deliveredKey = `jumpstart.drop.delivered_match.${elIso}`;
+      try {
+        const raw = window.localStorage.getItem(deliveredKey);
+        if (raw) {
+          const m = JSON.parse(raw) as Match;
+          setMatch(m);
+          setHasDrop(true);
+          const consumed = consumeDrop();
+          if (consumed) setEligibleAt(consumed.next_at);
+          if (shouldNotifyForDrop(elIso) && m) {
+            fireDropNotification({
+              title: "Your match is in",
+              body: `${m.candidate.name} is your pick. Read the four lines and decide.`,
+              url: "/drop",
+            });
+          }
+        }
+        // No delivered match yet -> stays in "preparing" state below.
+      } catch {
+        // malformed delivery, treat as no-match
       }
     }
 
     setHydrating(false);
   }, []);
 
-  // Crossing-zero handler from the live countdown. When the timer hits
-  // zero, re-run the eligibility check + match render. This avoids a
-  // full page reload while still respecting the same code path.
+  // Crossing-zero handler from the live countdown. We do NOT auto-
+  // generate a match. The page flips to "preparing" state and waits
+  // for the founder to deliver a manually-curated pick.
   const onArrived = () => {
-    const me = loadMe();
-    const m = generateSingleDrop(me);
-    if (!m) return;
-    setMatch(m);
-    setHasDrop(true);
-    const consumed = consumeDrop();
-    if (consumed) setEligibleAt(consumed.next_at);
-    fireDropNotification({
-      title: "Your match is in",
-      body: `${m.candidate.name} is your pick for tonight. Read the four lines and decide.`,
-      url: "/drop",
-    });
+    // Re-check storage in case the founder just dropped a match in.
+    if (!eligibleAt) return;
+    const elIso = eligibleAt.toISOString();
+    try {
+      const raw = window.localStorage.getItem(
+        `jumpstart.drop.delivered_match.${elIso}`
+      );
+      if (raw) {
+        const m = JSON.parse(raw) as Match;
+        setMatch(m);
+        setHasDrop(true);
+        const consumed = consumeDrop();
+        if (consumed) setEligibleAt(consumed.next_at);
+        fireDropNotification({
+          title: "Your match is in",
+          body: `${m.candidate.name} is your pick. Read the four lines and decide.`,
+          url: "/drop",
+        });
+      }
+    } catch {
+      // skip
+    }
   };
 
   async function askPerm() {
@@ -121,6 +139,8 @@ export default function DropPage() {
           </div>
         ) : hasDrop && match ? (
           <DeliveredMatch match={match} meName={meName} eligibleAt={eligibleAt} />
+        ) : eligibleAt && new Date() >= eligibleAt ? (
+          <PreparingMatch eligibleAt={eligibleAt} />
         ) : eligibleAt ? (
           <WaitingForDrop
             eligibleAt={eligibleAt}
@@ -133,6 +153,37 @@ export default function DropPage() {
         ) : null}
       </section>
     </>
+  );
+}
+
+function PreparingMatch({ eligibleAt }: { eligibleAt: Date }) {
+  // Drop time has passed but the founder hasn't delivered a curated
+  // match yet. Closed-beta-of-10 posture: every match in the first 50
+  // is hand-curated, so there's a window between the timer hitting
+  // zero and the founder finishing the pick. This screen says so
+  // honestly without filler.
+  return (
+    <div className="surface p-6 sm:p-8 text-center bg-bg/60 mt-2">
+      <div aria-hidden className="h-px bg-accent mx-auto mb-5 w-12" />
+      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent font-semibold">
+        Match being prepared
+      </p>
+      <p className="font-display italic text-2xl sm:text-3xl text-ink leading-tight mt-3">
+        {eligibleAt.toLocaleDateString("en-US", {
+          timeZone: "America/Los_Angeles",
+          weekday: "long",
+          month: "short",
+          day: "numeric",
+        })}{" "}
+        is filed.
+      </p>
+      <p className="text-xs text-muted mt-3 leading-relaxed max-w-md mx-auto">
+        Every match in the first cohort window is curated by hand. Your
+        pick lands here the moment the founder finishes scoring the
+        cohort against your card. Refresh in a few minutes.
+      </p>
+      <div aria-hidden className="h-px bg-accent mx-auto mt-7 w-12" />
+    </div>
   );
 }
 

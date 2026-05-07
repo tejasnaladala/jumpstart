@@ -25,6 +25,14 @@ export function BottomNav() {
             <li key={item.href} className="flex-1">
               <Link
                 href={item.href}
+                // Disable Next.js auto-prefetch on the bottom nav. Auto-
+                // prefetch fires RSC payload requests on hover/visibility
+                // for every nav target, and during server restarts (or
+                // any tunnel hiccup) those requests fail with a "Failed
+                // to fetch RSC payload" console error. The routes are
+                // tiny and load instantly without prefetch; the noise
+                // is not worth it.
+                prefetch={false}
                 className={cn(
                   "flex flex-col items-center justify-center gap-0.5 py-1.5 rounded-md transition-colors",
                   active ? "text-accent" : "text-muted hover:text-ink"
