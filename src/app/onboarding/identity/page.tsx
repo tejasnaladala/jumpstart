@@ -112,9 +112,21 @@ export default function IdentityStep() {
             <span className="text-xs text-muted whitespace-nowrap">Identity</span>
             <DraftIndicator status={status} className="hidden sm:inline-flex" />
           </div>
-          <Button onClick={onNext} disabled={!canContinue}>
-            Continue
-          </Button>
+          <div className="flex items-center gap-3">
+            {/* Surface why Continue is disabled. Without this, users
+                hit the button, nothing happens, and they bounce. The
+                identity step has the strictest validation (oneLine
+                requires 10+ chars) — the inline hint names the
+                missing field directly. */}
+            {blockedReason ? (
+              <span className="text-xs text-muted hidden sm:inline">
+                {blockedReason}
+              </span>
+            ) : null}
+            <Button onClick={onNext} disabled={!canContinue}>
+              Continue
+            </Button>
+          </div>
         </div>
       </div>
     </div>
