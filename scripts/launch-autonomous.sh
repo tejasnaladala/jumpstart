@@ -18,6 +18,45 @@
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
+# --help / -h flag for discoverability. The full stack is documented in
+# docs/autonomous-stack.md; the live monitor in docs/monitoring-quickstart.md.
+if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
+  cat <<'HELP'
+launch-autonomous.sh — start the full Jumpstart autonomous stack
+
+Brings up these processes (idempotent: skips any already alive):
+
+  1. caffeinate     scripts/caffeinate.ps1   prevent sleep
+  2. server         next start (stub mode)   product on :3030
+  3. harness_loop   bun run harness:loop     12 personas drive the app
+  4. coordinator    bun run coord:loop       findings -> review -> apply
+  5. autoresearch   bun run research:loop    eval suite continuously
+  6. assertion_loop bun run assert:loop      invariant checks every 5min
+  7. checkpointer   scripts/checkpointer.ps1 auto-commit safe zones
+  8. watchdog       scripts/watchdog.ps1     restart anything dead
+
+Usage:
+  bash scripts/launch-autonomous.sh         # bring up the stack
+  bash scripts/launch-autonomous.sh --help  # this message
+
+Watch:
+  bash scripts/monitor.sh                   # live dashboard
+  tail -f experiments/coordinator.jsonl     # decision audit
+  http://localhost:3030/admin/health        # browser monitor
+
+Stop:
+  bash scripts/stop-autonomous.sh
+
+Verify:
+  bash scripts/verify-stack.sh              # one-shot health check
+
+Docs:
+  docs/autonomous-stack.md                  # operating manual
+  docs/monitoring-quickstart.md             # the page to keep open
+HELP
+  exit 0
+fi
+
 mkdir -p experiments
 
 is_listening() {
