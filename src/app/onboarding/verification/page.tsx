@@ -160,17 +160,15 @@ export default function VerificationStep() {
         return;
       }
       setEmailOtpSent(true);
-      // Stub-mode: surface the code in a toast so closed-beta friends
-      // can self-verify without a real email server. Real beta swaps
-      // this for Resend; the demo_code field disappears.
-      if (result.demo_code) {
-        toast.push(
-          `Stub-mode email code: ${result.demo_code} (expires in 10 min)`,
-          "info"
-        );
-      } else {
-        toast.push("Code sent. Check your email.", "info");
+      // Stub-mode hides the demo_code from the visible UI per founder
+      // direction (May 7): "hide codes for now". The code is logged to
+      // the dev console for closed-beta debugging only; non-dev testers
+      // see the same "code sent" toast a real run would produce. Real
+      // beta wired to Resend will not return a demo_code at all.
+      if (result.demo_code && typeof window !== "undefined") {
+        console.info(`[stub] email otp -> ${result.demo_code}`);
       }
+      toast.push("Code sent. Check your email.", "info");
     } finally {
       setSendingEmail(false);
     }
@@ -193,14 +191,10 @@ export default function VerificationStep() {
         return;
       }
       setPhoneOtpSent(true);
-      if (result.demo_code) {
-        toast.push(
-          `Stub-mode phone code: ${result.demo_code} (expires in 10 min)`,
-          "info"
-        );
-      } else {
-        toast.push("Code sent. Check your messages.", "info");
+      if (result.demo_code && typeof window !== "undefined") {
+        console.info(`[stub] phone otp -> ${result.demo_code}`);
       }
+      toast.push("Code sent. Check your messages.", "info");
     } finally {
       setSendingPhone(false);
     }
