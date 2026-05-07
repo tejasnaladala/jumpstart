@@ -50,33 +50,41 @@ export function DropCountdown({ targetIso, onArrived }: Props) {
   const isFinalMinute = c.days === 0 && c.hours === 0 && c.minutes === 0;
 
   return (
-    <div className="surface p-6 sm:p-8 text-center bg-bg/60">
-      <div aria-hidden className="h-px bg-accent mx-auto mb-5 w-12" />
-      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent font-semibold">
+    // Hero countdown. Founder direction (May 7): "Make the envelope
+    // lands thing big to take up most space on the screen, make it
+    // look good." On lg+ this fills the container-wide canvas
+    // (1080px) with display-serif numerals and generous whitespace.
+    <div className="surface bg-bg/60 px-4 py-10 sm:px-10 sm:py-16 lg:px-16 lg:py-24 text-center">
+      <div aria-hidden className="h-px bg-accent mx-auto mb-6 lg:mb-12 w-12 lg:w-24" />
+      <p className="font-mono text-[10px] sm:text-xs lg:text-sm uppercase tracking-[0.22em] lg:tracking-[0.36em] text-accent font-semibold">
         Envelope lands
       </p>
-      <p className="font-display italic text-2xl sm:text-3xl text-ink leading-tight mt-3">
+      <p className="font-display italic text-3xl sm:text-4xl lg:text-6xl xl:text-7xl text-ink leading-[1.05] mt-4 lg:mt-8 px-2">
         {label}
-      </p>
-      <p className="text-xs text-muted mt-2 leading-relaxed max-w-md mx-auto">
-        One curated founder match. Read the four lines, decide in 30
-        seconds. Mon, Wed, Fri at 9pm PT, sharp.
       </p>
 
       <div
-        className={`mt-7 grid grid-cols-4 gap-3 sm:gap-5 max-w-lg mx-auto ${
+        className={`mt-12 lg:mt-20 flex items-end justify-center gap-6 sm:gap-12 lg:gap-20 ${
           isFinalMinute ? "animate-pulse" : ""
         }`}
         aria-live="polite"
         aria-atomic="true"
       >
         <Cell value={c.days} label="days" />
+        <Separator />
         <Cell value={c.hours} label="hours" />
+        <Separator />
         <Cell value={c.minutes} label="min" />
+        <Separator />
         <Cell value={c.seconds} label="sec" highlight={isFinalMinute} />
       </div>
 
-      <div aria-hidden className="h-px bg-accent mx-auto mt-7 w-12" />
+      <p className="text-xs sm:text-sm lg:text-base text-muted mt-12 lg:mt-20 leading-relaxed max-w-md lg:max-w-2xl mx-auto px-4">
+        One curated founder match. Read the four lines, decide in 30
+        seconds. Mon, Wed, Fri at 9pm PT, sharp.
+      </p>
+
+      <div aria-hidden className="h-px bg-accent mx-auto mt-10 lg:mt-16 w-12 lg:w-24" />
     </div>
   );
 }
@@ -91,17 +99,31 @@ function Cell({
   highlight?: boolean;
 }) {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center min-w-0">
       <span
-        className={`font-display text-4xl sm:text-5xl tabular-nums leading-none ${
+        className={`font-display tabular-nums leading-[0.9] text-5xl sm:text-7xl lg:text-[10rem] xl:text-[12rem] ${
           highlight ? "text-accent" : "text-ink"
         } transition-colors`}
       >
         {String(value).padStart(2, "0")}
       </span>
-      <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted mt-2">
+      <span className="font-mono text-[9px] sm:text-[10px] lg:text-sm uppercase tracking-[0.18em] lg:tracking-[0.28em] text-muted mt-3 lg:mt-6">
         {label}
       </span>
     </div>
+  );
+}
+
+function Separator() {
+  // Decorative · between countdown cells. Lighter weight than the
+  // numerals so the rhythm reads "02 · 00 · 25 · 01" rather than a
+  // single mashed-together number.
+  return (
+    <span
+      aria-hidden
+      className="font-display text-3xl sm:text-5xl lg:text-7xl text-muted/30 leading-[0.9] self-center"
+    >
+      ·
+    </span>
   );
 }

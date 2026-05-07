@@ -130,18 +130,28 @@ export default function DropPage() {
         subtitle={longDate}
         right={<Logo size={22} withWord={false} href="/" />}
       />
-      <section className="container-app pt-5 pb-10">
-        {hydrating ? (
+      {/* Two containers: container-wide (1080) for the dramatic
+          countdown so the envelope hero takes most of the laptop
+          screen; container-app (720) for delivered match + preparing
+          state so they keep the editorial tightness. */}
+      {hydrating ? (
+        <section className="container-app pt-5 pb-10">
           <div className="surface p-6 animate-pulse">
             <div className="h-3 w-1/3 skeleton mb-3" />
             <div className="h-3 w-2/3 skeleton" />
             <div className="h-24 w-full skeleton mt-4" />
           </div>
-        ) : hasDrop && match ? (
+        </section>
+      ) : hasDrop && match ? (
+        <section className="container-app pt-5 pb-10">
           <DeliveredMatch match={match} meName={meName} eligibleAt={eligibleAt} />
-        ) : eligibleAt && new Date() >= eligibleAt ? (
+        </section>
+      ) : eligibleAt && new Date() >= eligibleAt ? (
+        <section className="container-app pt-5 pb-10">
           <PreparingMatch eligibleAt={eligibleAt} />
-        ) : eligibleAt ? (
+        </section>
+      ) : eligibleAt ? (
+        <section className="container-wide pt-5 pb-10 lg:pt-12">
           <WaitingForDrop
             eligibleAt={eligibleAt}
             onArrived={onArrived}
@@ -150,8 +160,8 @@ export default function DropPage() {
             onAskPerm={askPerm}
             hasAsked={hasAsked()}
           />
-        ) : null}
-      </section>
+        </section>
+      ) : null}
     </>
   );
 }
@@ -267,7 +277,7 @@ function WaitingForDrop({
 }) {
   return (
     <>
-      <div className="ed-rule pt-3 pb-4">
+      <div className="ed-rule pt-3 pb-4 lg:hidden">
         <div className="flex items-center justify-between gap-2">
           <span className="ed-serial">Drop pending</span>
           <span className="ed-serial">1 pick incoming</span>
