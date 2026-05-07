@@ -85,6 +85,28 @@
         { "name": "severity", "type": "select", "options": { "values": ["low", "medium", "high"] } },
         { "name": "resolution_note", "type": "text" }
       ]
+    },
+    {
+      "_comment": "OTP storage. Server-only (admin SDK). Hashed target + hashed code; plaintext never persists. Closed-beta posture; promotion-ready for Supabase migration via the OtpCodeStore interface.",
+      "name": "otp_codes",
+      "type": "base",
+      "listRule": null,
+      "viewRule": null,
+      "createRule": null,
+      "updateRule": null,
+      "deleteRule": null,
+      "schema": [
+        { "name": "channel", "type": "select", "required": true, "options": { "values": ["email", "phone"] } },
+        { "name": "target_hash", "type": "text", "required": true, "options": { "max": 128 } },
+        { "name": "code_hash", "type": "text", "required": true, "options": { "max": 128 } },
+        { "name": "sent_at", "type": "date", "required": true },
+        { "name": "expires_at", "type": "date", "required": true },
+        { "name": "verified_at", "type": "date" },
+        { "name": "attempts", "type": "number", "options": { "min": 0, "max": 100 } }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_otp_codes_lookup ON otp_codes (channel, target_hash, verified_at, expires_at)"
+      ]
     }
   ]
 }

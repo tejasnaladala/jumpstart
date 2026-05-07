@@ -150,7 +150,7 @@ export default function VerificationStep() {
     }
     setSendingEmail(true);
     try {
-      const result = sendOtp("email", email.trim());
+      const result = await sendOtp("email", email.trim());
       if (!result.ok) {
         if (result.reason === "rate_limit") {
           toast.push("Wait a minute before requesting another code.", "error");
@@ -181,7 +181,7 @@ export default function VerificationStep() {
     }
     setSendingPhone(true);
     try {
-      const result = sendOtp("phone", phoneClean);
+      const result = await sendOtp("phone", phoneClean);
       if (!result.ok) {
         if (result.reason === "rate_limit") {
           toast.push("Wait a minute before requesting another code.", "error");
@@ -200,8 +200,8 @@ export default function VerificationStep() {
     }
   }
 
-  function onVerifyEmailCode() {
-    const result = verifyOtp("email", emailOtpInput);
+  async function onVerifyEmailCode() {
+    const result = await verifyOtp("email", emailOtpInput);
     if (!result.ok) {
       const msg =
         result.reason === "expired"
@@ -217,8 +217,8 @@ export default function VerificationStep() {
     toast.push("Email verified.", "success");
   }
 
-  function onVerifyPhoneCode() {
-    const result = verifyOtp("phone", phoneOtpInput);
+  async function onVerifyPhoneCode() {
+    const result = await verifyOtp("phone", phoneOtpInput);
     if (!result.ok) {
       const msg =
         result.reason === "expired"
