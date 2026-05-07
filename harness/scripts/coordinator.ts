@@ -17,6 +17,7 @@ import { extractFindings } from "../lib/findings";
 import { proposeFor, ensureSafeScope } from "../lib/proposals";
 import { reviewProposal } from "../lib/reviewers";
 import { applyProposal } from "../lib/applier";
+import { appendDigest } from "../lib/digest";
 
 const LOG_DIR = path.resolve(__dirname, "..", "..", "experiments");
 const LOG = path.join(LOG_DIR, "coordinator.jsonl");
@@ -92,6 +93,12 @@ async function runRound(roundIdx: number): Promise<void> {
           rejected_by: "scope-guard",
           reason: safety.reason,
         });
+        appendDigest({
+          level: "needs_call",
+          summary: `Multi-agent flagged: ${p.description}`,
+          detail: `Did not auto-apply because ${safety.reason}. Founder review needed.`,
+          refs: ["experiments/coordinator-human-queue.jsonl"],
+        });
         queued += 1;
         continue;
       }
@@ -131,6 +138,18 @@ async function runRound(roundIdx: number): Promise<void> {
           codex: review.codex,
           fool: review.fool,
         });
+        // Both reviewers rejected = strong consensus signal worth
+        // surfacing. Either one rejected = "fool was skeptical" or
+        // "codex spotted an issue" - still worth founder eye.
+        const bothRejected = !review.codex.approved && !review.fool.approved;
+        appendDigest({
+          level: "needs_call",
+          summary: bothRejected
+            ? `Multi-agent consensus REJECTED: ${p.description}`
+            : `Multi-agent split on: ${p.description}`,
+          detail: `codex: ${review.codex.rationale}. fool: ${review.fool.rationale}.`,
+          refs: ["experiments/coordinator-human-queue.jsonl"],
+        });
         queued += 1;
         continue;
       }
@@ -144,6 +163,17 @@ async function runRound(roundIdx: number): Promise<void> {
             proposal_id: p.id,
             files: result.files_modified,
           });
+          // Only digest auto-applies that actually wrote files. The
+          // logging-only proposals (no edits) would flood the digest
+          // with low-signal entries.
+          if (result.files_modified.length > 0) {
+            appendDigest({
+              level: "auto_applied",
+              summary: `Multi-agent consensus shipped: ${p.description}`,
+              detail: `Files: ${result.files_modified.join(", ")}.`,
+              refs: ["git log"],
+            });
+          }
           applied += 1;
         } else {
           logEvent({
