@@ -14,6 +14,7 @@ import { loadMe } from "@/lib/mock/me";
 import { generateLocalDrop, getMatchById } from "@/lib/match/local-drop";
 import { MATCH_TYPE_LABEL } from "@/lib/types";
 import type { Match } from "@/lib/types";
+import { createOutgoingThread } from "@/lib/inbox/threads";
 
 export default function MatchDetailPage() {
   const params = useParams<{ id: string }>();
@@ -137,7 +138,23 @@ export default function MatchDetailPage() {
       // Successful send: clear the auto-saved draft so it doesn't haunt
       // the next time this match is opened.
       clearNote();
-      toast.push("Request sent. We will email you when they accept.", "success");
+      // Create a Thread in the user's inbox in pending_outgoing state
+      // so they can see it under the Sent tab and pick up the convo
+      // when the recipient accepts. Replaces the prior "we'll email
+      // you" flow — see docs/launch-playbook.md "no-DMs hardline"
+      // retirement note.
+      try {
+        if (match) {
+          createOutgoingThread({
+            other: match.candidate,
+            request_note: finalNote,
+            match_id: match.id,
+          });
+        }
+      } catch {
+        // localStorage failure is non-fatal — the API send already succeeded
+      }
+      toast.push("Request sent. Track it in your inbox.", "success");
     } catch {
       toast.push("Network issue. Try again.", "error");
     } finally {
@@ -284,9 +301,8 @@ export default function MatchDetailPage() {
           </Button>
         </div>
         <p className="text-xs text-muted mt-3 leading-relaxed">
-          On accept, both of you get an email with each other&apos;s contact and a calendar link. No
-          chat to manage, no DMs to hunt. They have a per-week intro cap, so respect it if no answer
-          comes back.
+          On accept, the conversation opens in your inbox. Low-friction, in-app, no email forwarding
+          to manage. They have a per-week intro cap, so respect it if no answer comes back.
         </p>
 
         <div className="mt-7 flex flex-wrap gap-2 justify-end">

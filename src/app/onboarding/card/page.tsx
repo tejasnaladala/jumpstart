@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { saveMe, DEFAULT_ME } from "@/lib/mock/me";
 import type { FounderCard } from "@/lib/types";
-import { extractTags, synthesizeCardLocal } from "@/lib/agents/synthesize-local";
+import { extractIntents, extractTags, synthesizeCardLocal } from "@/lib/agents/synthesize-local";
 import { useToast } from "@/components/primitive/Toast";
 
 export default function CardReviewStep() {
@@ -77,10 +77,29 @@ export default function CardReviewStep() {
       const intent = readDraft("jumpstart.onboarding.intent") as Record<string, string>;
       const synth = synthesizeCardLocal({ identity: id, verification: ver, intent });
       const tags = extractTags({ identity: id, intent });
+      const intents = extractIntents({ identity: id, intent });
+      // Per-user id/user_id derived from email so two new users on the
+      // same machine don't collide on "fc_me" / "u_me". Closes the
+      // DEFAULT_ME bleed-through where every new card inherited Tejas's
+      // identity, intents, and tags.
+      const signupRaw = window.localStorage.getItem("jumpstart.signup");
+      let derivedSlug = "self";
+      try {
+        const signup = signupRaw ? JSON.parse(signupRaw) : {};
+        const emailSeed = (signup?.email || id.name || "").toString();
+        derivedSlug = emailSeed
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "")
+          .slice(0, 24) || "self";
+      } catch {
+        // fall through with default slug
+      }
       setCard({
-        ...DEFAULT_ME,
-        name: id.name || DEFAULT_ME.name,
-        location: id.location || DEFAULT_ME.location,
+        id: `fc_${derivedSlug}`,
+        user_id: `u_${derivedSlug}`,
+        name: id.name || "",
+        location: id.location || "",
         going_to_sf: !!ver?.opts?.sf,
         attended_india: !!ver?.opts?.india,
         remote_global: !!ver?.opts?.remote,
@@ -90,9 +109,11 @@ export default function CardReviewStep() {
         looking_for: synth.looking_for,
         can_help_with: synth.can_help_with,
         talk_to_me_if: synth.talk_to_me_if,
-        tags: tags.length ? tags : DEFAULT_ME.tags,
-        // Public link survives from the identity step into the saved card
-        // and renders on the Founder Pass.
+        // Tags + intents come from the user's actual signal. Empty is
+        // a valid state — TagAdder lets them add manually on this page.
+        tags,
+        intents,
+        // Public link survives from the identity step into the saved card.
         public_link: id.publicLink || undefined,
         trust_tier: "provisional",
         updated_at: new Date().toISOString(),

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const NAV_ITEMS = [
   { href: "/drop", label: "Drop", icon: DropIcon },
   { href: "/browse", label: "Browse", icon: BrowseIcon },
+  { href: "/inbox", label: "Inbox", icon: InboxIcon },
   { href: "/you", label: "You", icon: YouIcon },
 ];
 
@@ -61,6 +62,27 @@ function BrowseIcon({ active }: { active: boolean }) {
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
       <circle cx="9" cy="9" r="5.5" stroke="currentColor" strokeWidth="1.6" fill={active ? "currentColor" : "none"} opacity={active ? 0.18 : 1} />
       <path d="M13 13l3 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+function InboxIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path
+        d="M3 10l1.6-4.6A1.5 1.5 0 016 4.5h8a1.5 1.5 0 011.4 0.9L17 10v4.5A1.5 1.5 0 0115.5 16h-11A1.5 1.5 0 013 14.5V10z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+        fill={active ? "currentColor" : "none"}
+        opacity={active ? 0.18 : 1}
+      />
+      <path
+        d="M3 10h4l1 1.5h4l1-1.5h4"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+        fill="none"
+      />
     </svg>
   );
 }
