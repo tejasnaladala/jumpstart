@@ -30,11 +30,21 @@ const VIEW_H = 480;
 const CUTOUT_X_PCT = 86;
 const CUTOUT_R = 14;
 const CUTOUT_X = (VIEW_W * CUTOUT_X_PCT) / 100;
-const TICKET_PATH =
-  `M20,0 H${VIEW_W - 20} A20,20 0 0 1 ${VIEW_W},20 V${VIEW_H - 20} A20,20 0 0 1 ${VIEW_W - 20},${VIEW_H} ` +
-  `H20 A20,20 0 0 1 0,${VIEW_H - 20} V20 A20,20 0 0 1 20,0 Z ` +
-  `M${CUTOUT_X - CUTOUT_R},0 a${CUTOUT_R},${CUTOUT_R} 0 1,1 ${CUTOUT_R * 2},0 a${CUTOUT_R},${CUTOUT_R} 0 1,1 -${CUTOUT_R * 2},0 Z ` +
-  `M${CUTOUT_X - CUTOUT_R},${VIEW_H} a${CUTOUT_R},${CUTOUT_R} 0 1,1 ${CUTOUT_R * 2},0 a${CUTOUT_R},${CUTOUT_R} 0 1,1 -${CUTOUT_R * 2},0 Z`;
+// SVG path is built via array.join(" ") rather than `+`-concatenated
+// template literals. The previous `+` form triggered an SWC build-time
+// constant-folding bug that dropped the trailing static segment of any
+// template literal whose final static ended in whitespace, producing
+// a 175-char path on the wire vs the 201-char source intent. Browser
+// then fired `<path> attribute d: Expected number, "...a14,14 0 1,1
+// -28M605.2,480..."` on every Pass render. Repro at
+// harness/scripts/repro-swc-bug.ts. The .join() call is opaque to the
+// constant evaluator, so the path round-trips intact through the build.
+const TICKET_PATH = [
+  `M20,0 H${VIEW_W - 20} A20,20 0 0 1 ${VIEW_W},20 V${VIEW_H - 20} A20,20 0 0 1 ${VIEW_W - 20},${VIEW_H}`,
+  `H20 A20,20 0 0 1 0,${VIEW_H - 20} V20 A20,20 0 0 1 20,0 Z`,
+  `M${CUTOUT_X - CUTOUT_R},0 a${CUTOUT_R},${CUTOUT_R} 0 1,1 ${CUTOUT_R * 2},0 a${CUTOUT_R},${CUTOUT_R} 0 1,1 -${CUTOUT_R * 2},0 Z`,
+  `M${CUTOUT_X - CUTOUT_R},${VIEW_H} a${CUTOUT_R},${CUTOUT_R} 0 1,1 ${CUTOUT_R * 2},0 a${CUTOUT_R},${CUTOUT_R} 0 1,1 -${CUTOUT_R * 2},0 Z`,
+].join(" ");
 
 export function FounderPass({
   card,
