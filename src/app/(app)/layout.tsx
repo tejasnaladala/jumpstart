@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import { BottomNav } from "@/components/BottomNav";
 import { RouteTransition } from "@/components/RouteTransition";
 import { EluIdentify } from "@/components/EluIdentify";
 import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
+
+// Authed surfaces are personal: never indexed, never cached by search
+// engines. Public surfaces (/, /signup, /pass/[id]) opt in separately.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default async function AppShellLayout({
   children,
@@ -28,7 +35,9 @@ export default async function AppShellLayout({
           an anonymous device. Optional - safe to remove if you don't want to
           share email with analytics. See https://elu.dev for docs. */}
       <EluIdentify email={session.email || null} />
-      <RouteTransition>{children}</RouteTransition>
+      <main id="main">
+        <RouteTransition>{children}</RouteTransition>
+      </main>
       <BottomNav />
     </div>
   );
