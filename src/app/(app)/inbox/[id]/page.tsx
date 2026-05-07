@@ -33,7 +33,7 @@ export default function ThreadPage() {
 
   useEffect(() => {
     // Pin scroll to bottom when messages change so the latest line is
-    // always in view — same shape as iMessage / Instagram DMs.
+    // always in view - same shape as iMessage / Instagram DMs.
     scrollRef.current?.scrollTo({
       top: scrollRef.current.scrollHeight,
       behavior: "smooth",

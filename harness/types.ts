@@ -1,6 +1,6 @@
 // Persona harness types. Lives outside src/ so it never ships in the
 // production bundle. The harness drives the live app via Playwright,
-// not by importing internals — that keeps the synthetic load realistic.
+// not by importing internals - that keeps the synthetic load realistic.
 
 export type DecisionStyle =
   | "eager"        // requests intros aggressively, low picky-ness
@@ -49,7 +49,7 @@ export type Persona = {
   intent: PersonaIntent;
   decisionStyle: DecisionStyle;
   cadence: PersonaCadence;
-  // Optional explicit hint — when "p_priya_fintech" runs, would they
+  // Optional explicit hint - when "p_priya_fintech" runs, would they
   // be more likely to request "p_marcus_devops" or "p_aiko_design"?
   // The runtime reads this when scoring incoming drops.
   affinityHints?: Record<string, number>;
@@ -67,7 +67,7 @@ export type PersonaState = {
   intros_received: string[];     // intro_ids inbound (from coordinator)
   intros_accepted: string[];     // accepted ids (own response)
   intros_declined: string[];
-  // Pretend meetings — coordinator records these in meetings.jsonl
+  // Pretend meetings - coordinator records these in meetings.jsonl
   meetings_scheduled: string[];
   // Last activity for cadence sampling
   last_visit: string | null;     // ISO

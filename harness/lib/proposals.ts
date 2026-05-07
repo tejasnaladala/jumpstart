@@ -3,7 +3,7 @@
 // candidate edits with structured before/after diffs. The reviewer
 // layer (codex + fool) decides whether to apply.
 //
-// This deliberately does NOT call an LLM to generate the patch — the
+// This deliberately does NOT call an LLM to generate the patch - the
 // risk of hallucinated edits at the file level is too high. LLMs are
 // scoped to the review layer, where they evaluate proposed edits
 // rather than author them. Token-max, but token-safely.
@@ -82,7 +82,7 @@ function proposeAssertionFix(finding: Finding, id: string): Proposal | null {
 function proposePersonaFix(finding: Finding, id: string): Proposal | null {
   // Persona errors usually mean a session.ts selector or flow drift.
   // We surface the failing persona's last error stage but don't write
-  // a code edit — that's a human triage call.
+  // a code edit - that's a human triage call.
   const personaId = finding.context.persona_id as string;
   return {
     id,

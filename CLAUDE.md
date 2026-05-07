@@ -124,10 +124,10 @@ Eight agents do the work. Each has a SKILL.md style spec in the design doc, sect
 
 ## Files of record
 
-- `docs/superpowers/specs/2026-05-05-jumpstart-design.md` — full design spec
-- `docs/external-tools.md` — gstack and autoresearch setup notes
-- `external/inspection/` — read-only clones of reference repos (gitignored)
-- `.superpowers/` — brainstorming session artifacts (gitignored)
+- `docs/superpowers/specs/2026-05-05-jumpstart-design.md` - full design spec
+- `docs/external-tools.md` - gstack and autoresearch setup notes
+- `external/inspection/` - read-only clones of reference repos (gitignored)
+- `.superpowers/` - brainstorming session artifacts (gitignored)
 
 ## Build phases (from spec section 33)
 

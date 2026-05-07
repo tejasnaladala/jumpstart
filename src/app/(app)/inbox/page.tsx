@@ -211,7 +211,7 @@ function ActiveRow({ thread }: { thread: Thread }) {
         <p className="text-xs text-muted truncate">
           {last
             ? `${last.from_user_id === thread.other.user_id ? "" : "You: "}${last.text}`
-            : "No messages yet — say hi"}
+            : "No messages yet - say hi"}
         </p>
       </div>
       <span className="text-xxs text-muted font-mono whitespace-nowrap">

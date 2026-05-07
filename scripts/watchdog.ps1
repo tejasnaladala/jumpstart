@@ -1,4 +1,4 @@
-# watchdog.ps1 — supervises the autonomous Jumpstart processes and
+# watchdog.ps1 - supervises the autonomous Jumpstart processes and
 # restarts anything that dies. Logs every state change to a checkpoint
 # JSONL file so the founder can replay what happened across restarts.
 #

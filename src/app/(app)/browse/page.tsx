@@ -1,215 +1,280 @@
 "use client";
 import { TopBar } from "@/components/TopBar";
-import { FilterPanel } from "@/components/FilterPanel";
-import { FounderCardView } from "@/components/FounderCard";
+import { Avatar } from "@/components/primitive/Avatar";
+import { Button } from "@/components/primitive/Button";
 import { Pill } from "@/components/primitive/Pill";
-import { Sheet } from "@/components/primitive/Sheet";
-import { useDraftState } from "@/lib/hooks/useDraftState";
-import { useMemo, useState } from "react";
-import { MOCK_COHORT } from "@/lib/mock/cohort";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { loadMe } from "@/lib/mock/me";
+import {
+  CATEGORY_LABELS,
+  createPost,
+  loadPosts,
+  loadVotes,
+  seedDemoPostsIfNeeded,
+  toggleUpvote,
+  type Post,
+  type PostCategory,
+} from "@/lib/forum/posts";
+
+const CATEGORIES: { key: PostCategory; label: string; help: string }[] = [
+  { key: "show", label: "Show", help: "Something you shipped" },
+  { key: "ask", label: "Ask", help: "Question for the cohort" },
+  { key: "feedback", label: "Feedback", help: "Roast my X, advice on Y" },
+  { key: "hiring", label: "Hiring", help: "Looking for a teammate" },
+  { key: "other", label: "Other", help: "Anything else" },
+];
 
 export default function BrowsePage() {
-  const [filterOpen, setFilterOpen] = useState(false);
-  // Persist selected tags + free-text query across sessions so a user
-  // who comes back to /browse picks up their search where they left off.
-  const [selected, setSelected] = useDraftState<string[]>(
-    "jumpstart.browse.tags",
-    [],
-    { debounceMs: 200 }
-  );
-  const [query, setQuery] = useDraftState<string>(
-    "jumpstart.browse.query",
-    "",
-    { debounceMs: 250 }
-  );
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [votes, setVotes] = useState<Set<string>>(new Set());
+  const [filter, setFilter] = useState<PostCategory | "all">("all");
+  const [composing, setComposing] = useState(false);
+  const [composeTitle, setComposeTitle] = useState("");
+  const [composeBody, setComposeBody] = useState("");
+  const [composeCat, setComposeCat] = useState<PostCategory>("show");
 
-  // Combined filter: tags AND free-text. Free-text searches across name,
-  // location, building_summary, looking_for, can_help_with, talk_to_me_if,
-  // and tags so a query like "voice" or "biotech" or "japan" surfaces
-  // any card mentioning that token in any field.
+  useEffect(() => {
+    seedDemoPostsIfNeeded();
+    setPosts(loadPosts());
+    setVotes(loadVotes());
+  }, []);
+
+  const refresh = () => {
+    setPosts(loadPosts());
+    setVotes(loadVotes());
+  };
+
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return MOCK_COHORT.filter((c) => {
-      // Tag filter (AND): every selected tag must be on the card.
-      if (selected.length > 0 && !selected.every((s) => c.tags.includes(s))) {
-        return false;
-      }
-      // Free-text filter: query must appear in at least one indexed field.
-      if (q) {
-        const hay = [
-          c.name,
-          c.location,
-          c.building_summary,
-          c.looking_for,
-          c.can_help_with,
-          c.talk_to_me_if,
-          ...c.tags,
-        ]
-          .join(" ")
-          .toLowerCase();
-        if (!hay.includes(q)) return false;
-      }
-      return true;
+    const base = filter === "all" ? posts : posts.filter((p) => p.category === filter);
+    // Default sort: HN-style score = upvotes / age^1.5. Recency wins.
+    return base.slice().sort((a, b) => {
+      const ageA = (Date.now() - new Date(a.created_at).getTime()) / 3600_000;
+      const ageB = (Date.now() - new Date(b.created_at).getTime()) / 3600_000;
+      const sa = a.upvotes / Math.pow(ageA + 2, 1.4);
+      const sb = b.upvotes / Math.pow(ageB + 2, 1.4);
+      return sb - sa;
     });
-  }, [selected, query]);
+  }, [posts, filter]);
 
-  function toggle(tag: string) {
-    setSelected((s) => (s.includes(tag) ? s.filter((x) => x !== tag) : [...s, tag]));
+  function submitPost() {
+    const title = composeTitle.trim();
+    const body = composeBody.trim();
+    if (title.length < 5 || body.length < 10) return;
+    const me = loadMe();
+    createPost({
+      author_user_id: me.user_id,
+      author_name: me.name || "Anonymous",
+      category: composeCat,
+      title,
+      body,
+    });
+    setComposeTitle("");
+    setComposeBody("");
+    setComposing(false);
+    refresh();
+  }
+
+  function vote(id: string) {
+    toggleUpvote(id);
+    refresh();
   }
 
   return (
     <>
-      <TopBar
-        title="Browse"
-        subtitle={`${filtered.length} founders`}
-        right={
-          <button
-            onClick={() => setFilterOpen(true)}
-            className={`inline-flex h-9 w-9 items-center justify-center rounded-md border transition-colors ${selected.length > 0 ? "border-ink bg-ink text-white" : "border-border text-muted hover:border-ink/40"}`}
-            aria-label="Filter"
-          >
-            <FilterIcon />
-            {selected.length > 0 ? (
-              <span className="absolute -mt-6 ml-5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent text-white text-xxs px-1">
-                {selected.length}
-              </span>
-            ) : null}
-          </button>
-        }
-      />
-
-      <div className="container-app pt-4">
-        <div className="ed-rule pt-3 flex items-baseline justify-between gap-4 mb-3">
-          <span className="ed-serial">
-            § Index / {filtered.length} of {MOCK_COHORT.length}
-          </span>
-          <span className="ed-serial hidden sm:inline">
-            {selected.length === 0 && !query
-              ? "All segments"
-              : `${selected.length + (query ? 1 : 0)} filter${
-                  selected.length + (query ? 1 : 0) === 1 ? "" : "s"
-                } on`}
-          </span>
-        </div>
-
-        {/* Free-text search. Combines AND with the tag filter. Debounced
-            via useDraftState so the count updates as you type without
-            spamming. */}
-        <div className="relative">
-          <span
-            aria-hidden
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/70"
-          >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-              <circle cx="7" cy="7" r="4.5" stroke="currentColor" strokeWidth="1.5" />
-              <path
-                d="M11 11l3.5 3.5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
+      <TopBar title="Feed" subtitle="Cohort posts, advice, hiring, show-and-tell" />
+      <section className="container-app pt-5 pb-24">
+        {/* Compose card. Click "New post" to expand the full form. Keeps
+            the feed dense and the composer one tap away. */}
+        <div className="surface p-4 mb-5">
+          {!composing ? (
+            <button
+              type="button"
+              onClick={() => setComposing(true)}
+              className="w-full text-left text-sm text-muted py-2 px-3 rounded-md border border-dashed border-border hover:border-ink/40 hover:text-ink transition-colors"
+            >
+              Post something. Show what you shipped, ask, get feedback, hire…
+            </button>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-wrap gap-1.5">
+                {CATEGORIES.map((c) => (
+                  <Pill
+                    key={c.key}
+                    size="sm"
+                    active={composeCat === c.key}
+                    onClick={() => setComposeCat(c.key)}
+                  >
+                    {c.label}
+                  </Pill>
+                ))}
+              </div>
+              <p className="text-xxs text-muted">
+                {CATEGORIES.find((c) => c.key === composeCat)?.help}
+              </p>
+              <input
+                type="text"
+                placeholder={`${CATEGORY_LABELS[composeCat]}: title`}
+                value={composeTitle}
+                onChange={(e) => setComposeTitle(e.target.value)}
+                maxLength={140}
+                className="text-sm px-3 py-2 rounded-md border border-border bg-bg text-ink placeholder:text-muted/70 focus:outline-none focus:border-ink"
               />
-            </svg>
-          </span>
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by name, location, what they build, who they want to meet"
-            maxLength={120}
-            className="w-full h-10 pl-9 pr-9 rounded-md border border-border bg-surface text-sm text-ink placeholder:text-muted/70 focus:border-ink/30 transition-colors"
-          />
-          {query ? (
-            <button
-              onClick={() => setQuery("")}
-              aria-label="Clear search"
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted hover:text-ink transition-colors p-1"
-            >
-              <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-                <path
-                  d="M3 3l10 10M13 3L3 13"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-          ) : null}
+              <textarea
+                placeholder="Body. Markdown-ish, links, code blocks, whatever. Be useful."
+                value={composeBody}
+                onChange={(e) => setComposeBody(e.target.value)}
+                rows={5}
+                maxLength={4000}
+                className="text-sm px-3 py-2 rounded-md border border-border bg-bg text-ink placeholder:text-muted/70 focus:outline-none focus:border-ink resize-y leading-relaxed"
+              />
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xxs text-muted">
+                  {composeTitle.length}/140 · {composeBody.length}/4000
+                </span>
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setComposing(false);
+                      setComposeTitle("");
+                      setComposeBody("");
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={submitPost}
+                    disabled={composeTitle.trim().length < 5 || composeBody.trim().length < 10}
+                  >
+                    Post
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      </div>
 
-      {selected.length > 0 ? (
-        <div className="container-app pt-3">
-          <div className="flex flex-wrap gap-1.5">
-            {selected.map((s) => (
-              <Pill key={s} active size="sm" onClick={() => toggle(s)}>
-                {s} ×
-              </Pill>
-            ))}
-            <button
-              onClick={() => setSelected([])}
-              className="text-xs text-accent ml-1 hover:underline"
+        {/* Category filter row */}
+        <div className="flex items-center gap-1.5 mb-4 overflow-x-auto pb-1">
+          <FilterChip active={filter === "all"} onClick={() => setFilter("all")}>
+            All
+          </FilterChip>
+          {CATEGORIES.map((c) => (
+            <FilterChip
+              key={c.key}
+              active={filter === c.key}
+              onClick={() => setFilter(c.key)}
             >
-              Clear all
-            </button>
-          </div>
+              {c.label}
+            </FilterChip>
+          ))}
         </div>
-      ) : null}
 
-      <section className="container-app pt-5 pb-6">
         {filtered.length === 0 ? (
-          <div className="surface p-8 text-center">
-            <p className="text-sm text-muted">
-              {query && selected.length > 0
-                ? "No founders match those filters. Try removing a tag or trimming the search."
-                : query
-                ? `No founders match "${query}". Try a different word or check spelling.`
-                : "No founders match all of those tags. Loosen the filter."}
+          <div className="surface p-6 text-center">
+            <p className="text-sm text-ink mb-1">Nothing here yet.</p>
+            <p className="text-xs text-muted">
+              Be the first to post. {filter === "all" ? "Anything goes." : `Try a different category.`}
             </p>
           </div>
         ) : (
-          <ul className="flex flex-col gap-3">
-            {filtered.map((c, i) => (
-              <li key={c.id}>
-                <Link
-                  href={`/browse/${c.id}`}
-                  className="block card-interactive rounded-lg"
-                >
-                  <FounderCardView card={c} variant="compact" />
-                </Link>
-                {(i + 1) % 6 === 0 && i < filtered.length - 1 ? (
-                  <div className="ed-rule pt-3 mt-3">
-                    <span className="ed-serial">
-                      Batch {String(Math.floor(i / 6) + 1).padStart(2, "0")} / {String(Math.floor(filtered.length / 6) + 1).padStart(2, "0")}
-                    </span>
-                  </div>
-                ) : null}
-              </li>
+          <ul className="flex flex-col gap-2">
+            {filtered.map((p) => (
+              <PostRow key={p.id} post={p} voted={votes.has(p.id)} onVote={() => vote(p.id)} />
             ))}
           </ul>
         )}
       </section>
-
-      <Sheet open={filterOpen} onClose={() => setFilterOpen(false)} title="Filter" size="lg">
-        <FilterPanel
-          selected={selected}
-          onToggle={toggle}
-          onClear={() => setSelected([])}
-        />
-      </Sheet>
     </>
   );
 }
 
-function FilterIcon() {
+function FilterChip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M1.5 3h13M3.5 8h9M5.5 13h5"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
+    <button
+      onClick={onClick}
+      className={`text-xs px-3 py-1 rounded-full border transition-colors whitespace-nowrap ${
+        active
+          ? "bg-ink text-bg border-ink"
+          : "bg-bg text-muted border-border hover:text-ink"
+      }`}
+    >
+      {children}
+    </button>
   );
+}
+
+function PostRow({
+  post,
+  voted,
+  onVote,
+}: {
+  post: Post;
+  voted: boolean;
+  onVote: () => void;
+}) {
+  return (
+    <li className="surface px-4 py-3 hover:border-ink/40 transition-colors">
+      <div className="flex items-start gap-3">
+        {/* Vote column */}
+        <button
+          onClick={onVote}
+          className={`flex flex-col items-center justify-start py-1 px-1.5 rounded-md transition-colors shrink-0 ${
+            voted
+              ? "bg-accent/10 text-accent"
+              : "text-muted hover:bg-bg hover:text-ink"
+          }`}
+          aria-label={voted ? "Remove upvote" : "Upvote"}
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M7 3l4 5H3l4-5z" fill="currentColor" />
+          </svg>
+          <span className="text-xs font-mono mt-0.5">{post.upvotes}</span>
+        </button>
+
+        {/* Body column */}
+        <Link href={`/browse/${post.id}`} className="flex-1 min-w-0">
+          <div className="flex items-baseline gap-2 mb-0.5 flex-wrap">
+            <Pill size="sm" active>{CATEGORY_LABELS[post.category]}</Pill>
+            <h3 className="text-sm font-semibold text-ink leading-snug">
+              {post.title}
+            </h3>
+          </div>
+          <p className="text-xs text-muted leading-relaxed line-clamp-2 mt-1">
+            {post.body}
+          </p>
+          <div className="flex items-center gap-3 text-xxs text-muted mt-2 font-mono">
+            <span className="inline-flex items-center gap-1.5">
+              <Avatar name={post.author_name} size={16} />
+              {post.author_name}
+            </span>
+            <span>{timeAgo(post.created_at)}</span>
+            <span>· {post.comments.length} {post.comments.length === 1 ? "comment" : "comments"}</span>
+          </div>
+        </Link>
+      </div>
+    </li>
+  );
+}
+
+function timeAgo(iso: string): string {
+  const ms = Date.now() - new Date(iso).getTime();
+  const min = Math.round(ms / 60000);
+  if (min < 1) return "just now";
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.round(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+  const days = Math.round(hr / 24);
+  return `${days}d ago`;
 }

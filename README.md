@@ -48,7 +48,7 @@ bun install
 bun run dev
 ```
 
-The app boots on `http://localhost:3030` in dev mode. Sign up with any email, fill out the 4-step onboarding, see your first Drop. Stub mode is on by default — agents fall back to local heuristics, no API key needed.
+The app boots on `http://localhost:3030` in dev mode. Sign up with any email, fill out the 4-step onboarding, see your first Drop. Stub mode is on by default - agents fall back to local heuristics, no API key needed.
 
 To switch agents from local stub to real Claude calls, drop `ANTHROPIC_API_KEY` into `.env.local`.
 

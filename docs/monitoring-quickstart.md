@@ -7,13 +7,13 @@ closed-beta-of-10 launch. Five things to watch.
 
 Open these in browser tabs:
 
-- `http://localhost:3030/admin/health` — per-dependency probes (Supabase,
+- `http://localhost:3030/admin/health` - per-dependency probes (Supabase,
   Anthropic, Upstash) with a 30-poll history sparkline. Auto-refreshes
   every 4s. **Green dot = configured-and-healthy. Grey dot = stub-mode
   (expected during closed beta). Red dot = wired-but-failing (page).**
-- `http://localhost:3030/admin` — tile launcher. Live health, Moderation,
+- `http://localhost:3030/admin` - tile launcher. Live health, Moderation,
   Agent logs, Cohort dashboard.
-- `http://localhost:3030/admin/cohort` — cohort distribution, drop performance.
+- `http://localhost:3030/admin/cohort` - cohort distribution, drop performance.
 
 Tunnel URL: paste the latest `https://*.trycloudflare.com` here once you
 restart cloudflared.
@@ -69,20 +69,20 @@ bun run harness:metrics
 
 You get:
 - `signups`, `drops_seen`, `intros_requested`, `intros_accepted`, `meetings_scheduled`
-- `acceptance_rate` (accepts / (accepts + declines)) — keep above 40%
+- `acceptance_rate` (accepts / (accepts + declines)) - keep above 40%
   for normal cohort behavior. Below means the matchmaker is matching wrong.
-- `assertion_pass_rate` — keep at 100. Anything below means a regression.
-- `errors` — should be 0. Anything else, look at recent persona screenshots
+- `assertion_pass_rate` - keep at 100. Anything below means a regression.
+- `errors` - should be 0. Anything else, look at recent persona screenshots
   in `experiments/harness-runs/<run_id>/<persona_id>/`.
 
 ## When something goes red
 
 | Signal | Where to look |
 |---|---|
-| `assertion_pass_rate < 100` | `experiments/harness-assertions.jsonl` — grep `"passed":false` |
-| `errors > 0` in activity | `experiments/harness-runs/<latest>/*/telemetry.json` — console errors and 4xx/5xx per persona |
+| `assertion_pass_rate < 100` | `experiments/harness-assertions.jsonl` - grep `"passed":false` |
+| `errors > 0` in activity | `experiments/harness-runs/<latest>/*/telemetry.json` - console errors and 4xx/5xx per persona |
 | `acceptance_rate < 30%` | Decision rules might be too picky, or matchmaker scoring drifted. Inspect `harness/lib/coordinator.ts decideAccept` |
-| `/admin/health` shows red dot | Real probe failure — restart Supabase/Anthropic/Upstash dep |
+| `/admin/health` shows red dot | Real probe failure - restart Supabase/Anthropic/Upstash dep |
 | `/admin/health` shows grey dot | Stub mode (expected during closed beta) |
 
 ## Persona-specific debugging
@@ -98,8 +98,8 @@ specific archetype's flow fails (e.g. mobile profile + filter sheet
 
 ## What you do NOT need to watch
 
-- Server stdout — we read it through `/api/health`.
-- The cloudflared tunnel terminal — it logs noise but the URL is
+- Server stdout - we read it through `/api/health`.
+- The cloudflared tunnel terminal - it logs noise but the URL is
   constant for the session. If it dies, the URL rotates; check it.
-- Per-persona state files in `harness/state/` — those are durable but
+- Per-persona state files in `harness/state/` - those are durable but
   only matter if you want to reset a persona (`rm harness/state/<id>.json`).

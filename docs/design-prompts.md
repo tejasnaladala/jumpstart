@@ -26,7 +26,7 @@ This is the exact sequence to follow inside Claude.ai (or v0.dev, or any high-co
 4. In the Project's **Custom Instructions**, paste the voice rules block from the bottom of this file.
 5. Pick the model: **Claude Sonnet 4.5** (or higher). Avoid Haiku for design work.
 
-## Pass 1 — Vision sync
+## Pass 1 - Vision sync
 
 Paste this into a new chat in the Project. The goal is to confirm the design AI has the brief locked before producing pixels.
 
@@ -46,7 +46,7 @@ Do not propose any new design yet. This is sync.
 
 Read the response carefully. If anything is wrong, correct it before moving to Pass 2. The model is going to riff off whatever it confirms here, so accuracy matters.
 
-## Pass 2 — Hero redesign
+## Pass 2 - Hero redesign
 
 ```
 Redesign the landing hero only. Constraints:
@@ -71,7 +71,7 @@ Do not include changelog formatting, do not include "I hope this helps", do not 
 
 Apply the output to your repo. Run `bun run build` and `bash scripts/loop.sh`. If the hardening score drops below 100, paste the failure into the same chat and ask the AI to fix while preserving the design.
 
-## Pass 3 — Drop home redesign
+## Pass 3 - Drop home redesign
 
 ```
 Now redesign the authenticated Drop home at src/app/(app)/drop/page.tsx.
@@ -85,7 +85,7 @@ Same locked tokens. The three-match list is the centerpiece. Add:
 Constraints unchanged. Deliver the same five artifacts as Pass 2.
 ```
 
-## Pass 4 — Polish, accessibility, performance
+## Pass 4 - Polish, accessibility, performance
 
 ```
 Audit the redesign for:
@@ -99,7 +99,7 @@ Audit the redesign for:
 Output a single markdown report with severity-tagged findings (P0, P1, P2). For each P0 and P1, propose a specific fix. Do not produce new design.
 ```
 
-## Pass 5, optional — Variants
+## Pass 5, optional - Variants
 
 ```
 Produce three landing-page variants holding the locked tokens but exploring different hero compositions:

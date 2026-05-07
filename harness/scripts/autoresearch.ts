@@ -3,7 +3,7 @@
 // computed by the metrics emitter.
 //
 // In stub mode (no ANTHROPIC_API_KEY), evals fall back to local
-// heuristic checks via the existing runner contract — the goal here
+// heuristic checks via the existing runner contract - the goal here
 // is to keep the signal warm so a regression in eval logic is caught
 // the moment it lands.
 //

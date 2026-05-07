@@ -64,7 +64,7 @@ export function savePosts(posts: Post[]): void {
   try {
     window.localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
   } catch {
-    // quota or privacy mode — non-fatal
+    // quota or privacy mode - non-fatal
   }
 }
 
@@ -188,7 +188,7 @@ export function seedDemoPostsIfNeeded(): void {
           id: "cmt_seed_2",
           author_user_id: "u_marcus",
           author_name: "Marcus Chen",
-          body: "Yes — batch endpoints are first-class. The tracer hooks the queue boundary so you see batch-vs-realtime cleanly.",
+          body: "Yes - batch endpoints are first-class. The tracer hooks the queue boundary so you see batch-vs-realtime cleanly.",
           created_at: new Date(now - 1000 * 60 * 18).toISOString(),
         },
       ],
@@ -229,7 +229,7 @@ export function seedDemoPostsIfNeeded(): void {
       author_name: "Lena Voss",
       category: "hiring",
       title: "Hiring: embedded firmware engineer for battery analytics",
-      body: "Looking for one early embedded eng who has shipped CAN bus / ISO 26262 work. Berlin or remote-EU OK, occasional travel to Munich for fleet tests. Equity-heavy, salary on the lower end of competitive. We'll be at SS in person — happy to grab coffee at Chase Center if you're attending.",
+      body: "Looking for one early embedded eng who has shipped CAN bus / ISO 26262 work. Berlin or remote-EU OK, occasional travel to Munich for fleet tests. Equity-heavy, salary on the lower end of competitive. We'll be at SS in person - happy to grab coffee at Chase Center if you're attending.",
       created_at: new Date(now - 1000 * 60 * 60 * 8).toISOString(),
       upvotes: 3,
       comments: [],

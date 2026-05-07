@@ -45,7 +45,7 @@ fi
 LINT_VIOLATIONS=0
 
 # Em dashes anywhere in source (we ban them per voice rules).
-EM_DASH_HITS=$(grep -rn --include='*.ts' --include='*.tsx' --include='*.md' --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=external "—" src 2>/dev/null | wc -l | tr -d ' ')
+EM_DASH_HITS=$(grep -rn --include='*.ts' --include='*.tsx' --include='*.md' --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=external " - " src 2>/dev/null | wc -l | tr -d ' ')
 if [ "${EM_DASH_HITS:-0}" -gt 0 ]; then
   LINT_VIOLATIONS=$((LINT_VIOLATIONS + EM_DASH_HITS))
 fi

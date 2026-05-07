@@ -33,7 +33,7 @@ export type Thread = {
   // request time). The "me" side is implied by ownership of the inbox.
   other: FounderCard;
   status: ThreadStatus;
-  // The opening note — the request body. Always preserved even after
+  // The opening note - the request body. Always preserved even after
   // accept so the convo has context.
   request_note: string;
   // Who initiated. "me" = current user sent the request; "them" =
@@ -65,7 +65,7 @@ export function saveThreads(threads: Thread[]): void {
   try {
     window.localStorage.setItem(KEY, JSON.stringify(threads));
   } catch {
-    // quota or privacy mode — non-fatal, the user just loses persistence
+    // quota or privacy mode - non-fatal, the user just loses persistence
   }
 }
 
@@ -111,7 +111,7 @@ export function acceptThread(id: string, currentUserId: string): Thread | undefi
   if (!thread) return undefined;
   thread.status = "accepted";
   thread.updated_at = new Date().toISOString();
-  // No automatic system message — thread starts clean. Sender's
+  // No automatic system message - thread starts clean. Sender's
   // request_note is rendered as the first item in the thread view so
   // context is preserved without polluting the message log.
   void currentUserId;

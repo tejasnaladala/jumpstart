@@ -1,5 +1,5 @@
 // Invariant assertions. Run once per round, independent of any persona.
-// These are the things that must always hold true — if any of them
+// These are the things that must always hold true - if any of them
 // fails, the founder gets paged. They run against the live app the
 // personas are testing against, so they catch the regressions the
 // personas may have caused.
@@ -86,7 +86,7 @@ export async function runAssertions(): Promise<{
   );
 
   // Each /api/intros assertion accepts 429 as "rate limit working as
-  // designed" — the API is rejecting input with a known error code, which
+  // designed" - the API is rejecting input with a known error code, which
   // is the underlying invariant. A real failure would be a 5xx or a 200
   // on bad input. Rate-limit drift across many parallel personas is
   // expected; the metrics layer surfaces it separately.
@@ -118,7 +118,7 @@ export async function runAssertions(): Promise<{
       });
       const body = (await res.json().catch(() => ({}))) as { code?: string };
       // Accept 401 (auth required), 400+SAFETY_BLOCK (correct path),
-      // or 429 (rate limited — also defended).
+      // or 429 (rate limited - also defended).
       const ok =
         res.status === 401 ||
         res.status === 429 ||
@@ -201,7 +201,7 @@ export async function runAssertions(): Promise<{
       await check("drop_returns_three_matches", async () => {
         await page.goto(`${BASE_URL}/drop`, { waitUntil: "domcontentloaded" });
         // Wait briefly for the matches to render. Not fatal if they
-        // don't appear — that's the assertion failing.
+        // don't appear - that's the assertion failing.
         await page.waitForSelector('a[href^="/match/"]', { timeout: 5_000 }).catch(() => null);
         const count = await page.locator('a[href^="/match/"]').count();
         return { ok: count === 3, detail: `got ${count} match cards` };

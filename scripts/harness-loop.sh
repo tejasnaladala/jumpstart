@@ -4,7 +4,7 @@
 # + emit consolidated METRIC lines.
 #
 # Designed to run in a `while true` outer loop or via cron. Each pass
-# is bounded and self-contained — if the dev server is down we still
+# is bounded and self-contained - if the dev server is down we still
 # log METRIC lines (with zeros) so we can see the gap on the dashboard.
 #
 # Output: experiments/harness-loop.jsonl gets one summary row per pass.

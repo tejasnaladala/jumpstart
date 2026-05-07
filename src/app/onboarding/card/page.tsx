@@ -110,7 +110,7 @@ export default function CardReviewStep() {
         can_help_with: synth.can_help_with,
         talk_to_me_if: synth.talk_to_me_if,
         // Tags + intents come from the user's actual signal. Empty is
-        // a valid state — TagAdder lets them add manually on this page.
+        // a valid state - TagAdder lets them add manually on this page.
         tags,
         intents,
         // Public link survives from the identity step into the saved card.
@@ -203,12 +203,12 @@ export default function CardReviewStep() {
                 </Pill>
               ))}
               {card.tags.length === 0 ? (
-                <span className="text-xs text-muted italic">No tags yet — add a few below.</span>
+                <span className="text-xs text-muted italic">No tags yet - add a few below.</span>
               ) : null}
             </div>
             {/* Free-text tag input. Tags drive matching, browse filters,
                 and the Pass display, so users need a real way to add
-                them — clicking pills only removed before. Normalize
+                them - clicking pills only removed before. Normalize
                 aggressively so "AI Agents" / "ai-agents" / "ai agents"
                 all collapse to one canonical form. Cap at 12 to keep
                 the Pass legible (FounderPass.tsx renders the first 6). */}

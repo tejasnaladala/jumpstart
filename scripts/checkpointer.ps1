@@ -1,15 +1,15 @@
-# checkpointer.ps1 — periodic git checkpoint logger. Every 5 minutes,
+# checkpointer.ps1 - periodic git checkpoint logger. Every 5 minutes,
 # checks for any uncommitted changes in tracked safe-zones (harness/,
 # scripts/, evals/, docs/, src/lib/) and commits them as a checkpoint.
 # Frontend paths (src/app/, src/components/) are intentionally NOT
-# touched here — those are user-controlled per the no-frontend-changes
+# touched here - those are user-controlled per the no-frontend-changes
 # rule.
 #
 # Output:
 #   experiments/checkpoint.jsonl  one row per checkpoint pass
 #
 # Each commit message is auto-generated from the diff stats. Multiple
-# small commits beat one big drift — easier to revert if a bad fix
+# small commits beat one big drift - easier to revert if a bad fix
 # slipped through review.
 
 $ErrorActionPreference = "Continue"

@@ -1,4 +1,4 @@
-# Autonomous Jumpstart — operating manual
+# Autonomous Jumpstart - operating manual
 
 The closed loop, top to bottom. Six processes run continuously and the
 founder steps in only for the few decisions a machine cannot judge.
@@ -92,10 +92,10 @@ that one. New ones get started.
 ### Live monitoring
 
 ```bash
-# One terminal — refreshing dashboard
+# One terminal - refreshing dashboard
 bash scripts/monitor.sh
 
-# Another terminal — raw event stream
+# Another terminal - raw event stream
 tail -f experiments/coordinator.jsonl experiments/harness-activity.jsonl experiments/autoresearch.jsonl
 ```
 
@@ -128,7 +128,7 @@ The founder still owns:
 - Product thesis (no LLM should be tuning this)
 - Anything in `coordinator-human-queue.jsonl` flagged frontend / large-scope
 - Anything the watchdog can't restart on its own (e.g. server build
-  fails after a code change — watchdog restarts the binary, but if the
+  fails after a code change - watchdog restarts the binary, but if the
   build is broken the binary won't come up)
 
 ## Failure modes (and the fixes already in place)
@@ -161,4 +161,4 @@ These are the seams where a future iteration would plug in:
 - **Spec-first software factory.** Today the coordinator only fixes
   bugs. A spec-first factory would let the founder write a spec + tests
   for a new feature, and the coordinator would build until tests pass.
-  Boundary work — needs prompt design, not code.
+  Boundary work - needs prompt design, not code.
