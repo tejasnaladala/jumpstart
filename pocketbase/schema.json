@@ -1,0 +1,90 @@
+{
+  "_comment": "PocketBase schema for Jumpstart. Run via `pocketbase migrate collections` after starting the server. Stub mode (closed-beta-of-10) keeps using localStorage; this schema activates when NEXT_PUBLIC_POCKETBASE_URL is set in .env.local.",
+  "collections": [
+    {
+      "name": "users",
+      "type": "auth",
+      "schema": [
+        { "name": "full_name", "type": "text", "required": true, "options": { "max": 80 } },
+        { "name": "age", "type": "number", "required": false, "options": { "min": 16, "max": 99 } },
+        { "name": "city", "type": "text", "required": true, "options": { "max": 60 } },
+        { "name": "region", "type": "text", "required": true, "options": { "max": 60 } },
+        { "name": "pronouns", "type": "text", "required": false, "options": { "max": 20 } },
+        { "name": "phone", "type": "text", "required": false, "options": { "max": 20 } },
+        { "name": "trust_tier", "type": "select", "required": true, "options": { "values": ["provisional", "verified", "peer_vouched"] } },
+        { "name": "ticket_photo", "type": "file", "required": false, "options": { "maxSelect": 1, "maxSize": 4194304, "mimeTypes": ["image/png", "image/jpeg", "image/webp"] } }
+      ]
+    },
+    {
+      "name": "founder_cards",
+      "type": "base",
+      "schema": [
+        { "name": "user", "type": "relation", "required": true, "options": { "collectionId": "users", "cascadeDelete": true } },
+        { "name": "name", "type": "text", "required": true, "options": { "max": 80 } },
+        { "name": "location", "type": "text", "required": true, "options": { "max": 120 } },
+        { "name": "going_to_sf", "type": "bool" },
+        { "name": "attended_india", "type": "bool" },
+        { "name": "remote_global", "type": "bool" },
+        { "name": "open_to_async", "type": "bool" },
+        { "name": "open_to_in_person", "type": "bool" },
+        { "name": "building_summary", "type": "text", "options": { "max": 400 } },
+        { "name": "looking_for", "type": "text", "options": { "max": 400 } },
+        { "name": "can_help_with", "type": "text", "options": { "max": 400 } },
+        { "name": "talk_to_me_if", "type": "text", "options": { "max": 400 } },
+        { "name": "tags", "type": "json" },
+        { "name": "intents", "type": "json" },
+        { "name": "public_link", "type": "text", "options": { "max": 200 } }
+      ]
+    },
+    {
+      "name": "drops",
+      "type": "base",
+      "schema": [
+        { "name": "user", "type": "relation", "required": true, "options": { "collectionId": "users" } },
+        { "name": "drop_at", "type": "date", "required": true },
+        { "name": "delivered_match", "type": "json", "required": false },
+        { "name": "delivered_at", "type": "date", "required": false },
+        { "name": "curated_by", "type": "relation", "options": { "collectionId": "users" } }
+      ]
+    },
+    {
+      "name": "threads",
+      "type": "base",
+      "schema": [
+        { "name": "participants", "type": "relation", "required": true, "options": { "collectionId": "users", "maxSelect": 2 } },
+        { "name": "status", "type": "select", "options": { "values": ["pending_incoming", "pending_outgoing", "accepted", "declined"] } },
+        { "name": "request_note", "type": "text", "options": { "max": 600 } },
+        { "name": "messages", "type": "json" }
+      ]
+    },
+    {
+      "name": "posts",
+      "type": "base",
+      "schema": [
+        { "name": "author", "type": "relation", "required": true, "options": { "collectionId": "users" } },
+        { "name": "category", "type": "select", "options": { "values": ["show", "ask", "feedback", "hiring", "other"] } },
+        { "name": "title", "type": "text", "required": true, "options": { "max": 140 } },
+        { "name": "body", "type": "text", "required": true, "options": { "max": 4000 } },
+        { "name": "upvotes", "type": "number" },
+        { "name": "comments", "type": "json" },
+        { "name": "flagged", "type": "bool" }
+      ]
+    },
+    {
+      "name": "moderation",
+      "type": "base",
+      "schema": [
+        { "name": "kind", "type": "select", "options": { "values": ["verification", "flagged_post", "flagged_comment", "reported_post", "reported_message"] } },
+        { "name": "status", "type": "select", "options": { "values": ["pending", "approved", "rejected", "removed", "dismissed"] } },
+        { "name": "triggered_by", "type": "relation", "options": { "collectionId": "users" } },
+        { "name": "target_id", "type": "text" },
+        { "name": "target_kind", "type": "select", "options": { "values": ["user", "post", "comment", "message"] } },
+        { "name": "target_label", "type": "text" },
+        { "name": "target_snippet", "type": "text" },
+        { "name": "reasons", "type": "json" },
+        { "name": "severity", "type": "select", "options": { "values": ["low", "medium", "high"] } },
+        { "name": "resolution_note", "type": "text" }
+      ]
+    }
+  ]
+}
