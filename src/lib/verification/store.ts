@@ -46,7 +46,23 @@ export interface OtpCodeStore {
     targetHash: string
   ): Promise<OtpCodeRecord | null>;
   incrementAttempts(id: string): Promise<number>;
-  markVerified(id: string, verifiedAt: string): Promise<OtpCodeRecord>;
+  // Returns null if the row was already verified between read and
+  // update (concurrent verify race). Caller maps null → mismatch so
+  // only the first writer wins.
+  markVerified(
+    id: string,
+    verifiedAt: string
+  ): Promise<OtpCodeRecord | null>;
+  // Mark all unverified rows for (channel, targetHash) whose
+  // expires_at is in the future as expired-now. Called from sendOtp
+  // before persisting the new row so a fresh send invalidates older
+  // codes still inside their TTL window. Returns the count of rows
+  // affected; best-effort, never throws.
+  expirePriorUnverified(
+    channel: OtpChannel,
+    targetHash: string,
+    asOfIso: string
+  ): Promise<number>;
 }
 
 const COLLECTION = "otp_codes";
@@ -105,10 +121,42 @@ export function createPocketBaseOtpCodeStore(
 
     async markVerified(id, verifiedAt) {
       const client = await getPocketBaseAdminClient(config);
+      // Read-then-update guard: PocketBase admin SDK does not expose a
+      // filter-conditional update, so we narrow the race window by
+      // re-reading the row immediately before the write. If verified_at
+      // was set by a concurrent caller, return null and let the service
+      // map to mismatch. Race window remains but is now sub-millisecond.
+      const fresh = await client.collection(COLLECTION).getOne(id);
+      if (fresh["verified_at"]) {
+        return null;
+      }
       const updated = await client
         .collection(COLLECTION)
         .update(id, { verified_at: verifiedAt });
       return rowToRecord(updated);
+    },
+
+    async expirePriorUnverified(channel, targetHash, asOfIso) {
+      const client = await getPocketBaseAdminClient(config);
+      try {
+        const rows = await client.collection(COLLECTION).getFullList({
+          filter: `channel = "${channel}" && target_hash = "${targetHash}" && verified_at = "" && expires_at > "${asOfIso}"`,
+        });
+        let count = 0;
+        for (const row of rows) {
+          try {
+            await client
+              .collection(COLLECTION)
+              .update(String(row.id), { expires_at: asOfIso });
+            count++;
+          } catch {
+            // best-effort; one failure must not block the new send
+          }
+        }
+        return count;
+      } catch {
+        return 0;
+      }
     },
   };
 }
