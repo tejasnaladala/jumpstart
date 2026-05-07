@@ -50,22 +50,25 @@ function gh(args: string[], stdin?: string): string {
 }
 
 function listOpenReadyIssues(): Issue[] {
+  // gh CLI's --label flag doesn't match labels containing colons (which all
+  // our coordination labels do). Pull all open issues and filter the names
+  // client-side.
   try {
     const json = gh([
       "issue",
       "list",
-      "--label",
-      "status:ready",
-      "--label",
-      "owner:mukund-claude",
       "--state",
       "open",
       "--json",
       "number,title,labels,state,updatedAt",
       "--limit",
-      "50",
+      "100",
     ]);
-    return JSON.parse(json) as Issue[];
+    const all = JSON.parse(json) as Issue[];
+    return all.filter((issue) => {
+      const names = new Set(issue.labels.map((l) => l.name));
+      return names.has("status:ready") && names.has("owner:mukund-claude");
+    });
   } catch (e) {
     log({ event: "list_failed", error: (e as Error).message });
     return [];
