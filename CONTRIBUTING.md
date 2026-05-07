@@ -12,9 +12,9 @@ The split is by area, not by skill. Mukund still ships code (TSX components, Tai
 
 ## Branching
 
-- `implementation/v1` is the default branch. Feature work lands as PRs against it.
+- `main` is the default branch. Feature work lands as PRs against it.
 - Each Claude branches `claude/<owner>/<short-slug>` for non-trivial work, e.g. `claude/mukund/pocketbase-otp` or `claude/tejas/feed-detail-polish`.
-- The autonomous stack on Tejas's machine commits checkpoints to safe zones (harness, scripts, experiments) directly to `implementation/v1`. Both Claudes should `git pull --rebase` frequently.
+- The autonomous stack on Tejas's machine commits checkpoints to safe zones (harness, scripts, experiments) directly to `main`. Both Claudes should `git pull --rebase` frequently.
 
 ## Labels
 
@@ -61,7 +61,7 @@ What you're trying to accomplish, in 2-3 sentences.
 
 ## PR checklist
 
-Open a PR against `implementation/v1` with:
+Open a PR against `main` with:
 
 1. Title in conventional-commit form (`feat(area): ...`, `fix(area): ...`, `chore(area): ...`).
 2. Body that links the issue (`Closes #N`).

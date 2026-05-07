@@ -114,7 +114,7 @@ function nudgeIssue(issue: Issue): void {
     "",
     "When you pick it up:",
     "1. Switch label to `status:in-progress`",
-    "2. Branch from `implementation/v1` as `claude/mukund/<short-slug>`",
+    "2. Branch from `main` as `claude/mukund/<short-slug>`",
     "3. Read the **Brief** section above; it's self-contained.",
     "4. Run `/codex` on your diff before pushing the PR.",
     "5. Tag the PR with `status:review` and request a review from Tejas's Claude.",
