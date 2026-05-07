@@ -1,6 +1,6 @@
 // Standalone assertion runner. Calls the assertion suite once and
 // emits METRIC lines for the maintenance loop. Exits non-zero only
-// if every assertion failed (server is dead) — a partial failure
+// if every assertion failed (server is dead) - a partial failure
 // still returns 0 so the loop keeps running and the next round
 // gets a chance.
 

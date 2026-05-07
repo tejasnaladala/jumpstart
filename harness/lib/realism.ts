@@ -6,7 +6,7 @@
 //
 // Each function returns a Promise so the caller can compose it with
 // other actions. The shape is "do X, sometimes do Y instead, sometimes
-// do Z first" — biased coin flips driven by HARNESS_REALISM intensity.
+// do Z first" - biased coin flips driven by HARNESS_REALISM intensity.
 
 import type { PersonaSession } from "./session";
 
@@ -24,7 +24,7 @@ export async function maybeRefresh(s: PersonaSession): Promise<void> {
 }
 
 export async function maybeAbandon(s: PersonaSession): Promise<boolean> {
-  // Returns true if the persona "abandoned" — caller should bail.
+  // Returns true if the persona "abandoned" - caller should bail.
   if (chance(0.1)) {
     await s.page.goto(`${process.env.HARNESS_BASE_URL || "http://localhost:3030"}/`);
     return true;
@@ -70,8 +70,8 @@ export function junkText(): string {
 export function spamNote(): string {
   const variants = [
     "Click http://earn-money.fast to make $5000 a day from home now",
-    "Hi! Crypto giveaway at http://bit.ly/btc-fast-money — limited time, claim now",
-    "Wire transfer immediate — Nigerian prince has $4M for you, contact me",
+    "Hi! Crypto giveaway at http://bit.ly/btc-fast-money - limited time, claim now",
+    "Wire transfer immediate - Nigerian prince has $4M for you, contact me",
   ];
   return variants[Math.floor(Math.random() * variants.length)] as string;
 }

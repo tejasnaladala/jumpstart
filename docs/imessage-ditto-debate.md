@@ -10,7 +10,7 @@
 **No** for v1. **Maybe** for v1.5+ as a one-shot reminder channel.
 
 The single thing iMessage is great at, we already have via the Web Share API
-(`navigator.share`) — the user taps Share, picks Messages from the native
+(`navigator.share`) - the user taps Share, picks Messages from the native
 sheet, and the recipient sees a link with the sender's name in the OG preview.
 That covers the manual-invite flow without any compliance, ToS, or pricing
 exposure.
@@ -18,7 +18,7 @@ exposure.
 Going further (programmatic iMessage sends, automated drops via blue bubbles,
 in-thread match flows) trades structured product mechanics for the worst
 chat-app failure mode: founders text instead of meet. We've already chosen
-that hill — the deferred-features doc lists "no in-app DMs" as a hard rule
+that hill - the deferred-features doc lists "no in-app DMs" as a hard rule
 because every networking app that adds them becomes a chat app and the
 meeting rate collapses. iMessage as a primary surface is in-app DMs by a
 different name.
@@ -41,11 +41,11 @@ What you can plausibly do:
 - Send a calendar link the moment two people accept an intro.
 
 What you can't plausibly do (or shouldn't):
-- Mass-send unsolicited messages — Apple shadow-bans the iCloud account
+- Mass-send unsolicited messages - Apple shadow-bans the iCloud account
   within hours.
 - Send to non-iPhone users (the SS cohort has a real Android contingent,
   especially the India and Latam founders).
-- Treat it as a real database — iMessage threads are write-once, the bridge
+- Treat it as a real database - iMessage threads are write-once, the bridge
   caches state but loses fidelity.
 
 ## Why not, for v1
@@ -55,7 +55,7 @@ What you can't plausibly do (or shouldn't):
 Jumpstart's whole pitch is: 3 founders worth meeting per week, an opener
 half-written, and a one-tap intro request that lands as an email. The flow
 is six taps long. Switching the surface to a chat thread reintroduces
-exactly the friction the email digest was designed to remove — now the
+exactly the friction the email digest was designed to remove - now the
 recipient has to read a paragraph, decide whether to click, decide whether
 to reply, and still has to hop out of thread to schedule.
 
@@ -69,7 +69,7 @@ Apple's Business Chat is the only sanctioned API for programmatic iMessage,
 and it requires a registered business agent, a verified business phone
 number, and customer-initiated conversations only (the customer has to
 message you first, you can't cold-send). Bridge services like ditto operate
-outside that lane — they sign into iCloud accounts and automate the Messages
+outside that lane - they sign into iCloud accounts and automate the Messages
 app on Mac minis. Apple periodically purges those accounts. Building the
 funnel on infrastructure that can vanish on a Tuesday is fragile for a
 2,000-attendee cohort.

@@ -78,16 +78,16 @@ The current build has these. Treat them as floor, not ceiling.
 
 Bring any of these to a level the current build does not yet hit.
 
-1. **Live drop counter** — "12 founders matched in the last 24 hours" with a pulsing dot, updates without refresh
-2. **Type-on effect** — char-by-char reveal on the sample drop's "why you should meet" line, like a wire arriving
-3. **Magnetic CTA** — primary buttons subtly attract the cursor when nearby, ease-out
-4. **Animated rule-draw** — the editorial rules with accent ticks animate from left on scroll
-5. **Tag particle field** — 30-50 cohort tags drift slowly in the background of one section, hover to highlight, click to filter
-6. **Calendar grid** — Wednesdays of SS 2026 plotted, "next drop in 3 days" highlighted
-7. **Cohort flow visualizer** — animated arcs between cities on a flat world map, showing intro requests in flight
-8. **Founder card flip stack** — three small cards on the landing that flip-rotate every 3s showing different match types
-9. **Scroll-linked hero** — the globe scales and the headline tightens as the user scrolls past the masthead
-10. **Animated KPI band** — counters tick on scroll, a small sparkline draws
+1. **Live drop counter** - "12 founders matched in the last 24 hours" with a pulsing dot, updates without refresh
+2. **Type-on effect** - char-by-char reveal on the sample drop's "why you should meet" line, like a wire arriving
+3. **Magnetic CTA** - primary buttons subtly attract the cursor when nearby, ease-out
+4. **Animated rule-draw** - the editorial rules with accent ticks animate from left on scroll
+5. **Tag particle field** - 30-50 cohort tags drift slowly in the background of one section, hover to highlight, click to filter
+6. **Calendar grid** - Wednesdays of SS 2026 plotted, "next drop in 3 days" highlighted
+7. **Cohort flow visualizer** - animated arcs between cities on a flat world map, showing intro requests in flight
+8. **Founder card flip stack** - three small cards on the landing that flip-rotate every 3s showing different match types
+9. **Scroll-linked hero** - the globe scales and the headline tightens as the user scrolls past the masthead
+10. **Animated KPI band** - counters tick on scroll, a small sparkline draws
 
 ## Quality bar
 
@@ -136,11 +136,11 @@ For the landing page in particular, deliver:
 
 Visual references the AI should study, in order of priority:
 
-1. https://events.ycombinator.com/startup-school-2026 — the cream + espresso palette, the marquee strip, the chunky condensed display, the brown buttons
-2. https://linear.app — the restraint, the typography, the dense-but-calm layout
-3. https://ditto.ai — the "drop" mechanic and ritual framing
-4. https://datedrop.com — the curated-not-swipe positioning
-5. https://partiful.com — the editorial header treatment, the warm humour
+1. https://events.ycombinator.com/startup-school-2026 - the cream + espresso palette, the marquee strip, the chunky condensed display, the brown buttons
+2. https://linear.app - the restraint, the typography, the dense-but-calm layout
+3. https://ditto.ai - the "drop" mechanic and ritual framing
+4. https://datedrop.com - the curated-not-swipe positioning
+5. https://partiful.com - the editorial header treatment, the warm humour
 
 ## Anti-references
 

@@ -92,7 +92,7 @@ while true; do
       echo "  $field"
     done
   else
-    echo "  (no loop pass yet — run scripts/harness-loop.sh)"
+    echo "  (no loop pass yet - run scripts/harness-loop.sh)"
   fi
 
   echo ""

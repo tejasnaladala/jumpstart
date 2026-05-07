@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 // Live admin health monitor. Polls /api/health every 4s and renders the
 // per-dependency probe grid (Supabase, Anthropic, Upstash) with current
-// latency. Founder-only operational surface — used for monitoring the
+// latency. Founder-only operational surface - used for monitoring the
 // closed beta of 10.
 //
 // Stub-mode behavior: probes return configured:false for all three
@@ -187,7 +187,7 @@ export default function AdminHealthPage() {
               key={`${h.ts}-${i}`}
               className={`w-2 rounded-t ${h.ok ? "bg-success/70" : "bg-error/70"}`}
               style={{ height: h.ok ? "100%" : "30%" }}
-              title={`${new Date(h.ts).toLocaleTimeString()} — ${h.ok ? "ok" : "fail"}`}
+              title={`${new Date(h.ts).toLocaleTimeString()} - ${h.ok ? "ok" : "fail"}`}
             />
           ))}
           {history.length === 0 ? (
@@ -218,7 +218,7 @@ export default function AdminHealthPage() {
             <li>· Tail server logs (use Vercel dashboard)</li>
             <li>· Track per-user activity (use /admin/cohort)</li>
             <li>· Alert on incidents (wire Sentry / Slack)</li>
-            <li>· Show env vars (intentional — no leak surface)</li>
+            <li>· Show env vars (intentional - no leak surface)</li>
           </ul>
         </div>
       </div>

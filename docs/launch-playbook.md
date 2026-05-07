@@ -24,7 +24,7 @@ skip 1; the rest assume you've actually walked the funnel yourself.
    one bug now than to hear it from 10 friends later.
 
 2. **Set the share copy you'll DM.** Don't write "check this out,
-   working on something" — that gets ignored. Use:
+   working on something" - that gets ignored. Use:
 
    > "I built an unofficial pre-event matchmaker for our SS cohort.
    > Picks 3 founders worth meeting per week, has an opener half-written
@@ -74,7 +74,7 @@ skip 1; the rest assume you've actually walked the funnel yourself.
   a thread open. The surface is intentionally Instagram-DM-shaped (low
   latency, simple compose, scroll log) rather than a full chat app
   (no group threads, no read receipts, no presence). Email forwarding
-  is gone — the meeting rate metric still rules. If it dips below the
+  is gone - the meeting rate metric still rules. If it dips below the
   threshold post-launch, revisit the structured intro + auto-schedule
   fallback.
 
@@ -151,7 +151,7 @@ JUMPSTART_PRIVATE_BETA=1 JUMPSTART_ALLOW_STUB=1 JUMPSTART_DEV_ADMIN=1 bun run st
 ```
 
 The three opt-in flags authorize the in-memory rate-limit fallback,
-stub-mode auth, and dev-admin bypass — only valid for tunneled private
+stub-mode auth, and dev-admin bypass - only valid for tunneled private
 beta. Never use these flags for a real public launch.
 
 ---

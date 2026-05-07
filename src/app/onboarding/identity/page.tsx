@@ -116,7 +116,7 @@ export default function IdentityStep() {
             {/* Surface why Continue is disabled. Without this, users
                 hit the button, nothing happens, and they bounce. The
                 identity step has the strictest validation (oneLine
-                requires 10+ chars) — the inline hint names the
+                requires 10+ chars) - the inline hint names the
                 missing field directly. */}
             {blockedReason ? (
               <span className="text-xs text-muted hidden sm:inline">

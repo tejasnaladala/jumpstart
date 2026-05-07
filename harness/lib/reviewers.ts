@@ -1,6 +1,6 @@
 // Reviewer agents: codex (factual cross-check) + fool (devil's advocate).
 // Both are "review the proposal" agents, NOT "generate the patch" agents
-// — that scoping protects us from hallucinated edits while still
+// - that scoping protects us from hallucinated edits while still
 // letting LLM judgement gate the apply.
 //
 // Both reviewers use the existing src/lib/agents/runner.ts contract so
@@ -104,7 +104,7 @@ function runReviewerStub(
   _finding: Finding
 ): Review {
   // Stub-mode rules. Both reviewers approve only if:
-  //   - proposal has zero edits (logging-only — always safe)
+  //   - proposal has zero edits (logging-only - always safe)
   //   - OR every edit is in a safe path AND scope is small
   // The fool is stricter than codex: it also rejects if rationale is
   // shorter than 40 chars (indicating hand-wave).
@@ -123,7 +123,7 @@ function runReviewerStub(
     return { reviewer, approved: false, rationale: "scope exceeds auto-apply limits", via: "stub" };
   }
   if (reviewer === "fool" && proposal.rationale.length < 40) {
-    return { reviewer, approved: false, rationale: "rationale too short — possible hand-wave", via: "stub" };
+    return { reviewer, approved: false, rationale: "rationale too short - possible hand-wave", via: "stub" };
   }
   return {
     reviewer,

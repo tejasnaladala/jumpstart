@@ -51,7 +51,7 @@ function tone(freq: number, durationMs: number, gain = 0.08): void {
     osc.type = "sine";
     osc.frequency.setValueAtTime(freq, ctx.currentTime);
     g.gain.setValueAtTime(0.0001, ctx.currentTime);
-    // Quick attack, exponential decay — keeps it crisp like an iMessage tritone.
+    // Quick attack, exponential decay - keeps it crisp like an iMessage tritone.
     g.gain.exponentialRampToValueAtTime(gain, ctx.currentTime + 0.01);
     g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + durationMs / 1000);
     osc.connect(g).connect(ctx.destination);

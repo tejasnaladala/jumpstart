@@ -1,5 +1,5 @@
 // Observability capture per persona session. Without this, the harness
-// is a black box — runs don't fail, they just produce wrong state.
+// is a black box - runs don't fail, they just produce wrong state.
 // With it, every round emits:
 //   - console errors per persona
 //   - 4xx/5xx network responses

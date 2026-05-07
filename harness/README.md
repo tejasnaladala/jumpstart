@@ -86,7 +86,7 @@ bash scripts/harness-loop.sh
 | `experiments/harness-meetings.jsonl` | Every pretend meeting that got scheduled. |
 | `experiments/harness-assertions.jsonl` | Invariant assertion results, append-only. |
 | `experiments/harness-runs/<run_id>/<persona_id>/` | Per-persona screenshots + telemetry per run. |
-| `experiments/harness-loop.jsonl` | One row per maintenance loop pass — the dashboard feed. |
+| `experiments/harness-loop.jsonl` | One row per maintenance loop pass - the dashboard feed. |
 
 ## What the personas actually do
 
@@ -95,7 +95,7 @@ Per tick, each persona:
 1. Maybe browses `/browse` (30% chance, exercises filter sheet).
 2. Maybe visits `/you` and clicks Share (15% chance, exercises Web Share path).
 3. Visits `/drop` and reads three matches.
-4. Decides whether to act — driven by `cadence.actionRate`.
+4. Decides whether to act - driven by `cadence.actionRate`.
 5. If acting, picks one match (eager picks first, picky filters,
    ghoster ignores, chatty randomizes).
 6. Submits `POST /api/intros` through the per-context Playwright
@@ -111,7 +111,7 @@ under Pixel 7 / iPhone profiles. The rest run desktop 1280x800.
 ## Adding a persona
 
 Append a new entry to `harness/personas/seed.ts`. Stable id is the
-contract — once a persona's id is in production state files, do not
+contract - once a persona's id is in production state files, do not
 rename it. Bump the id (e.g. `p_priya_fintech_v2`) for material identity
 changes that should reset state.
 
@@ -126,12 +126,12 @@ through the same `harness/lib/coordinator.ts` primitives.
 
 ## What this harness deliberately does NOT do
 
-- It does not simulate the recipient surface in the app — that surface
+- It does not simulate the recipient surface in the app - that surface
   isn't built yet. The coordinator is the substitute for now: it routes
   intros to recipient personas via state writes. When the in-app
   incoming-intros tray ships, swap that path to drive the real UI.
 - It does not run with real Anthropic / Supabase keys. Stub mode is
-  the contract — the personas' job is to pressure-test stub-mode flows.
+  the contract - the personas' job is to pressure-test stub-mode flows.
   Wire real services after the closed-beta-of-10 phase.
 - It does not authenticate per persona via magic link. Stub mode treats
   every browser context as a fresh session; the harness exploits that

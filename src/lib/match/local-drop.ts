@@ -54,7 +54,7 @@ const EXPLAIN_TEMPLATES: Record<MatchType, (m: FounderCard, o: FounderCard) => s
     const firstName = o.name.split(" ")[0] || o.name;
     const theirTag = (o.tags.find((t) => !me.tags.includes(t)) || o.tags[0] || "their work").replace(/-/g, " ");
     if (me.tags.length === 0) {
-      return `${firstName} works on ${theirTag}. The matchmaker doesn't have a strong overlap signal yet — but unobvious calls are the ones that produce the ideas you wouldn't get alone.`;
+      return `${firstName} works on ${theirTag}. The matchmaker doesn't have a strong overlap signal yet - but unobvious calls are the ones that produce the ideas you wouldn't get alone.`;
     }
     const youTag = (me.tags[0] || "your domain").replace(/-/g, " ");
     return `${firstName} works on ${theirTag} which has nothing to do with ${youTag} on paper. The unobvious match is the kind of conversation that produces ideas you would not have alone.`;

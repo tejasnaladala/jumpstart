@@ -3,7 +3,7 @@
 // fresh and the verify-stack threshold has clean recent data.
 //
 // Without this, assertions only run when the founder manually invokes
-// scripts/harness-loop.sh — which means a stale-build regression
+// scripts/harness-loop.sh - which means a stale-build regression
 // shows up in the dashboard hours after it lands.
 
 import { runAssertions } from "../lib/assertions";

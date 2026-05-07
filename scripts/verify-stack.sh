@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# verify-stack.sh — comprehensive health check of the autonomous stack.
+# verify-stack.sh - comprehensive health check of the autonomous stack.
 # Designed to be invoked by cron every ~18 minutes. Outputs a structured
 # summary the cron handler can act on.
 #

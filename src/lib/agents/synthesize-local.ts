@@ -102,7 +102,7 @@ export function extractTags(input: IntakeShape): string[] {
   return Array.from(found).slice(0, 8);
 }
 
-// Derive intents from the user's actual answers. Default is empty —
+// Derive intents from the user's actual answers. Default is empty - 
 // don't presume cofounder unless the user said it. Closes the
 // bleed-through bug where every new user inherited DEFAULT_ME.intents
 // (["cofounder","collaborator"]) and got cofounder_shape matches they

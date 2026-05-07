@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# launch-autonomous.sh — start the full autonomous Jumpstart stack:
+# launch-autonomous.sh - start the full autonomous Jumpstart stack:
 #   1. caffeinate (PowerShell, prevents sleep)
 #   2. Next.js production server (stub mode)
 #   3. harness loop (12 personas, 3-min cycles)
@@ -22,7 +22,7 @@ cd "$(dirname "$0")/.."
 # docs/autonomous-stack.md; the live monitor in docs/monitoring-quickstart.md.
 if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
   cat <<'HELP'
-launch-autonomous.sh — start the full Jumpstart autonomous stack
+launch-autonomous.sh - start the full Jumpstart autonomous stack
 
 Brings up these processes (idempotent: skips any already alive):
 

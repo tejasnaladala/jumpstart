@@ -36,7 +36,7 @@ function lookup(id: string): FounderCard | undefined {
 }
 
 function firstNameOf(name: string): string {
-  // Mononyms (e.g. "Madonna", "Adele") — split returns [name] so
+  // Mononyms (e.g. "Madonna", "Adele") - split returns [name] so
   // .split(" ")[0] still works, but a defensive trim guards against
   // weird whitespace, leading separators, etc.
   const trimmed = (name || "").trim();

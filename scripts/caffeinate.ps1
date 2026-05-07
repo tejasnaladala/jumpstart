@@ -1,4 +1,4 @@
-# caffeinate.ps1 — keep this Windows machine awake while the autonomous
+# caffeinate.ps1 - keep this Windows machine awake while the autonomous
 # loop runs. Calls SetThreadExecutionState every 30 seconds to refresh
 # the wake state.
 #

@@ -1,5 +1,5 @@
 // Autonomous coordinator. The intelligent layer that closes the harness
-// loop — turns observations into proposals, runs the codex+fool review,
+// loop - turns observations into proposals, runs the codex+fool review,
 // applies what's safe, and queues the rest for human triage.
 //
 // Modes:

@@ -23,7 +23,7 @@ export default function MatchDetailPage() {
   const [match, setMatch] = useState<Match | null>(null);
   // notFound: the URL referenced a match id that doesn't exist in the
   // local drop. We previously substituted the first match in the drop
-  // which silently sent a stranger to the user — closing security/match
+  // which silently sent a stranger to the user - closing security/match
   // agent finding "stranger substitution on stale URLs".
   const [notFound, setNotFound] = useState(false);
   const [opener, setOpener] = useState("");
@@ -50,7 +50,7 @@ export default function MatchDetailPage() {
       // Stale or invalid match id (drop has rotated, user pasted a
       // shared URL from a different cohort, link was tampered with).
       // Show a real not-found surface instead of substituting the first
-      // match in the current drop — that would expose a stranger as if
+      // match in the current drop - that would expose a stranger as if
       // the user had been matched with them.
       setNotFound(true);
     }
@@ -141,7 +141,7 @@ export default function MatchDetailPage() {
       // Create a Thread in the user's inbox in pending_outgoing state
       // so they can see it under the Sent tab and pick up the convo
       // when the recipient accepts. Replaces the prior "we'll email
-      // you" flow — see docs/launch-playbook.md "no-DMs hardline"
+      // you" flow - see docs/launch-playbook.md "no-DMs hardline"
       // retirement note.
       try {
         if (match) {
@@ -152,7 +152,7 @@ export default function MatchDetailPage() {
           });
         }
       } catch {
-        // localStorage failure is non-fatal — the API send already succeeded
+        // localStorage failure is non-fatal - the API send already succeeded
       }
       toast.push("Request sent. Track it in your inbox.", "success");
     } catch {

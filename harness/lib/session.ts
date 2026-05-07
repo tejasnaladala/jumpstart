@@ -1,5 +1,5 @@
 // Per-persona Playwright session. Each persona gets an isolated browser
-// context so localStorage doesn't leak between them — that's how the
+// context so localStorage doesn't leak between them - that's how the
 // app naturally distinguishes users in stub mode.
 //
 // The session walks the persona through:
@@ -155,7 +155,7 @@ export async function fillVerification(s: PersonaSession): Promise<void> {
   // Verification page has TWO required gates: a "proof" (email subject
   // line OR referral code) AND at least one location toggle. The form
   // uses useDraftState with a versioned envelope, so we can write the
-  // draft directly to localStorage and skip the form interaction —
+  // draft directly to localStorage and skip the form interaction - 
   // same pattern fillIntent uses for the conversational interview.
   // This is robust to button-text changes and removes the need to
   // maintain selectors for every toggle.
@@ -240,7 +240,7 @@ export async function reviewAndSaveCard(s: PersonaSession): Promise<void> {
   await s.page.goto(`${BASE_URL}/onboarding/card`);
   // The Card review page synthesizes from drafts and shows editable
   // sections. The persona accepts the synth for now (decision style
-  // can override later — chatty personas might re-edit each line).
+  // can override later - chatty personas might re-edit each line).
   const saveBtn = s.page.getByRole("button", {
     name: /Save and see Drop preview/i,
   });
@@ -291,7 +291,7 @@ export async function browseCohort(s: PersonaSession): Promise<number> {
 
 export async function visitYouAndShare(s: PersonaSession): Promise<boolean> {
   // Visits /you (the Founder Pass surface) and clicks the Share button.
-  // Returns true if Share completed without throwing — the actual share
+  // Returns true if Share completed without throwing - the actual share
   // sheet won't open in headless mode but the click path is exercised.
   await s.page.goto(`${BASE_URL}/you`);
   await s.page.waitForLoadState("domcontentloaded");
@@ -375,11 +375,11 @@ export async function requestIntroVia(
   try {
     opener = (await openerEl.innerText()).replace(/^"|"$/g, "");
   } catch {
-    // not visible (page didn't render properly) — fall back below
+    // not visible (page didn't render properly) - fall back below
   }
   const note = noteOverride ?? opener;
 
-  // Get the recipient_id by scraping the page's data — match cards
+  // Get the recipient_id by scraping the page's data - match cards
   // expose candidate.user_id only via the match record on the server.
   // For the synthetic harness we encode it from the matchId, which is
   // shaped like "match_<candidate_id>_<position>".

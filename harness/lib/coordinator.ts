@@ -180,7 +180,7 @@ export async function tickPersona(persona: Persona): Promise<void> {
       await visitDrop(session).catch(() => null);
       state.drops_seen += 1;
       logActivity({ persona_id: persona.id, event: "viewed_drop" });
-      // Light chaos pass on lurk visits — exercises defensive paths
+      // Light chaos pass on lurk visits - exercises defensive paths
       // that scripted flows skip. Bounded so it doesn't dominate the
       // round time.
       if (Math.random() < 0.1) {
@@ -226,7 +226,7 @@ export async function tickPersona(persona: Persona): Promise<void> {
         detail: { match_id: targetId, status: result.status, mobile: session.mobile },
       });
       // Route the intro to the recipient persona, if they exist in
-      // the harness pool. The candidate id may be a fc_/u_ — we map
+      // the harness pool. The candidate id may be a fc_/u_ - we map
       // this to the persona by scanning seeded personas.
       const recipientPersonaId = recipientFromMatchId(targetId);
       if (recipientPersonaId) {
@@ -278,7 +278,7 @@ function recipientFromMatchId(matchId: string): string | undefined {
   // proxy: the match id encodes the candidate's card id (fc_xxx) or
   // user id (u_xxx). We don't have a persona<->fc_id map yet because
   // stub mode generates random fc_ ids per session. So we sample
-  // randomly here — coordinator's pretend graph is best-effort. A
+  // randomly here - coordinator's pretend graph is best-effort. A
   // future iteration can stash the persona-to-card mapping during
   // onboardPersona and read it back here.
   const candidates = PERSONAS;
@@ -336,7 +336,7 @@ export async function routeIntro(args: {
     });
   }
   // If "ignore", we leave it in intros_received so a future tick
-  // could pick it back up — that simulates the ghoster pattern of
+  // could pick it back up - that simulates the ghoster pattern of
   // re-deciding later.
 
   saveState(recipientState);

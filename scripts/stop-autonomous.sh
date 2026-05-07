@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# stop-autonomous.sh — kill the full autonomous stack. The watchdog
+# stop-autonomous.sh - kill the full autonomous stack. The watchdog
 # is killed first so it doesn't restart anything mid-shutdown. Then
 # everything else.
 
@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 
 if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
   cat <<'HELP'
-stop-autonomous.sh — kill the autonomous Jumpstart stack
+stop-autonomous.sh - kill the autonomous Jumpstart stack
 
 Order of kill:
   1. watchdog (so it doesn't restart anything mid-shutdown)
