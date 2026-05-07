@@ -9,6 +9,7 @@ import type { FounderCard } from "@/lib/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/primitive/Toast";
+import { eluReset } from "@/components/EluIdentify";
 
 export default function YouPage() {
   const [card, setCard] = useState<FounderCard | null>(null);
@@ -21,6 +22,10 @@ export default function YouPage() {
 
   function logout() {
     resetMe();
+    // ELU Analytics: drop the identify on this device so the next signed-in
+    // user gets a fresh attribution window. Safe to remove with the rest of
+    // the ELU integration.
+    eluReset();
     toast.push("Card cleared. You are signed out.", "info");
     router.push("/");
   }

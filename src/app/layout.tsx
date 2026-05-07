@@ -49,6 +49,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+      <head>
+        {/* ELU Analytics: product analytics SDK, similar shape to PostHog /
+            Plausible. The signed-in identify call lives in (app)/layout.tsx
+            via <EluIdentify />. See https://elu.dev for docs. Remove this
+            tag and the EluIdentify component to opt out. */}
+        <script async src="https://elu.dev/v1/elu_pk_live_QqJ0wzIYwSSK0QrXdo386FMkO3.js" />
+      </head>
       <body className="min-h-svh">
         <MotionConfig reducedMotion="user">
           <ToastProvider>{children}</ToastProvider>
