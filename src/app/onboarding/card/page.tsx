@@ -11,6 +11,8 @@ import { saveMe, DEFAULT_ME } from "@/lib/mock/me";
 import type { FounderCard } from "@/lib/types";
 import { extractIntents, extractTags, synthesizeCardLocal } from "@/lib/agents/synthesize-local";
 import { useToast } from "@/components/primitive/Toast";
+import { eligibleDropFor, formatDropLabel } from "@/lib/drop/schedule";
+import { setEligibleDrop } from "@/lib/drop/eligibility";
 
 export default function CardReviewStep() {
   const router = useRouter();
@@ -127,7 +129,15 @@ export default function CardReviewStep() {
 
   function finalize() {
     saveMe(card);
-    toast.push("Founder Card created. Your first drop arrives at the next 09:00 PT (Mon, Wed, or Fri).", "success");
+    // Compute eligible drop time using the 6-hour cutoff rule:
+    //   - finished onboarding before 3pm PT on a drop day -> tonight's 9pm drop
+    //   - finished onboarding at/after 3pm PT on a drop day -> next drop day
+    const eligibleAt = eligibleDropFor(new Date());
+    setEligibleDrop(eligibleAt);
+    toast.push(
+      `Founder Pass saved. Your first match drops ${formatDropLabel(eligibleAt)}.`,
+      "success"
+    );
     router.push("/drop");
   }
 

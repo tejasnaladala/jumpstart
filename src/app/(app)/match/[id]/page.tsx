@@ -181,7 +181,7 @@ export default function MatchDetailPage() {
               This match isn't in your current drop
             </h1>
             <p className="text-sm text-muted mt-3 leading-relaxed">
-              Drops rotate at 09:00 PT on Mon, Wed, and Fri. The match you're looking for
+              Drops rotate at 9pm PT on Mon, Wed, and Fri. The match you're looking for
               has already cycled out, or the link was for a different account.
             </p>
             <div className="mt-5 flex gap-2">

@@ -49,7 +49,7 @@ const TICKET_PATH = [
 export function FounderPass({
   card,
   cohort = "Startup School 2026",
-  venue = "Chase Center, SF · July 25-26",
+  venue: _venue = "",
   className,
   tilt = true,
 }: Props) {
@@ -232,7 +232,7 @@ export function FounderPass({
                   ))}
                 </div>
                 {card.public_link ? (
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted mb-1">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
                     <span className="opacity-60">Find me /</span>{" "}
                     <a
                       href={
@@ -248,9 +248,10 @@ export function FounderPass({
                     </a>
                   </p>
                 ) : null}
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-                  {venue}
-                </p>
+                {/* Venue line removed per founder direction (May 7 2026):
+                    cohort is broader than SS attendees, hardcoding the
+                    venue on every Pass made the product feel narrower
+                    than it is. Kept the cohort line at top. */}
               </div>
             </div>
           </div>

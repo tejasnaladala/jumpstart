@@ -1,6 +1,6 @@
 # Jumpstart
 
-The unofficial global attendee graph for YC Startup School 2026. One curated founder match three times a week, Monday, Wednesday, and Friday at 09:00 PT.
+The unofficial global attendee graph for YC Startup School 2026. One curated founder match three times a week, Monday, Wednesday, and Friday at 9pm PT.
 
 ## What is in this repo
 
