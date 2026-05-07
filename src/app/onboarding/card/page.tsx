@@ -181,7 +181,22 @@ export default function CardReviewStep() {
                   {t} ×
                 </Pill>
               ))}
+              {card.tags.length === 0 ? (
+                <span className="text-xs text-muted italic">No tags yet — add a few below.</span>
+              ) : null}
             </div>
+            {/* Free-text tag input. Tags drive matching, browse filters,
+                and the Pass display, so users need a real way to add
+                them — clicking pills only removed before. Normalize
+                aggressively so "AI Agents" / "ai-agents" / "ai agents"
+                all collapse to one canonical form. Cap at 12 to keep
+                the Pass legible (FounderPass.tsx renders the first 6). */}
+            <TagAdder
+              existing={card.tags}
+              onAdd={(t) =>
+                setCard((c) => (c.tags.includes(t) ? c : { ...c, tags: [...c.tags, t] }))
+              }
+            />
           </div>
         </div>
 
@@ -201,6 +216,71 @@ export default function CardReviewStep() {
           <Button onClick={finalize}>Save and see Drop preview</Button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function TagAdder({
+  existing,
+  onAdd,
+}: {
+  existing: string[];
+  onAdd: (tag: string) => void;
+}) {
+  const [val, setVal] = useState("");
+  const MAX_TAGS = 12;
+  const atCap = existing.length >= MAX_TAGS;
+
+  function normalize(raw: string): string {
+    return raw
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "")
+      .slice(0, 24);
+  }
+
+  function commit() {
+    const t = normalize(val);
+    if (!t || t.length < 2) {
+      setVal("");
+      return;
+    }
+    if (existing.includes(t)) {
+      setVal("");
+      return;
+    }
+    onAdd(t);
+    setVal("");
+  }
+
+  return (
+    <div className="mt-3 flex items-center gap-2">
+      <input
+        type="text"
+        placeholder={atCap ? `Cap reached (${MAX_TAGS})` : "Add tag, e.g. ai-agents"}
+        value={val}
+        onChange={(e) => setVal(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            commit();
+          }
+        }}
+        disabled={atCap}
+        maxLength={24}
+        className="text-xs px-3 py-1.5 rounded-md border border-border bg-bg text-ink placeholder:text-muted/70 focus:outline-none focus:border-ink disabled:opacity-60"
+      />
+      <button
+        type="button"
+        onClick={commit}
+        disabled={atCap || normalize(val).length < 2}
+        className="text-xs px-3 py-1.5 rounded-md bg-ink text-bg font-medium disabled:opacity-30 disabled:cursor-not-allowed hover:bg-espresso transition-colors"
+      >
+        Add
+      </button>
     </div>
   );
 }
