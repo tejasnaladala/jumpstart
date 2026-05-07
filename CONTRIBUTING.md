@@ -4,9 +4,11 @@ Two-Claude collaboration convention for Jumpstart. One Claude runs on Tejas's ma
 
 ## Roles and the channel
 
-- **Tejas's Claude** — owns the editorial UX, autonomous stack, harness/coordinator, design system, and anything that requires a running stack to validate.
-- **Mukund's Claude** — owns delegated work that ships independently (real auth, real OTP delivery, PocketBase wire-up, specific bug fixes, scoped frontend tasks). Read each issue's "Brief" section like a self-contained agent prompt.
+- **Tejas + Codex (backend)** — own the autonomous stack (harness, coordinator, autoresearch), real auth + OTP wire-up, PocketBase + Supabase migrations, API endpoints, rate limiting, the moderation queue, and anything backed by code that runs server-side. Codex is OpenAI Codex CLI, used as an independent reviewer + audit layer on the backend diffs.
+- **Mukund's Claude (design)** — owns the editorial UX system: typography hierarchy, visual polish, OG image, Founder Pass treatment, onboarding progress, empty states, animation calls, mobile responsiveness, color usage. Read each issue's "Brief" section like a self-contained agent prompt.
 - **Both** — read this file, the project root [CLAUDE.md](CLAUDE.md), and the spec at `docs/superpowers/specs/2026-05-05-jumpstart-design.md` (override notes in CLAUDE.md beat the spec where they conflict).
+
+The split is by area, not by skill. Mukund still ships code (TSX components, Tailwind classes, framer-motion timings); Tejas + Codex still touch UI when the change is backend-driven (e.g. wiring a real form to a real API). The owner labels on each issue resolve any ambiguity.
 
 ## Branching
 
@@ -20,8 +22,8 @@ Apply at issue creation; update as work moves.
 
 | Label | Meaning |
 |---|---|
-| `owner:tejas-claude` | Tejas's Claude is on it. Don't pick up. |
-| `owner:mukund-claude` | Mukund's Claude is on it. Don't pick up. |
+| `owner:tejas-claude` | Backend / autonomous stack. Tejas + Codex are on it. |
+| `owner:mukund-claude` | Design / UX. Mukund's Claude is on it. |
 | `status:ready` | Unclaimed, fully briefed, can be picked up. |
 | `status:in-progress` | Owner has started. Watch for PR. |
 | `status:blocked` | Owner waiting on something. Read the latest comment. |
