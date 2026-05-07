@@ -3,11 +3,10 @@ import { FounderPass } from "@/components/FounderPass";
 import { MOCK_COHORT } from "@/lib/mock/cohort";
 import { Marquee } from "@/components/Marquee";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
-import { MagneticButton } from "@/components/MagneticButton";
 import { Reveal } from "@/components/Reveal";
 import { BlurReveal } from "@/components/BlurReveal";
-import { GlobeLazy } from "@/components/GlobeLazy";
 import { StampSeal } from "@/components/primitive/StampSeal";
+import { WaitlistForm } from "@/components/WaitlistForm";
 import Link from "next/link";
 
 // Editorial restraint: per The Fool red-team, three additions cut from the
@@ -33,9 +32,12 @@ export default function LandingPage() {
             >
               Sign in
             </Link>
-            <MagneticButton href="/signup" variant="md">
-              Get my drop
-            </MagneticButton>
+            <a
+              href="#waitlist"
+              className="inline-flex items-center justify-center h-10 px-4 rounded-md bg-ink text-bg text-sm font-semibold hover:bg-ink/90 transition-colors"
+            >
+              Join the waitlist
+            </a>
           </nav>
         </div>
       </header>
@@ -68,8 +70,11 @@ export default function LandingPage() {
             </Reveal>
             <Reveal delay={0.16}>
               <div className="flex flex-col sm:flex-row gap-3 mt-8">
-                <MagneticButton href="/signup" variant="lg" intensity={0.05}>
-                  Get my Founder Drop
+                <a
+                  href="#waitlist"
+                  className="inline-flex items-center justify-center h-12 px-6 rounded-md bg-ink text-bg text-base font-semibold hover:bg-ink/90 transition-colors"
+                >
+                  Join the waitlist
                   <svg className="ml-1.5" width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path
                       d="M3 7h8m0 0L7 3m4 4L7 11"
@@ -79,7 +84,7 @@ export default function LandingPage() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                </MagneticButton>
+                </a>
                 <a
                   href="#how"
                   className="inline-flex items-center justify-center h-12 px-6 rounded-md border border-border bg-surface text-ink font-medium hover:border-ink/40 transition-colors"
@@ -91,26 +96,23 @@ export default function LandingPage() {
             <Reveal delay={0.24}>
               <div className="flex items-center gap-2 mt-6 text-xs text-muted">
                 <Verified />
-                <span>Verified attendees only.</span>
+                <span>Verified attendees first.</span>
+                <span className="opacity-50">·</span>
+                <span>Founder reviews every entry.</span>
                 <span className="opacity-50">·</span>
                 <span>Not affiliated with Y Combinator.</span>
               </div>
             </Reveal>
           </div>
 
-          {/* Globe + drop preview */}
-          <div className="lg:col-span-5">
+          {/* Waitlist form - the primary conversion surface for organic
+              LinkedIn / X traffic. Replaces the decorative globe so the
+              landing page actually captures demand instead of admiring
+              its own aesthetics. The globe ships back later if traffic
+              calls for it. */}
+          <div id="waitlist" className="lg:col-span-5 scroll-mt-24">
             <Reveal delay={0.12}>
-              <div className="relative flex flex-col items-center gap-6">
-                <div className="relative">
-                  <div
-                    aria-hidden
-                    className="absolute -inset-4 rounded-full bg-accent-soft opacity-50 blur-xl"
-                  />
-                  <GlobeLazy size={420} />
-                </div>
-                <p className="ed-serial mt-4">12 anchor cities · 60+ countries verifying</p>
-              </div>
+              <WaitlistForm source="hero" />
             </Reveal>
           </div>
         </div>
@@ -353,8 +355,11 @@ export default function LandingPage() {
                 <span className="italic text-accent">Get on the list.</span>
               </h2>
               <div className="mt-10 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                <MagneticButton href="/signup" variant="lg" tone="cream" intensity={0.05}>
-                  Get my Founder Drop
+                <a
+                  href="#waitlist"
+                  className="inline-flex items-center justify-center h-12 px-6 rounded-md bg-bg text-ink text-base font-semibold hover:bg-bg/90 transition-colors"
+                >
+                  Join the waitlist
                   <svg
                     className="ml-1.5"
                     width="14"
@@ -370,7 +375,7 @@ export default function LandingPage() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                </MagneticButton>
+                </a>
                 <div className="flex items-center gap-3">
                   <StampSeal
                     topLabel="Verified"
@@ -379,7 +384,7 @@ export default function LandingPage() {
                     rotate={-10}
                     className="text-accent shrink-0"
                   />
-                  <span className="ed-serial text-bg/60">Verified SS 2026 attendees only</span>
+                  <span className="ed-serial text-bg/60">Verified attendees first</span>
                 </div>
               </div>
             </div>
