@@ -23,14 +23,15 @@ Stable error codes:
 | `BAD_JSON` | 400 | Body could not be parsed as JSON |
 | `VALIDATION` | 400 | Zod validation failed (also returns `fields[]`) |
 | `SELF_INTRO` | 400 | User tried to intro themselves |
-| `MATCH_NOT_OWNED` | 400 | Match doesn't belong to caller |
 | `SAFETY_BLOCK` | 400 | Safety classifier blocked the artifact |
 | `UNAUTHORIZED` | 401 | Missing or invalid session |
 | `FORBIDDEN` | 403 | Cron token mismatch or admin-required |
+| `MATCH_NOT_OWNED` | 403 | Match doesn't belong to caller (verified against `src/app/api/intros/route.ts:62`) |
 | `RATE_LIMITED` | 429 | With `retry_in_ms`, `help` |
 | `SESSION_ERROR` | 500 | Session reading failed |
 | `AGENT_ERROR` | 500 | Agent runner threw |
 | `SUPABASE_NOT_CONFIGURED` | 500 | Supabase env missing and stub not allowed |
+| `CRON_NOT_CONFIGURED` | 503 | `CRON_SECRET` env var not set on the deployment |
 | `DROPS_NOT_IMPLEMENTED` | 503 | Real drop generation not wired (stub-mode required) |
 | `INTROS_NOT_IMPLEMENTED` | 503 | Intro flow needs DB; stub mode required |
 | `RETENTION_NOT_IMPLEMENTED` | 503 | Cron retention deletion not yet implemented |
@@ -86,11 +87,16 @@ Stable error codes:
 
 **Response (200):** `{ deleted: number, audited: number, ts: string }` — when implemented.
 
-**Response (503, today):** `{ error, code: "RETENTION_NOT_IMPLEMENTED" }`. Returns 503 honestly so monitors fail loudly when the real deletion path is missing.
+**Response (503 `CRON_NOT_CONFIGURED`):** `CRON_SECRET` env is missing entirely (`src/app/api/cron/retention/route.ts:16`).
+
+**Response (403 `FORBIDDEN`):** Bearer token mismatch (`route.ts:26`).
+
+**Response (503 `RETENTION_NOT_IMPLEMENTED`):** `CRON_SECRET` is set and Bearer matches, but Supabase service-role envs are missing OR the deletion logic is still a TODO (`route.ts:34, 51`). Returns 503 honestly so monitors fail loudly when the real deletion path is missing.
 
 **Notes:**
 - Vercel Cron schedule: `0 3 * * *` (daily 3am UTC).
-- TODO: SELECT `verifications WHERE artifact_expires_at < now()`, DELETE storage object, INSERT `retention_audit` row.
+- The route checks BOTH `NEXT_PUBLIC_SUPABASE_URL` AND `SUPABASE_SERVICE_ROLE_KEY` before declaring "configured" (`route.ts:30-32`).
+- TODO: SELECT `verifications WHERE artifact_expires_at < now()`, DELETE storage object, NULL the artifact columns, INSERT `retention_audit` row.
 
 ---
 
@@ -143,33 +149,26 @@ Or, when called from `/pass/[id]`:
 
 **Rate limit:** `drops_day` (5/day per user).
 
-**Request body (optional):**
-
-```ts
-DropRequestSchema {
-  cycle_week?: string  // ISO date, defaults to current week
-}
-```
+**Request body:** none. (Earlier versions accepted body for the user payload; that was removed because it bypassed auth in stub mode. The route is now `POST` only — `GET` was removed.)
 
 **Response (200, stub mode):**
 
 ```ts
-Drop {
-  id: string,                // "drop_<userId>_<isoDate>"
-  user_id: string,
-  cycle_week: string,        // ISO date
-  matches: Match[],          // exactly 3, see local-drop diversity rule
-  generated_at: string,      // ISO timestamp
-  sent_at: null,
-  opened_at: null
+{
+  drop_id: string,           // "drop_<Date.now()>" — verified at route.ts:46
+  user_id: string,           // server-derived from session
+  matches: Match[],          // from generateLocalDrop(me); top picks with diversity rule
+  generated_at: string       // ISO timestamp
 }
 ```
 
-**Response (503, prod):** `{ error, code: "DROPS_NOT_IMPLEMENTED" }` until `loadMeFromDb()` is wired.
+The richer `Drop` type from `src/lib/types.ts` (with `cycle_week`, `sent_at`, `opened_at`) is the database-row shape. The route does not yet emit those fields.
+
+**Response (503, prod):** `{ error, code: "DROPS_NOT_IMPLEMENTED" }` until `loadMeFromDb()` is wired (`route.ts:53`).
 
 **Notes:**
 - Frontend consumer: `/admin/curate` (admin) and the future `/drop` server-side load.
-- Stub path uses `generateLocalDrop` over MOCK_COHORT.
+- Stub path uses `generateLocalDrop` over `DEFAULT_ME` from `src/lib/mock/me.ts` (not over `MOCK_COHORT` directly; `local-drop.ts` reads `MOCK_COHORT` itself for candidates).
 
 ---
 
@@ -195,30 +194,37 @@ IntroRequestSchema {
 
 ```ts
 {
-  ok: true,
-  intro_id: string,
-  thread_id: string,          // localStorage thread in stub mode
+  accepted: true,
+  intro_id: string,           // "intro_<Date.now()>" — route.ts:106
+  match_id: string,           // echoed from request
+  requester_id: string,       // server-derived from session
+  recipient_id: string,       // echoed from request
+  sent_at: string             // ISO timestamp
 }
 ```
+
+There is no `thread_id` in the server response — thread modeling is a frontend localStorage concept today.
 
 **Response (400 SAFETY_BLOCK):**
 
 ```ts
 {
-  error: "Your message couldn't be sent. Try rewriting without sales language or links.",
-  code: "SAFETY_BLOCK",
-  reasons: string[]           // safety classifier output, sanitized
+  error: "Your note was flagged. Please rewrite without sales language or external links.",
+  code: "SAFETY_BLOCK"
+  // The route does NOT echo reasons[] back to the client (no attacker oracle).
+  // Reasons are written server-side via recordSafetyBlock() to the agent log.
 }
 ```
 
-**Response (400 MATCH_NOT_OWNED):** Caller is not the drop owner of this match.
+**Response (403 MATCH_NOT_OWNED):** Caller is not the drop owner of this match (`route.ts:62`).
 
-**Response (503, prod):** `INTROS_NOT_IMPLEMENTED` until `assertMatchOwnership` is wired.
+**Response (503 INTROS_NOT_IMPLEMENTED):** Returned when the ownership check throws because Supabase is configured but the `matches` table query is still a TODO (`route.ts:64, 152`).
 
 **Notes:**
-- Calls `runAgent(safetyClassifier, { artifact_type: "intro_note", artifact_text, context })`. Stub fallback: regex check for spam patterns (http, click here, earn $, bitcoin, nigerian prince, crypto, wire transfer) and harassment (kill, hate, slur, racist).
-- Safety blocks logged via `recordSafetyBlock()` to `.jumpstart-logs/agent.jsonl`.
-- Frontend UX: on `SAFETY_BLOCK`, toast "rewrite without sales language or links."
+- Calls `runAgent(safetyClassifier, { artifact_type: "intro_note", artifact_text: note, context: { sender_id, recipient_id, recent_artifacts: 0 } })`. Stub fallback (when `result.via === "stub"`): regex check for spam (`http|click here|earn \$|bitcoin|nigerian prince|crypto giveaway|wire transfer`) and harassment (`kill|hate|slur|racist`). See `route.ts:84-89`.
+- Safety blocks logged via `recordSafetyBlock()` (server-side only).
+- Stub-mode ownership check (when `JUMPSTART_ALLOW_STUB=1` and Supabase NOT configured): only validates id-prefix shape (`match_*`, `u_*` or `fc_*`).
+- Frontend UX: on `SAFETY_BLOCK`, toast "rewrite without sales language or external links."
 
 ---
 
