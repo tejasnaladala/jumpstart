@@ -20,7 +20,7 @@ export default function LandingPage() {
   const sample = MOCK_COHORT.slice(0, 3);
 
   return (
-    <main className="min-h-svh bg-bg text-ink">
+    <main id="main" className="min-h-svh bg-bg text-ink">
       {/* Top bar */}
       <header className="border-b border-border bg-bg/85 backdrop-blur-md sticky top-0 z-20">
         <div className="container-wide flex items-center justify-between py-4">

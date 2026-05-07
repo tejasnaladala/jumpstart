@@ -51,7 +51,7 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="min-h-svh bg-bg flex flex-col">
+    <main id="main" className="min-h-svh bg-bg flex flex-col">
       <header className="border-b border-border">
         <div className="container-wide py-4">
           <Logo />
