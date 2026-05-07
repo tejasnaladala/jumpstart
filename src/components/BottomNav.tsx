@@ -16,7 +16,9 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="fixed bottom-0 left-0 right-0 z-30 border-t border-border bg-surface/95 backdrop-blur-md sm:rounded-2xl sm:bottom-4 sm:left-1/2 sm:-translate-x-1/2 sm:w-[400px] sm:border sm:shadow-card"
+      // Hidden on lg+ where SideNav takes over. Mobile/tablet still
+      // gets the floating pill at the bottom.
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-30 border-t border-border bg-surface/95 backdrop-blur-md sm:rounded-2xl sm:bottom-4 sm:left-1/2 sm:-translate-x-1/2 sm:w-[400px] sm:border sm:shadow-card"
     >
       <ul className="flex items-stretch justify-around safe-area-padding-bottom px-2 py-2">
         {NAV_ITEMS.map((item) => {
