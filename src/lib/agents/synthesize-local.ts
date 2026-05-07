@@ -3,6 +3,7 @@
 // uses Claude. This stub keeps the onboarding flow working without an API key.
 
 import { COHORT_TAGS } from "@/lib/mock/cohort";
+import type { Intent } from "@/lib/types";
 
 type IntakeShape = {
   identity?: { name?: string; location?: string; oneLine?: string };
@@ -99,6 +100,30 @@ export function extractTags(input: IntakeShape): string[] {
   if (input.verification?.opts?.remote) found.add("remote");
 
   return Array.from(found).slice(0, 8);
+}
+
+// Derive intents from the user's actual answers. Default is empty —
+// don't presume cofounder unless the user said it. Closes the
+// bleed-through bug where every new user inherited DEFAULT_ME.intents
+// (["cofounder","collaborator"]) and got cofounder_shape matches they
+// never asked for.
+export function extractIntents(input: IntakeShape): Intent[] {
+  const text = [
+    input.identity?.oneLine,
+    input.intent?.building,
+    input.intent?.looking_for,
+    input.intent?.can_help,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  const out = new Set<Intent>();
+  if (/\bcofounder\b|\bco-?founder\b/.test(text)) out.add("cofounder");
+  if (/\bcollaborator\b|\bcollab\b|\bcompare notes\b/.test(text)) out.add("collaborator");
+  if (/\bpeer\b|\bsounding board\b/.test(text)) out.add("peer");
+  if (/\bfriend\b|\bbeer\b|\bcoffee\b/.test(text)) out.add("friend");
+  // No false-positive "everyone wants collaborators" default. Empty is empty.
+  return Array.from(out);
 }
 
 function polish(s: string | undefined): string {
