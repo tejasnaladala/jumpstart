@@ -165,12 +165,12 @@ fail    jsonError(status, code, message, extras?)
 ```
 
 Codes used:
-- `VALIDATION`, `BAD_JSON`, `SELF_INTRO`, `MATCH_NOT_OWNED`, `SAFETY_BLOCK` (400)
+- `VALIDATION`, `BAD_JSON`, `SELF_INTRO`, `SAFETY_BLOCK` (400)
 - `UNAUTHORIZED` (401)
-- `FORBIDDEN` (403)
+- `FORBIDDEN`, `MATCH_NOT_OWNED` (403)
 - `RATE_LIMITED` (429, includes `retry_in_ms` and human help text)
 - `SESSION_ERROR`, `AGENT_ERROR` (500)
-- `SUPABASE_NOT_CONFIGURED`, `DROPS_NOT_IMPLEMENTED`, `INTROS_NOT_IMPLEMENTED`, `RETENTION_NOT_IMPLEMENTED` (503)
+- `SUPABASE_NOT_CONFIGURED`, `CRON_NOT_CONFIGURED`, `DROPS_NOT_IMPLEMENTED`, `INTROS_NOT_IMPLEMENTED`, `RETENTION_NOT_IMPLEMENTED` (503)
 
 Validation never echoes user input back to the client. Server-side log captures detail; client gets a generic code.
 
