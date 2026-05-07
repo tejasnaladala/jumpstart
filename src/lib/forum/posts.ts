@@ -12,6 +12,9 @@
 // Closed-beta-of-10 posture: browser-local storage. Promotes to a
 // Supabase posts table at v1.5+ with the same schema shape.
 
+import { classifyContent, shouldBlock } from "@/lib/safety/classify";
+import { enqueue } from "@/lib/moderation/queue";
+
 export type PostCategory = "show" | "ask" | "feedback" | "hiring" | "other";
 
 export const CATEGORY_LABELS: Record<PostCategory, string> = {
@@ -94,13 +97,25 @@ export function saveVotes(votes: Set<string>): void {
   }
 }
 
+export type CreatePostResult =
+  | { ok: true; post: Post; flagged: boolean }
+  | { ok: false; reason: "blocked"; reasons: string[] };
+
 export function createPost(args: {
   author_user_id: string;
   author_name: string;
   category: PostCategory;
   title: string;
   body: string;
-}): Post {
+}): CreatePostResult {
+  // Safety preflight: block at create-time on high-severity content
+  // (slurs / threats / doxx). Medium / low passes through but lands
+  // in the admin moderation queue for review.
+  const safety = classifyContent(`${args.title}\n\n${args.body}`);
+  if (shouldBlock(safety)) {
+    return { ok: false, reason: "blocked", reasons: safety.reasons };
+  }
+
   const now = new Date().toISOString();
   const post: Post = {
     id: `post_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`,
@@ -121,7 +136,22 @@ export function createPost(args: {
   const votes = loadVotes();
   votes.add(post.id);
   saveVotes(votes);
-  return post;
+
+  // Soft-flag: post is published, admin sees it in the queue.
+  if (safety.flagged) {
+    enqueue({
+      kind: "flagged_post",
+      triggered_by: "auto",
+      target_id: post.id,
+      target_kind: "post",
+      target_label: post.title,
+      target_snippet: post.body.slice(0, 140),
+      reasons: safety.reasons,
+      severity: safety.severity,
+    });
+  }
+
+  return { ok: true, post, flagged: safety.flagged };
 }
 
 export function toggleUpvote(postId: string): { upvotes: number; voted: boolean } | undefined {
@@ -142,13 +172,21 @@ export function toggleUpvote(postId: string): { upvotes: number; voted: boolean 
   return { upvotes: all[i].upvotes, voted: !had };
 }
 
+export type AppendCommentResult =
+  | { ok: true; post: Post; flagged: boolean }
+  | { ok: false; reason: "blocked"; reasons: string[] };
+
 export function appendComment(
   postId: string,
   comment: Omit<Comment, "id" | "created_at">
-): Post | undefined {
+): AppendCommentResult {
+  const safety = classifyContent(comment.body);
+  if (shouldBlock(safety)) {
+    return { ok: false, reason: "blocked", reasons: safety.reasons };
+  }
   const all = loadPosts();
   const i = all.findIndex((p) => p.id === postId);
-  if (i < 0) return undefined;
+  if (i < 0) return { ok: false, reason: "blocked", reasons: ["post_not_found"] };
   const full: Comment = {
     id: `cmt_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`,
     created_at: new Date().toISOString(),
@@ -156,7 +194,19 @@ export function appendComment(
   };
   all[i].comments.push(full);
   savePosts(all);
-  return all[i];
+  if (safety.flagged) {
+    enqueue({
+      kind: "flagged_comment",
+      triggered_by: "auto",
+      target_id: full.id,
+      target_kind: "comment",
+      target_label: `Comment on "${all[i].title}"`,
+      target_snippet: full.body.slice(0, 140),
+      reasons: safety.reasons,
+      severity: safety.severity,
+    });
+  }
+  return { ok: true, post: all[i], flagged: safety.flagged };
 }
 
 // Demo seed: drop 4 posts on first /browse visit so the feed isn't an
