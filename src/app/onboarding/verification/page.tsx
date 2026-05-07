@@ -289,7 +289,7 @@ export default function VerificationStep() {
         <p className="text-xxs uppercase tracking-wider text-accent font-semibold mt-3">
           Step 2 of 4
         </p>
-        <h1 className="font-display text-3xl text-ink leading-tight mt-1">
+        <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl text-ink leading-[1.05] mt-2">
           Verify you are in the cohort
         </h1>
         <p className="text-sm text-muted mt-2">

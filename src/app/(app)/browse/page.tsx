@@ -96,7 +96,7 @@ export default function BrowsePage() {
   return (
     <>
       <TopBar title="Feed" subtitle="Cohort posts, advice, hiring, show-and-tell" />
-      <section className="container-app pt-5 pb-24">
+      <section className="container-app pt-6 pb-12">
         {/* Compose card. Click "New post" to expand the full form. Keeps
             the feed dense and the composer one tap away. */}
         <div className="surface p-4 mb-5">

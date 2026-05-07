@@ -64,8 +64,8 @@ export default function YouPage() {
   if (!card) {
     return (
       <>
-        <TopBar title="You" />
-        <section className="container-app pt-5 pb-6">
+        <TopBar title="You" subtitle="Your Founder Pass" />
+        <section className="container-app pt-6 pb-12">
           <div className="surface p-5 animate-pulse">
             <div className="h-3 w-1/3 skeleton mb-3" />
             <div className="h-3 w-2/3 skeleton" />
@@ -79,11 +79,13 @@ export default function YouPage() {
   return (
     <>
       <TopBar title="You" subtitle="Your Founder Pass" />
-      <section className="container-app pt-5 pb-6">
+      <section className="container-app pt-6 pb-12">
         {/* Founder Pass: the editorial admit-one ticket carries both the
             identity treatment and the four founder-card lines. Pass and
-            Card are one object. */}
-        <div className="ed-rule pt-3 mb-4 flex items-baseline justify-between">
+            Card are one object. The TopBar already carries the page
+            masthead, so this just needs a small ed-serial dateline
+            before the Pass renders. */}
+        <div className="flex items-baseline justify-between mb-5">
           <span className="ed-serial">No. 001 / Founder Pass</span>
           <span className="ed-serial hidden sm:inline">Editable below</span>
         </div>

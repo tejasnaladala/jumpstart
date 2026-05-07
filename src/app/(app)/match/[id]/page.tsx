@@ -171,13 +171,13 @@ export default function MatchDetailPage() {
   if (notFound) {
     return (
       <>
-        <TopBar back={{ href: "/drop" }} title="Match not found" />
-        <section className="container-app py-12">
+        <TopBar variant="compact" back={{ href: "/drop" }} title="Match not found" />
+        <section className="container-app pt-6 pb-12">
           <div className="surface p-6 max-w-lg">
             <p className="text-xxs uppercase tracking-wider text-muted font-semibold">
               Stale link
             </p>
-            <h1 className="font-display text-2xl text-ink leading-tight mt-1">
+            <h1 className="font-display text-3xl sm:text-4xl text-ink leading-tight mt-2">
               This match isn't in your current drop
             </h1>
             <p className="text-sm text-muted mt-3 leading-relaxed">
@@ -199,23 +199,23 @@ export default function MatchDetailPage() {
   if (!match) {
     return (
       <>
-        <TopBar back={{ href: "/drop" }} title="Loading..." />
-        <div className="container-app py-10 text-sm text-muted">Finding this match...</div>
+        <TopBar variant="compact" back={{ href: "/drop" }} title="Loading..." />
+        <div className="container-app pt-6 pb-12 text-sm text-muted">Finding this match...</div>
       </>
     );
   }
 
   return (
     <>
-      <TopBar back={{ href: "/drop" }} title="Match" />
+      <TopBar variant="compact" back={{ href: "/drop" }} title="Match" />
 
-      <section className="container-app pt-5 pb-10">
-        <div className="surface p-5">
+      <section className="container-app pt-5 pb-12">
+        <div className="surface p-5 sm:p-6">
           <div className="flex items-start gap-4">
             <Avatar name={match.candidate.name} size={56} />
             <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h1 className="font-sans text-xl font-semibold tracking-tight text-ink">{match.candidate.name}</h1>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="font-display text-3xl sm:text-4xl text-ink leading-tight">{match.candidate.name}</h1>
                 <Pill size="sm" accent>{MATCH_TYPE_LABEL[match.match_type]}</Pill>
               </div>
               <p className="text-sm text-muted">{match.candidate.location}</p>

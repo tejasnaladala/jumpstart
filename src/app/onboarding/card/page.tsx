@@ -150,7 +150,7 @@ export default function CardReviewStep() {
         <p className="text-xxs uppercase tracking-wider text-accent font-semibold mt-3">
           Step 4 of 4
         </p>
-        <h1 className="font-display text-3xl text-ink leading-tight mt-1">Your Founder Pass</h1>
+        <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl text-ink leading-[1.05] mt-2">Your Founder Pass</h1>
         <p className="text-sm text-muted mt-2">
           Drafted from your interview. Edit any line, change any tag, then save. The pass is what
           other verified attendees see when the matchmaker scores you against them.

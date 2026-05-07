@@ -4,7 +4,7 @@ export default function DropLoading() {
   return (
     <>
       <TopBar title="Your Drop" subtitle="Curating..." />
-      <section className="container-app pt-5 pb-6">
+      <section className="container-app pt-6 pb-12">
         <div className="flex items-center gap-2 mb-4">
           <span className="pill pill-accent text-xs">3 worth meeting</span>
           <span className="text-xs text-muted">curating for you</span>

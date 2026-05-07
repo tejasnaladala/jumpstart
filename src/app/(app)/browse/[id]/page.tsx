@@ -41,8 +41,8 @@ export default function PostDetailPage() {
   if (!post) {
     return (
       <>
-        <TopBar back={{ href: "/browse" }} title="Loading..." />
-        <div className="container-app py-10 text-sm text-muted">Looking up the post...</div>
+        <TopBar variant="compact" back={{ href: "/browse" }} title="Loading..." />
+        <div className="container-app pt-6 pb-12 text-sm text-muted">Looking up the post...</div>
       </>
     );
   }
@@ -83,8 +83,8 @@ export default function PostDetailPage() {
 
   return (
     <>
-      <TopBar back={{ href: "/browse" }} title="Post" subtitle={post.author_name} />
-      <section className="container-app pt-5 pb-24">
+      <TopBar variant="compact" back={{ href: "/browse" }} title="Post" subtitle={post.author_name} />
+      <section className="container-app pt-5 pb-12">
         <div className="surface p-5">
           <div className="flex items-center gap-2 mb-3 flex-wrap">
             <Pill size="sm" active>

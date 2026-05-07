@@ -50,21 +50,21 @@ export function DropCountdown({ targetIso, onArrived }: Props) {
   const isFinalMinute = c.days === 0 && c.hours === 0 && c.minutes === 0;
 
   return (
-    // Hero countdown. Founder direction (May 7): "Make the envelope
-    // lands thing big to take up most space on the screen, make it
-    // look good." On lg+ this fills the container-wide canvas
-    // (1080px) with display-serif numerals and generous whitespace.
-    <div className="surface bg-bg/60 px-4 py-10 sm:px-10 sm:py-16 lg:px-16 lg:py-24 text-center">
-      <div aria-hidden className="h-px bg-accent mx-auto mb-6 lg:mb-12 w-12 lg:w-24" />
-      <p className="font-mono text-[10px] sm:text-xs lg:text-sm uppercase tracking-[0.22em] lg:tracking-[0.36em] text-accent font-semibold">
+    // Editorial countdown sized for the canonical container-app column
+    // (440 phone, 640 tablet, 720 laptop). Numerals are bold and serif
+    // but proportional to the column. The page TopBar already carries
+    // the page h1 (Your Drop), so this block is the body hero.
+    <div className="surface bg-bg/60 px-5 py-10 sm:px-8 sm:py-14 lg:px-10 lg:py-16 text-center">
+      <div aria-hidden className="h-px bg-accent mx-auto mb-5 sm:mb-7 w-12 sm:w-16" />
+      <p className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.28em] text-accent font-semibold">
         Envelope lands
       </p>
-      <p className="font-display italic text-3xl sm:text-4xl lg:text-6xl xl:text-7xl text-ink leading-[1.05] mt-4 lg:mt-8 px-2">
+      <p className="font-display italic text-3xl sm:text-4xl lg:text-5xl text-ink leading-[1.05] mt-3 sm:mt-5 px-2">
         {label}
       </p>
 
       <div
-        className={`mt-12 lg:mt-20 flex items-end justify-center gap-6 sm:gap-12 lg:gap-20 ${
+        className={`mt-10 sm:mt-12 lg:mt-14 flex items-end justify-center gap-4 sm:gap-8 lg:gap-10 ${
           isFinalMinute ? "animate-pulse" : ""
         }`}
         aria-live="polite"
@@ -79,12 +79,11 @@ export function DropCountdown({ targetIso, onArrived }: Props) {
         <Cell value={c.seconds} label="sec" highlight={isFinalMinute} />
       </div>
 
-      <p className="text-xs sm:text-sm lg:text-base text-muted mt-12 lg:mt-20 leading-relaxed max-w-md lg:max-w-2xl mx-auto px-4">
-        One curated founder match. Read the four lines, decide in 30
-        seconds. Mon, Wed, Fri at 9pm PT, sharp.
+      <p className="text-xs sm:text-sm text-muted mt-10 sm:mt-12 leading-relaxed max-w-md mx-auto px-2">
+        One curated founder match. Read the four lines, decide in 30 seconds. Mon, Wed, Fri at 9pm PT.
       </p>
 
-      <div aria-hidden className="h-px bg-accent mx-auto mt-10 lg:mt-16 w-12 lg:w-24" />
+      <div aria-hidden className="h-px bg-accent mx-auto mt-8 sm:mt-10 w-12 sm:w-16" />
     </div>
   );
 }
@@ -101,13 +100,13 @@ function Cell({
   return (
     <div className="flex flex-col items-center min-w-0">
       <span
-        className={`font-display tabular-nums leading-[0.9] text-5xl sm:text-7xl lg:text-[10rem] xl:text-[12rem] ${
+        className={`font-display tabular-nums leading-[0.9] text-5xl sm:text-6xl lg:text-7xl xl:text-8xl ${
           highlight ? "text-accent" : "text-ink"
         } transition-colors`}
       >
         {String(value).padStart(2, "0")}
       </span>
-      <span className="font-mono text-[9px] sm:text-[10px] lg:text-sm uppercase tracking-[0.18em] lg:tracking-[0.28em] text-muted mt-3 lg:mt-6">
+      <span className="font-mono text-[9px] sm:text-[10px] lg:text-xs uppercase tracking-[0.18em] lg:tracking-[0.22em] text-muted mt-3 sm:mt-4">
         {label}
       </span>
     </div>
@@ -121,7 +120,7 @@ function Separator() {
   return (
     <span
       aria-hidden
-      className="font-display text-3xl sm:text-5xl lg:text-7xl text-muted/30 leading-[0.9] self-center"
+      className="font-display text-3xl sm:text-4xl lg:text-5xl text-muted/30 leading-[0.9] self-center"
     >
       ·
     </span>

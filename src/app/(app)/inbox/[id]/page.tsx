@@ -44,8 +44,8 @@ export default function ThreadPage() {
   if (!thread) {
     return (
       <>
-        <TopBar back={{ href: "/inbox" }} title="Loading..." />
-        <div className="container-app py-10 text-sm text-muted">
+        <TopBar variant="compact" back={{ href: "/inbox" }} title="Loading..." />
+        <div className="container-app pt-6 pb-12 text-sm text-muted">
           Looking up the thread...
         </div>
       </>
@@ -55,7 +55,7 @@ export default function ThreadPage() {
   if (thread.status !== "accepted") {
     return (
       <>
-        <TopBar back={{ href: "/inbox" }} title={thread.other.name} />
+        <TopBar variant="compact" back={{ href: "/inbox" }} title={thread.other.name} />
         <section className="container-app pt-5">
           <div className="surface p-5">
             <p className="text-xxs uppercase tracking-wider text-muted font-semibold mb-1">
@@ -105,6 +105,7 @@ export default function ThreadPage() {
   return (
     <>
       <TopBar
+        variant="compact"
         back={{ href: "/inbox" }}
         title={thread.other.name}
         subtitle={thread.other.location}
