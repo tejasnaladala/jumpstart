@@ -199,22 +199,24 @@ export async function runAssertions(): Promise<{
 
     results.push(
       await check("drop_renders", async () => {
-        // Drop refactor (May 7 2026): page now renders ONE match when
-        // delivered, or a countdown when waiting for the next 9pm PT
-        // slot. Either is valid. Failure mode: the page is blank
-        // (neither a match card nor a countdown is visible).
-        await page.goto(`${BASE_URL}/drop`, { waitUntil: "domcontentloaded" });
-        await page.waitForLoadState("networkidle").catch(() => null);
-        const matchCount = await page.locator('a[href^="/match/"]').count();
-        const countdownVisible = await page
-          .getByText(/ENVELOPE LANDS|DROP PENDING/i)
+        // Drop refactor (May 7 2026): page renders countdown OR
+        // delivered match OR preparing-state. All three count as
+        // valid; failure is a blank page.
+        await page.goto(`${BASE_URL}/drop`, { waitUntil: "networkidle" });
+        // Wait up to 5s for the client to hydrate and render one of
+        // the three signals. The page uses useEffect for hydration so
+        // domcontentloaded is too early.
+        const surface = await page
+          .getByText(/ENVELOPE LANDS|DROP PENDING|MATCH BEING PREPARED|Why you should meet/i)
           .first()
-          .isVisible()
+          .waitFor({ state: "visible", timeout: 5_000 })
+          .then(() => true)
           .catch(() => false);
-        const ok = matchCount >= 1 || countdownVisible;
+        const matchCount = await page.locator('a[href^="/match/"]').count();
+        const ok = surface || matchCount >= 1;
         return {
           ok,
-          detail: `match_cards=${matchCount} countdown=${countdownVisible}`,
+          detail: `surface=${surface} match_cards=${matchCount}`,
         };
       })
     );
