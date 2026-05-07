@@ -122,6 +122,21 @@ export async function sendOtp(
     pepper: realConfig.otpHashPepper,
   });
 
+  // Invalidate any prior unverified rows for the same (channel, target)
+  // so a fresh send retires older codes still inside their TTL window.
+  // Closes the replay path the backend-patterns review flagged: an
+  // attacker who saw an older code could otherwise verify with it even
+  // after a newer one was issued. Best-effort; never blocks the send.
+  try {
+    await store.expirePriorUnverified(
+      input.channel,
+      realTargetHash,
+      sentAt
+    );
+  } catch {
+    // do not block the send on cleanup
+  }
+
   try {
     await store.create({
       channel: input.channel,
@@ -230,10 +245,17 @@ export async function verifyOtp(
   }
 
   const verifiedAt = now.toISOString();
+  let updated;
   try {
-    await store.markVerified(row.id, verifiedAt);
+    updated = await store.markVerified(row.id, verifiedAt);
   } catch {
     return { ok: false, reason: "internal" };
+  }
+  // Concurrent verify race: another writer set verified_at first.
+  // Treat as mismatch so only one caller's session is granted
+  // verification, even though the code itself was valid. Codex H7.
+  if (!updated) {
+    return { ok: false, reason: "mismatch", attempts_remaining: 0 };
   }
 
   return { ok: true, verified_at: verifiedAt, target: normalized };

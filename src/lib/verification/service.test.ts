@@ -67,8 +67,27 @@ function makeFakeStore(): {
     async markVerified(id, verifiedAt) {
       const row = rows.find((r) => r.id === id);
       if (!row) throw new Error("not found");
+      // Honor the conditional contract: if already verified by a
+      // concurrent caller, return null so the service treats the second
+      // verify as a mismatch.
+      if (row.verified_at) return null;
       row.verified_at = verifiedAt;
       return row;
+    },
+    async expirePriorUnverified(channel, targetHash, asOfIso) {
+      let count = 0;
+      for (const r of rows) {
+        if (
+          r.channel === channel &&
+          r.target_hash === targetHash &&
+          !r.verified_at &&
+          r.expires_at > asOfIso
+        ) {
+          r.expires_at = asOfIso;
+          count++;
+        }
+      }
+      return count;
     },
   };
   return { store, rows };
