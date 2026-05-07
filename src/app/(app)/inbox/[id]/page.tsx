@@ -14,6 +14,7 @@ import {
   type Thread,
 } from "@/lib/inbox/threads";
 import { playSent } from "@/lib/inbox/sound";
+import { blockUser, enqueue } from "@/lib/moderation/queue";
 
 export default function ThreadPage() {
   const params = useParams<{ id: string }>();
@@ -103,7 +104,36 @@ export default function ThreadPage() {
 
   return (
     <>
-      <TopBar back={{ href: "/inbox" }} title={thread.other.name} subtitle={thread.other.location} />
+      <TopBar
+        back={{ href: "/inbox" }}
+        title={thread.other.name}
+        subtitle={thread.other.location}
+        right={
+          <ThreadMenu
+            otherName={thread.other.name}
+            otherUserId={thread.other.user_id}
+            onBlock={() => {
+              blockUser(thread.other.user_id);
+              toast.push(`Blocked ${thread.other.name}. They will not see your Pass or be able to message you.`, "info");
+              router.push("/inbox");
+            }}
+            onReport={(reason) => {
+              const lastMsg = thread.messages[thread.messages.length - 1];
+              enqueue({
+                kind: "reported_message",
+                triggered_by: meRef.current.user_id,
+                target_id: lastMsg?.text || thread.id,
+                target_kind: "message",
+                target_label: `${thread.other.name} in your inbox`,
+                target_snippet: lastMsg?.text.slice(0, 140) ?? thread.request_note.slice(0, 140),
+                reasons: [reason],
+                severity: "medium",
+              });
+              toast.push("Reported. An admin will review.", "info");
+            }}
+          />
+        }
+      />
       {/* Single column for messages AND compose so they share the same
           horizontal axis. Previously compose was full-width while
           messages were centered, which read as misaligned at laptop
@@ -197,5 +227,64 @@ export default function ThreadPage() {
         </div>
       </section>
     </>
+  );
+}
+
+function ThreadMenu({
+  otherName,
+  otherUserId,
+  onBlock,
+  onReport,
+}: {
+  otherName: string;
+  otherUserId: string;
+  onBlock: () => void;
+  onReport: (reason: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="text-xs text-muted hover:text-ink transition-colors px-2 py-1 rounded-md"
+        aria-label="Thread options"
+      >
+        ⋯
+      </button>
+      {open ? (
+        <div
+          className="absolute right-0 top-full mt-1 z-30 surface p-1 min-w-[180px]"
+          onMouseLeave={() => setOpen(false)}
+        >
+          <button
+            onClick={() => {
+              setOpen(false);
+              const reason = window.prompt(
+                `Why are you reporting ${otherName}? (one short sentence)`
+              );
+              if (reason && reason.trim()) onReport(reason.trim());
+            }}
+            className="block w-full text-left text-xs px-3 py-2 rounded hover:bg-bg/60 text-ink"
+          >
+            Report
+          </button>
+          <button
+            onClick={() => {
+              setOpen(false);
+              const ok = window.confirm(
+                `Block ${otherName}? They will not see your Pass or be able to message you.`
+              );
+              if (ok) onBlock();
+            }}
+            className="block w-full text-left text-xs px-3 py-2 rounded hover:bg-error/10 text-error"
+          >
+            Block
+          </button>
+          <span className="block text-xxs text-muted px-3 pt-1 pb-2 font-mono">
+            {otherUserId.slice(0, 12)}
+          </span>
+        </div>
+      ) : null}
+    </div>
   );
 }

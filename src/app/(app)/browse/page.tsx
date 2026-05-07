@@ -62,13 +62,26 @@ export default function BrowsePage() {
     const body = composeBody.trim();
     if (title.length < 5 || body.length < 10) return;
     const me = loadMe();
-    createPost({
+    const result = createPost({
       author_user_id: me.user_id,
       author_name: me.name || "Anonymous",
       category: composeCat,
       title,
       body,
     });
+    if (!result.ok) {
+      // Hard-blocked content (slurs / threats / doxx). UI never names
+      // the specific pattern to avoid feedback for ban-evaders.
+      // eslint-disable-next-line no-alert
+      alert("Post blocked. Rewrite without language that targets people or could harm them.");
+      return;
+    }
+    if (result.flagged) {
+      // Soft-flagged: post is up, admin will review. Keep the user
+      // moving without a scary modal.
+      // eslint-disable-next-line no-alert
+      alert("Posted. Heads up: an admin will review the language before it stays public.");
+    }
     setComposeTitle("");
     setComposeBody("");
     setComposing(false);
