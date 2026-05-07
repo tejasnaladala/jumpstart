@@ -1,0 +1,569 @@
+[
+  {
+    "source": "repo:jumpstart",
+    "target": "dir:src/app",
+    "type": "DEFINES",
+    "summary": "Repository defines the Next.js App Router app.",
+    "confidence": "high"
+  },
+  {
+    "source": "repo:jumpstart",
+    "target": "dir:src/components",
+    "type": "DEFINES",
+    "summary": "Repository defines local frontend components.",
+    "confidence": "high"
+  },
+  {
+    "source": "repo:jumpstart",
+    "target": "dir:src/lib",
+    "type": "DEFINES",
+    "summary": "Repository defines domain logic and backend services.",
+    "confidence": "high"
+  },
+  {
+    "source": "repo:jumpstart",
+    "target": "dir:supabase",
+    "type": "DEFINES",
+    "summary": "Repository defines Supabase migrations.",
+    "confidence": "high"
+  },
+  {
+    "source": "repo:jumpstart",
+    "target": "dir:pocketbase",
+    "type": "DEFINES",
+    "summary": "Repository defines PocketBase beta schema.",
+    "confidence": "high"
+  },
+  {
+    "source": "file:package.json",
+    "target": "external:vercel",
+    "type": "DEPENDS_ON",
+    "summary": "Build/start scripts are used by Vercel deployment config.",
+    "confidence": "high"
+  },
+  {
+    "source": "file:vercel.json",
+    "target": "api:cron-retention",
+    "type": "EXPOSES",
+    "summary": "Vercel cron invokes /api/cron/retention daily.",
+    "confidence": "high"
+  },
+  {
+    "source": "file:vercel.json",
+    "target": "external:vercel",
+    "type": "CONFIGURED_BY",
+    "summary": "Vercel deployment uses vercel.json build, cron, region, and headers.",
+    "confidence": "high"
+  },
+  {
+    "source": "file:env.example",
+    "target": "external:supabase",
+    "type": "CONFIGURED_BY",
+    "summary": "Supabase URL, anon key, and service role key are documented env vars.",
+    "confidence": "high"
+  },
+  {
+    "source": "file:env.example",
+    "target": "external:anthropic",
+    "type": "CONFIGURED_BY",
+    "summary": "Anthropic API key and kill switches are documented env vars.",
+    "confidence": "high"
+  },
+  {
+    "source": "file:env.example",
+    "target": "external:upstash",
+    "type": "CONFIGURED_BY",
+    "summary": "Upstash REST URL and token are documented env vars.",
+    "confidence": "high"
+  },
+  {
+    "source": "file:env.example",
+    "target": "external:pocketbase",
+    "type": "CONFIGURED_BY",
+    "summary": "PocketBase public URL activates dormant client.",
+    "confidence": "high"
+  },
+  {
+    "source": "file:middleware",
+    "target": "api:health",
+    "type": "AUTHORIZES",
+    "summary": "Middleware explicitly bypasses public health endpoint.",
+    "confidence": "high"
+  },
+  {
+    "source": "file:middleware",
+    "target": "api:cron-retention",
+    "type": "AUTHORIZES",
+    "summary": "Middleware bypasses cron routes because they use bearer auth.",
+    "confidence": "high"
+  },
+  {
+    "source": "file:middleware",
+    "target": "service:session",
+    "type": "DEPENDS_ON",
+    "summary": "Middleware mirrors session env assumptions but is not the real security boundary.",
+    "confidence": "high"
+  },
+  {
+    "source": "layout:root",
+    "target": "external:elu",
+    "type": "DEPENDS_ON",
+    "summary": "Root layout loads ELU analytics script.",
+    "confidence": "high"
+  },
+  {
+    "source": "layout:app-shell",
+    "target": "service:session",
+    "type": "CALLS",
+    "summary": "Authenticated app shell calls getSession.",
+    "confidence": "high"
+  },
+  {
+    "source": "layout:app-shell",
+    "target": "component:bottom-nav",
+    "type": "RENDERS",
+    "summary": "App shell renders the primary bottom nav.",
+    "confidence": "high"
+  },
+  {
+    "source": "layout:admin",
+    "target": "service:admin-auth",
+    "type": "CALLS",
+    "summary": "Admin shell calls getAdmin.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:landing",
+    "target": "component:founder-pass",
+    "type": "RENDERS",
+    "summary": "Landing page shows sample Founder Pass.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:landing",
+    "target": "store:mock-cohort",
+    "type": "READS_FROM",
+    "summary": "Landing page reads sample founders from MOCK_COHORT.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:signup",
+    "target": "flow:onboarding",
+    "type": "STARTS",
+    "summary": "Signup writes local signup state and navigates to onboarding.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:onboarding-identity",
+    "target": "flow:onboarding",
+    "type": "WRITES_TO",
+    "summary": "Identity step writes jumpstart.onboarding.identity.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:onboarding-verification",
+    "target": "store:otp",
+    "type": "CALLS",
+    "summary": "Verification step uses client-side OTP helper.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:onboarding-verification",
+    "target": "store:moderation",
+    "type": "WRITES_TO",
+    "summary": "Verification step enqueues local verification moderation item.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:onboarding-intent",
+    "target": "flow:onboarding",
+    "type": "WRITES_TO",
+    "summary": "Intent step writes local intent answers.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:onboarding-card",
+    "target": "store:mock-me",
+    "type": "WRITES_TO",
+    "summary": "Card review saves final Founder Card to jumpstart.me.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:onboarding-card",
+    "target": "flow:drop",
+    "type": "HANDOFF_TO",
+    "summary": "Card review sets first eligible drop and navigates to /drop.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:onboarding-card",
+    "target": "risk:onboarding-location",
+    "type": "RISK_IN",
+    "summary": "Card review reads id.location despite identity storing city/region.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:drop",
+    "target": "store:drop-delivery",
+    "type": "READS_FROM",
+    "summary": "Drop page reads manually delivered match from localStorage.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:drop",
+    "target": "component:match-card",
+    "type": "RENDERS",
+    "summary": "Delivered drop renders MatchCard.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:match-detail",
+    "target": "api:intros",
+    "type": "CONSUMES",
+    "summary": "Match detail sends intro requests to /api/intros.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:match-detail",
+    "target": "service:local-drop",
+    "type": "READS_FROM",
+    "summary": "Match detail resolves matches from deterministic local drop.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:match-detail",
+    "target": "store:inbox-threads",
+    "type": "WRITES_TO",
+    "summary": "Successful intro request creates local outgoing thread.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:feed",
+    "target": "store:forum-posts",
+    "type": "READS_FROM",
+    "summary": "Feed reads and writes local forum posts.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:post-detail",
+    "target": "store:forum-posts",
+    "type": "READS_FROM",
+    "summary": "Post detail reads and appends comments to local post store.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:post-detail",
+    "target": "store:moderation",
+    "type": "WRITES_TO",
+    "summary": "Post detail reports posts to local moderation queue.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:inbox",
+    "target": "store:inbox-threads",
+    "type": "READS_FROM",
+    "summary": "Inbox page reads and mutates local threads.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:thread",
+    "target": "store:inbox-threads",
+    "type": "READS_FROM",
+    "summary": "Thread page reads and appends local messages.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:thread",
+    "target": "store:moderation",
+    "type": "WRITES_TO",
+    "summary": "Thread reports and blocks write to local moderation/block stores.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:you",
+    "target": "store:mock-me",
+    "type": "READS_FROM",
+    "summary": "You page reads local Founder Card.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:you",
+    "target": "component:founder-pass",
+    "type": "RENDERS",
+    "summary": "You page renders current Founder Pass.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:public-pass",
+    "target": "store:mock-cohort",
+    "type": "READS_FROM",
+    "summary": "Public pass looks up cards in mock cohort.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:public-pass",
+    "target": "component:founder-pass",
+    "type": "RENDERS",
+    "summary": "Public pass renders FounderPass.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:admin-health",
+    "target": "api:health",
+    "type": "CONSUMES",
+    "summary": "Admin health polls /api/health.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:admin-curate",
+    "target": "store:drop-delivery",
+    "type": "WRITES_TO",
+    "summary": "Admin curate writes delivered match into localStorage.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:admin-moderation",
+    "target": "store:moderation",
+    "type": "READS_FROM",
+    "summary": "Admin moderation reads local queue and blocklist.",
+    "confidence": "high"
+  },
+  {
+    "source": "page:admin-logs",
+    "target": "service:agent-log",
+    "type": "READS_FROM",
+    "summary": "Admin logs reads file-backed agent logs.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:health",
+    "target": "external:supabase",
+    "type": "CALLS",
+    "summary": "Health route probes Supabase REST when configured.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:health",
+    "target": "external:anthropic",
+    "type": "CALLS",
+    "summary": "Health route probes Anthropic messages API when configured and enabled.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:health",
+    "target": "external:upstash",
+    "type": "CALLS",
+    "summary": "Health route probes Upstash Redis REST ping when configured.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:browse",
+    "target": "service:session",
+    "type": "CALLS",
+    "summary": "Browse API requires session.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:browse",
+    "target": "service:rate-limit",
+    "type": "CALLS",
+    "summary": "Browse API rate-limits per user.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:browse",
+    "target": "store:mock-cohort",
+    "type": "READS_FROM",
+    "summary": "Browse API returns filtered mock cohort rows.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:drops",
+    "target": "service:session",
+    "type": "CALLS",
+    "summary": "Drops API requires session.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:drops",
+    "target": "service:rate-limit",
+    "type": "CALLS",
+    "summary": "Drops API rate-limits per user.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:drops",
+    "target": "service:local-drop",
+    "type": "CALLS",
+    "summary": "Drops API generates local drop in stub mode.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:drops",
+    "target": "risk:prod-db-not-wired",
+    "type": "RISK_IN",
+    "summary": "Drops API has production DB card read TODO.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:intros",
+    "target": "service:session",
+    "type": "CALLS",
+    "summary": "Intros API requires session.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:intros",
+    "target": "service:api-schema",
+    "type": "DEPENDS_ON",
+    "summary": "Intros API validates body with IntroRequestSchema.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:intros",
+    "target": "service:rate-limit",
+    "type": "CALLS",
+    "summary": "Intros API applies hourly and daily rate limits.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:intros",
+    "target": "service:agent-runner",
+    "type": "CALLS",
+    "summary": "Intros API runs safety classifier through agent runner.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:intros",
+    "target": "risk:prod-db-not-wired",
+    "type": "RISK_IN",
+    "summary": "Intros API has production matches table ownership TODO.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:onboarding-interview",
+    "target": "service:agent-runner",
+    "type": "CALLS",
+    "summary": "Onboarding interview API runs onboarding interviewer agent.",
+    "confidence": "high"
+  },
+  {
+    "source": "api:cron-retention",
+    "target": "risk:prod-db-not-wired",
+    "type": "RISK_IN",
+    "summary": "Retention cron authenticates but deletion logic is TODO.",
+    "confidence": "high"
+  },
+  {
+    "source": "service:session",
+    "target": "external:supabase",
+    "type": "CALLS",
+    "summary": "Session service reads Supabase auth user and trust_tier when configured.",
+    "confidence": "high"
+  },
+  {
+    "source": "service:rate-limit",
+    "target": "external:upstash",
+    "type": "DEPENDS_ON",
+    "summary": "Rate limiter uses Upstash when configured.",
+    "confidence": "high"
+  },
+  {
+    "source": "service:agent-runner",
+    "target": "external:anthropic",
+    "type": "CALLS",
+    "summary": "Agent runner calls Anthropic SDK when API key exists and stubs are not forced.",
+    "confidence": "high"
+  },
+  {
+    "source": "service:agent-runner",
+    "target": "service:agent-log",
+    "type": "CALLS",
+    "summary": "Agent runner logs all agent runs.",
+    "confidence": "high"
+  },
+  {
+    "source": "dir:supabase",
+    "target": "db:supabase-users",
+    "type": "DEFINES",
+    "summary": "Supabase migrations define users table.",
+    "confidence": "high"
+  },
+  {
+    "source": "dir:supabase",
+    "target": "db:supabase-founder-cards",
+    "type": "DEFINES",
+    "summary": "Supabase migrations define founder_cards table.",
+    "confidence": "high"
+  },
+  {
+    "source": "dir:supabase",
+    "target": "db:supabase-drops",
+    "type": "DEFINES",
+    "summary": "Supabase migrations define drops table.",
+    "confidence": "high"
+  },
+  {
+    "source": "dir:supabase",
+    "target": "db:supabase-matches",
+    "type": "DEFINES",
+    "summary": "Supabase migrations define matches table.",
+    "confidence": "high"
+  },
+  {
+    "source": "dir:supabase",
+    "target": "db:supabase-intros",
+    "type": "DEFINES",
+    "summary": "Supabase migrations define intros table.",
+    "confidence": "high"
+  },
+  {
+    "source": "dir:supabase",
+    "target": "db:supabase-verifications",
+    "type": "DEFINES",
+    "summary": "Supabase migrations define verifications table.",
+    "confidence": "high"
+  },
+  {
+    "source": "dir:pocketbase",
+    "target": "db:pocketbase-schema",
+    "type": "DEFINES",
+    "summary": "PocketBase folder defines beta collection schema.",
+    "confidence": "high"
+  },
+  {
+    "source": "db:pocketbase-schema",
+    "target": "unknown:backend-choice",
+    "type": "BLOCKED_BY",
+    "summary": "PocketBase schema needs backend source-of-truth decision.",
+    "confidence": "high"
+  },
+  {
+    "source": "dir:supabase",
+    "target": "unknown:backend-choice",
+    "type": "BLOCKED_BY",
+    "summary": "Supabase schema needs backend source-of-truth decision.",
+    "confidence": "high"
+  },
+  {
+    "source": "component:filter-panel",
+    "target": "page:feed",
+    "type": "DEPRECATED_BY",
+    "summary": "Current Feed page does not use tag filter panel.",
+    "confidence": "medium"
+  },
+  {
+    "source": "risk:stale-tests",
+    "target": "page:drop",
+    "type": "RISK_IN",
+    "summary": "Tests still expect old three-match Drop UI.",
+    "confidence": "high"
+  },
+  {
+    "source": "risk:stale-tests",
+    "target": "page:feed",
+    "type": "RISK_IN",
+    "summary": "Tests still expect old Browse filter UI.",
+    "confidence": "high"
+  }
+]

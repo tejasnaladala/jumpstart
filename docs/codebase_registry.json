@@ -1,0 +1,650 @@
+{
+  "repo_name": "jumpstart",
+  "repository_url": "https://github.com/tejasnaladala/jumpstart",
+  "branch_audited": "implementation/v1",
+  "audit_date": "2026-05-07",
+  "detected_stack": {
+    "application": "Next.js App Router application for a closed-beta founder matchmaking product",
+    "frontend": ["Next.js 15.1.5", "React 19", "TypeScript 5.7", "Tailwind CSS 3.4", "Framer Motion"],
+    "backend": ["Next.js route handlers", "Supabase SSR/client", "Anthropic SDK", "Upstash Redis/Ratelimit", "Zod"],
+    "database": ["Supabase Postgres migrations", "PocketBase schema present but not wired into runtime"],
+    "testing": ["Playwright e2e", "AI agent eval scripts"],
+    "deployment": ["Vercel", "vercel.json headers/cron"],
+    "analytics": ["ELU Analytics script"]
+  },
+  "frontend_framework": "Next.js App Router with React client components",
+  "backend_framework": "Next.js API route handlers in src/app/api",
+  "database": {
+    "primary_candidate": "Supabase Postgres",
+    "secondary_candidate": "PocketBase",
+    "status": "Supabase has migrations and auth helpers; PocketBase has schema/client files but no runtime imports were found."
+  },
+  "package_manager": "Bun",
+  "scripts": {
+    "dev": "next dev -p 3030",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:push": "supabase db push",
+    "db:generate": "bunx supabase gen types typescript --local > src/lib/database.types.ts && bun run scripts/generate-types.ts",
+    "db:seed": "bun run scripts/seed-cohort.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:agents": "bun run evals/run-agents.ts"
+  },
+  "env_vars": [
+    {
+      "name": "ANTHROPIC_API_KEY",
+      "owner": "backend",
+      "importance": "critical",
+      "purpose": "Enables Anthropic-backed agent calls in src/lib/agents/client.ts and safety/interview routes.",
+      "evidence": "src/lib/agents/client.ts, src/app/api/intros/route.ts, src/app/api/onboarding/interview/route.ts"
+    },
+    {
+      "name": "NEXT_PUBLIC_SUPABASE_URL",
+      "owner": "shared",
+      "importance": "critical",
+      "purpose": "Supabase browser/server client URL.",
+      "evidence": "src/lib/supabase/client.ts, src/lib/supabase/server.ts"
+    },
+    {
+      "name": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "owner": "shared",
+      "importance": "critical",
+      "purpose": "Supabase browser/server anonymous key.",
+      "evidence": "src/lib/supabase/client.ts, src/lib/supabase/server.ts"
+    },
+    {
+      "name": "NEXT_PUBLIC_USE_STUBS",
+      "owner": "shared",
+      "importance": "high",
+      "purpose": "Switches selected API handlers to stub/demo behavior.",
+      "evidence": "src/lib/config.ts, src/app/api/intros/route.ts"
+    },
+    {
+      "name": "NEXT_PUBLIC_POCKETBASE_URL",
+      "owner": "backend",
+      "importance": "medium",
+      "purpose": "PocketBase URL for dormant PocketBase client.",
+      "evidence": "src/lib/pocketbase.ts"
+    },
+    {
+      "name": "UPSTASH_REDIS_REST_URL",
+      "owner": "backend",
+      "importance": "high",
+      "purpose": "Redis endpoint for API rate limiting.",
+      "evidence": "src/lib/rate-limit.ts"
+    },
+    {
+      "name": "UPSTASH_REDIS_REST_TOKEN",
+      "owner": "backend",
+      "importance": "high",
+      "purpose": "Redis token for API rate limiting.",
+      "evidence": "src/lib/rate-limit.ts"
+    },
+    {
+      "name": "CRON_SECRET",
+      "owner": "backend",
+      "importance": "high",
+      "purpose": "Bearer secret for /api/cron/retention.",
+      "evidence": "src/app/api/cron/retention/route.ts, vercel.json"
+    }
+  ],
+  "frontend_routes": [
+    {
+      "path": "/",
+      "file": "src/app/page.tsx",
+      "owner": "frontend",
+      "summary": "Landing and closed-beta entry point."
+    },
+    {
+      "path": "/signup",
+      "file": "src/app/signup/page.tsx",
+      "owner": "frontend",
+      "summary": "Email capture and local demo account bootstrap."
+    },
+    {
+      "path": "/onboarding/identity",
+      "file": "src/app/onboarding/identity/page.tsx",
+      "owner": "frontend",
+      "summary": "Identity, role, company, location, and LinkedIn capture stored locally."
+    },
+    {
+      "path": "/onboarding/verification",
+      "file": "src/app/onboarding/verification/page.tsx",
+      "owner": "frontend",
+      "summary": "Client-side OTP and proof upload demo flow."
+    },
+    {
+      "path": "/onboarding/intent",
+      "file": "src/app/onboarding/intent/page.tsx",
+      "owner": "frontend",
+      "summary": "Interview-style onboarding UI currently using local hardcoded questions."
+    },
+    {
+      "path": "/onboarding/card",
+      "file": "src/app/onboarding/card/page.tsx",
+      "owner": "frontend",
+      "summary": "Founder card creation and local pass storage."
+    },
+    {
+      "path": "/drop",
+      "file": "src/app/(app)/drop/page.tsx",
+      "owner": "frontend",
+      "summary": "LocalStorage drop composer; can be migrated to POST /api/drops."
+    },
+    {
+      "path": "/browse",
+      "file": "src/app/(app)/browse/page.tsx",
+      "owner": "frontend",
+      "summary": "Client-side candidate browse/feed experience."
+    },
+    {
+      "path": "/match",
+      "file": "src/app/(app)/match/page.tsx",
+      "owner": "frontend",
+      "summary": "Match view with intro request behavior."
+    },
+    {
+      "path": "/inbox",
+      "file": "src/app/(app)/inbox/page.tsx",
+      "owner": "frontend",
+      "summary": "Local conversation list and thread UI."
+    },
+    {
+      "path": "/you",
+      "file": "src/app/(app)/you/page.tsx",
+      "owner": "frontend",
+      "summary": "Profile/pass view based on local state."
+    },
+    {
+      "path": "/pass/[id]",
+      "file": "src/app/pass/[id]/page.tsx",
+      "owner": "frontend",
+      "summary": "Public founder pass route."
+    },
+    {
+      "path": "/admin/applications",
+      "file": "src/app/admin/applications/page.tsx",
+      "owner": "shared",
+      "summary": "Admin application review UI."
+    },
+    {
+      "path": "/admin/moderation",
+      "file": "src/app/admin/moderation/page.tsx",
+      "owner": "shared",
+      "summary": "Admin moderation UI."
+    }
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "handler": "src/app/api/health/route.ts",
+      "auth": "public",
+      "frontend_consumers": ["src/app/(app)/drop/page.tsx"],
+      "request_shape": "none",
+      "response_shape": "{ status, checks, app }",
+      "status": "implemented"
+    },
+    {
+      "method": "GET",
+      "path": "/api/browse",
+      "handler": "src/app/api/browse/route.ts",
+      "auth": "requires Supabase session",
+      "frontend_consumers": [],
+      "request_shape": "query: limit optional number",
+      "response_shape": "{ candidates: BrowseCandidate[], generatedAt }",
+      "status": "implemented against Supabase tables, not consumed by current frontend"
+    },
+    {
+      "method": "POST",
+      "path": "/api/drops",
+      "handler": "src/app/api/drops/route.ts",
+      "auth": "requires Supabase session",
+      "frontend_consumers": [],
+      "request_shape": "{ text: string }",
+      "response_shape": "{ id, created_at, status }",
+      "status": "blocked by loadMeFromDb TODO"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intros",
+      "handler": "src/app/api/intros/route.ts",
+      "auth": "requires Supabase session unless stub mode",
+      "frontend_consumers": ["src/app/(app)/match/page.tsx"],
+      "request_shape": "{ matchId, targetId, context?, opener? }",
+      "response_shape": "{ introId, status, safety }",
+      "status": "stub path works; production ownership check and DB write are TODO"
+    },
+    {
+      "method": "POST",
+      "path": "/api/onboarding/interview",
+      "handler": "src/app/api/onboarding/interview/route.ts",
+      "auth": "requires Supabase session",
+      "frontend_consumers": [],
+      "request_shape": "{ answers: string[] }",
+      "response_shape": "{ summary, signals, suggestedCard }",
+      "status": "implemented but not consumed by onboarding UI"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cron/retention",
+      "handler": "src/app/api/cron/retention/route.ts",
+      "auth": "Bearer CRON_SECRET",
+      "frontend_consumers": [],
+      "request_shape": "Authorization header",
+      "response_shape": "{ ok, message, cutoff } or { error }",
+      "status": "auth gate implemented; destructive deletion TODO returns 503"
+    }
+  ],
+  "components": [
+    {
+      "name": "FounderPass",
+      "path": "src/components/FounderPass.tsx",
+      "owner": "frontend",
+      "importance": "high",
+      "summary": "Founder card/pass visual component reused across onboarding/profile/public pass."
+    },
+    {
+      "name": "CandidateStack",
+      "path": "src/components/CandidateStack.tsx",
+      "owner": "frontend",
+      "importance": "high",
+      "summary": "Browse/match candidate stack UI."
+    },
+    {
+      "name": "InboxThread",
+      "path": "src/components/InboxThread.tsx",
+      "owner": "frontend",
+      "importance": "high",
+      "summary": "Conversation/thread display component."
+    },
+    {
+      "name": "DropComposer",
+      "path": "src/components/DropComposer.tsx",
+      "owner": "frontend",
+      "importance": "high",
+      "summary": "Client-side drop composition UI."
+    },
+    {
+      "name": "FilterPanel",
+      "path": "src/components/FilterPanel.tsx",
+      "owner": "frontend",
+      "importance": "low",
+      "summary": "Appears stale or unconsumed in current route map."
+    },
+    {
+      "name": "MobileShell",
+      "path": "src/components/MobileShell.tsx",
+      "owner": "frontend",
+      "importance": "medium",
+      "summary": "Shared mobile-first frame/navigation shell."
+    },
+    {
+      "name": "NavDock",
+      "path": "src/components/NavDock.tsx",
+      "owner": "frontend",
+      "importance": "medium",
+      "summary": "Navigation dock for app routes."
+    }
+  ],
+  "services": [
+    {
+      "name": "Supabase server auth",
+      "path": "src/lib/supabase/server.ts",
+      "owner": "backend",
+      "importance": "critical",
+      "summary": "Creates server-side Supabase client and session helpers."
+    },
+    {
+      "name": "Supabase browser client",
+      "path": "src/lib/supabase/client.ts",
+      "owner": "shared",
+      "importance": "high",
+      "summary": "Creates browser Supabase client for future client-auth/database flows."
+    },
+    {
+      "name": "Auth helpers",
+      "path": "src/lib/auth.ts",
+      "owner": "backend",
+      "importance": "critical",
+      "summary": "Session and admin authorization helpers."
+    },
+    {
+      "name": "Rate limiting",
+      "path": "src/lib/rate-limit.ts",
+      "owner": "backend",
+      "importance": "high",
+      "summary": "Upstash-backed rate limiting utility."
+    },
+    {
+      "name": "Agent client",
+      "path": "src/lib/agents/client.ts",
+      "owner": "backend",
+      "importance": "high",
+      "summary": "Anthropic client wrapper for product agents."
+    },
+    {
+      "name": "Agent registry",
+      "path": "src/lib/agents/registry.ts",
+      "owner": "backend",
+      "importance": "medium",
+      "summary": "Defines nine intended AI agents and their responsibilities."
+    },
+    {
+      "name": "Safety classifier",
+      "path": "src/lib/agents/safety.ts",
+      "owner": "backend",
+      "importance": "high",
+      "summary": "Moderation/safety classification used before intro creation."
+    },
+    {
+      "name": "Onboarding interviewer",
+      "path": "src/lib/agents/onboarding.ts",
+      "owner": "backend",
+      "importance": "medium",
+      "summary": "LLM-assisted onboarding synthesis used by an API route but not the current UI."
+    },
+    {
+      "name": "PocketBase client",
+      "path": "src/lib/pocketbase.ts",
+      "owner": "backend",
+      "importance": "low",
+      "summary": "Dormant PocketBase helper with no runtime imports found."
+    }
+  ],
+  "models": [
+    {
+      "name": "users",
+      "source": "supabase/migrations/0001_initial_schema.sql",
+      "owner": "backend",
+      "importance": "critical",
+      "summary": "User identity, role, verification, trust, and admin flags."
+    },
+    {
+      "name": "founder_cards",
+      "source": "supabase/migrations/0001_initial_schema.sql",
+      "owner": "backend",
+      "importance": "critical",
+      "summary": "Public founder pass/card data."
+    },
+    {
+      "name": "intent_interviews",
+      "source": "supabase/migrations/0001_initial_schema.sql",
+      "owner": "backend",
+      "importance": "high",
+      "summary": "Onboarding interview answers and extracted signals."
+    },
+    {
+      "name": "verifications",
+      "source": "supabase/migrations/0001_initial_schema.sql",
+      "owner": "backend",
+      "importance": "high",
+      "summary": "Verification channel, status, and proof metadata."
+    },
+    {
+      "name": "drops",
+      "source": "supabase/migrations/0001_initial_schema.sql",
+      "owner": "backend",
+      "importance": "critical",
+      "summary": "Founder requests or offers."
+    },
+    {
+      "name": "matches",
+      "source": "supabase/migrations/0001_initial_schema.sql",
+      "owner": "backend",
+      "importance": "critical",
+      "summary": "Match state between users."
+    },
+    {
+      "name": "intros",
+      "source": "supabase/migrations/0001_initial_schema.sql",
+      "owner": "backend",
+      "importance": "critical",
+      "summary": "Intro request lifecycle records."
+    },
+    {
+      "name": "meetings",
+      "source": "supabase/migrations/0001_initial_schema.sql",
+      "owner": "backend",
+      "importance": "medium",
+      "summary": "Scheduled meeting metadata."
+    },
+    {
+      "name": "reports",
+      "source": "supabase/migrations/0001_initial_schema.sql",
+      "owner": "backend",
+      "importance": "medium",
+      "summary": "Moderation report records."
+    },
+    {
+      "name": "agent_logs",
+      "source": "supabase/migrations/0001_initial_schema.sql",
+      "owner": "backend",
+      "importance": "medium",
+      "summary": "Intended persistent agent run audit log."
+    },
+    {
+      "name": "taste_profiles",
+      "source": "supabase/migrations/0001_initial_schema.sql",
+      "owner": "backend",
+      "importance": "medium",
+      "summary": "Personalization or feedback-derived profile data."
+    },
+    {
+      "name": "PocketBase collections",
+      "source": "pocketbase/pb_schema.json",
+      "owner": "backend",
+      "importance": "low",
+      "summary": "Alternate users/cards/drops/threads/posts/moderation schema candidate."
+    }
+  ],
+  "integrations": [
+    {
+      "name": "Supabase",
+      "type": "database/auth",
+      "owner": "backend",
+      "importance": "critical",
+      "evidence": "src/lib/supabase/*, supabase/migrations/*"
+    },
+    {
+      "name": "PocketBase",
+      "type": "database/auth candidate",
+      "owner": "backend",
+      "importance": "low",
+      "evidence": "pocketbase/pb_schema.json, src/lib/pocketbase.ts"
+    },
+    {
+      "name": "Anthropic",
+      "type": "AI API",
+      "owner": "backend",
+      "importance": "high",
+      "evidence": "src/lib/agents/client.ts"
+    },
+    {
+      "name": "Upstash Redis",
+      "type": "rate limit storage",
+      "owner": "backend",
+      "importance": "high",
+      "evidence": "src/lib/rate-limit.ts"
+    },
+    {
+      "name": "ELU Analytics",
+      "type": "analytics script",
+      "owner": "shared",
+      "importance": "medium",
+      "evidence": "src/app/layout.tsx, vercel.json"
+    },
+    {
+      "name": "Vercel",
+      "type": "hosting/cron",
+      "owner": "backend",
+      "importance": "high",
+      "evidence": "vercel.json"
+    }
+  ],
+  "files_by_owner": {
+    "frontend": [
+      "src/app/page.tsx",
+      "src/app/signup/page.tsx",
+      "src/app/onboarding/**",
+      "src/app/(app)/**/page.tsx",
+      "src/app/pass/[id]/page.tsx",
+      "src/components/**",
+      "src/lib/demo-data.ts",
+      "src/lib/local-store.ts",
+      "src/lib/types.ts",
+      "src/app/globals.css",
+      "tailwind.config.ts"
+    ],
+    "backend": [
+      "src/app/api/**",
+      "src/lib/auth.ts",
+      "src/lib/config.ts",
+      "src/lib/rate-limit.ts",
+      "src/lib/supabase/**",
+      "src/lib/agents/**",
+      "src/lib/pocketbase.ts",
+      "supabase/**",
+      "pocketbase/**",
+      "vercel.json"
+    ],
+    "shared": [
+      "src/middleware.ts",
+      "src/lib/types.ts",
+      "src/lib/database.types.ts",
+      "package.json",
+      "bun.lock",
+      "tests/**",
+      ".github/workflows/**"
+    ],
+    "unknown": [
+      ".claude/**",
+      ".octogent/**",
+      ".vision-kb/**",
+      "harness/**"
+    ]
+  },
+  "risks": [
+    {
+      "id": "P0-01",
+      "priority": "P0",
+      "title": "POST /api/drops cannot persist in production",
+      "path": "src/app/api/drops/route.ts",
+      "evidence": "loadMeFromDb is TODO and throws.",
+      "owner": "backend"
+    },
+    {
+      "id": "P0-02",
+      "priority": "P0",
+      "title": "POST /api/intros production path cannot create intro records",
+      "path": "src/app/api/intros/route.ts",
+      "evidence": "Ownership check and DB write are TODO and throw outside stub mode.",
+      "owner": "backend"
+    },
+    {
+      "id": "P0-03",
+      "priority": "P0",
+      "title": "Retention cron is intentionally non-destructive",
+      "path": "src/app/api/cron/retention/route.ts",
+      "evidence": "Deletion logic TODO returns HTTP 503.",
+      "owner": "backend"
+    },
+    {
+      "id": "P0-04",
+      "priority": "P0",
+      "title": "Verification proof and OTP flow are client-local demo logic",
+      "path": "src/app/onboarding/verification/page.tsx",
+      "evidence": "OTP and uploaded proof are kept in client state/localStorage instead of secure backend storage.",
+      "owner": "shared"
+    },
+    {
+      "id": "P1-01",
+      "priority": "P1",
+      "title": "Supabase versus PocketBase architecture is unresolved",
+      "path": "supabase/migrations/0001_initial_schema.sql",
+      "evidence": "Both Supabase and PocketBase artifacts exist; only Supabase helpers are wired into API auth.",
+      "owner": "backend"
+    },
+    {
+      "id": "P1-02",
+      "priority": "P1",
+      "title": "Onboarding card loses location field",
+      "path": "src/app/onboarding/card/page.tsx",
+      "evidence": "Identity form stores city/region while card creation reads id.location.",
+      "owner": "frontend"
+    },
+    {
+      "id": "P1-03",
+      "priority": "P1",
+      "title": "Next.js version needs security review/upgrade",
+      "path": "package.json",
+      "evidence": "next is pinned to 15.1.5.",
+      "owner": "shared"
+    },
+    {
+      "id": "P1-04",
+      "priority": "P1",
+      "title": "E2E happy path appears stale against current UI",
+      "path": "tests/e2e/happy-path.spec.ts",
+      "evidence": "Selectors and expected text do not match current implementation.",
+      "owner": "shared"
+    },
+    {
+      "id": "P1-05",
+      "priority": "P1",
+      "title": "Database scripts reference missing files",
+      "path": "package.json",
+      "evidence": "scripts/generate-types.ts and scripts/seed-cohort.ts are referenced but absent.",
+      "owner": "backend"
+    },
+    {
+      "id": "P1-06",
+      "priority": "P1",
+      "title": "CI branch trigger may not run on current branch",
+      "path": ".github/workflows/ci.yml",
+      "evidence": "Workflow targets master while active work is on implementation/v1.",
+      "owner": "shared"
+    }
+  ],
+  "unknowns": [
+    {
+      "id": "UNK-01",
+      "title": "Canonical database backend",
+      "question": "Should the backend converge on Supabase, PocketBase, or a staged bridge?",
+      "evidence_checked": ["supabase/migrations/*", "pocketbase/pb_schema.json", "src/lib/pocketbase.ts", "src/lib/supabase/*"]
+    },
+    {
+      "id": "UNK-02",
+      "title": "Production authentication provider",
+      "question": "Will closed-beta auth use Supabase Auth email OTP, custom invites, or another identity provider?",
+      "evidence_checked": ["src/lib/auth.ts", "src/middleware.ts", "src/app/signup/page.tsx"]
+    },
+    {
+      "id": "UNK-03",
+      "title": "Verification policy",
+      "question": "What proof types are allowed, where should files be stored, and who reviews them?",
+      "evidence_checked": ["src/app/onboarding/verification/page.tsx", "supabase/migrations/0001_initial_schema.sql"]
+    },
+    {
+      "id": "UNK-04",
+      "title": "Agent production budget and safety policy",
+      "question": "Which agents should call Anthropic in production and what retry/cost/moderation constraints apply?",
+      "evidence_checked": ["src/lib/agents/*", "evals/*"]
+    },
+    {
+      "id": "UNK-05",
+      "title": "Deployment branch and environment",
+      "question": "Which branch deploys to Vercel and what environment variables are configured there?",
+      "evidence_checked": ["vercel.json", ".github/workflows/ci.yml"]
+    }
+  ],
+  "recommended_next_actions": [
+    "Decide and document Supabase versus PocketBase as the canonical backend persistence path.",
+    "Make /api/drops and /api/intros either production-real with Supabase writes or explicitly stub-only behind NEXT_PUBLIC_USE_STUBS.",
+    "Replace local verification proof/OTP with a backend-backed verification design before collecting real user data.",
+    "Align onboarding frontend with backend field names and API contract, especially location/city/region and intent interview data.",
+    "Repair package scripts and e2e tests so the backend and frontend collaborators can use CI as a real contract."
+  ]
+}
