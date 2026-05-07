@@ -21,7 +21,12 @@ export function AnimatedCounter({
   className,
 }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
-  const [display, setDisplay] = useState(0);
+  // Initial state is the final value, not 0. SSR + first hydrate render
+  // the real number; the IntersectionObserver in the effect below resets
+  // to 0 + ticks up only when in view AND JS has hydrated. Fixes the
+  // architecture-audit finding where cold readers saw "0 / 0+ / 0 / 0"
+  // for the four stats while waiting for hydration.
+  const [display, setDisplay] = useState(value);
   const startedRef = useRef(false);
 
   useEffect(() => {
@@ -31,6 +36,11 @@ export function AnimatedCounter({
       setDisplay(value);
       return;
     }
+    // Reset to 0 only after we've confirmed JS is alive AND we're about
+    // to animate. Without this, the SSR'd final value shows briefly,
+    // then snaps to 0 once the IO fires. Fine — the IO callback below
+    // sets display to 0 implicitly via tick(0).
+    setDisplay(0);
     const el = ref.current;
     if (!el) return;
     const observer = new IntersectionObserver(
