@@ -14,7 +14,8 @@ type LimiterKey =
   | "intros_day"
   | "drops_day"
   | "onboarding_min"
-  | "browse_min";
+  | "browse_min"
+  | "waitlist_min";
 
 const LIMITS: Record<LimiterKey, { limit: number; window: Duration; help: string }> = {
   intros_hour: { limit: 10, window: "1 h" as Duration, help: "10 intro requests per hour" },
@@ -22,6 +23,7 @@ const LIMITS: Record<LimiterKey, { limit: number; window: Duration; help: string
   drops_day: { limit: 5, window: "1 d" as Duration, help: "5 drop generations per day" },
   onboarding_min: { limit: 30, window: "1 m" as Duration, help: "30 onboarding calls per minute" },
   browse_min: { limit: 60, window: "1 m" as Duration, help: "60 browse calls per minute" },
+  waitlist_min: { limit: 5, window: "1 m" as Duration, help: "5 waitlist signups per minute per IP" },
 };
 
 const upstashByKey = new Map<LimiterKey, Ratelimit>();
