@@ -1,5 +1,6 @@
 import { BottomNav } from "@/components/BottomNav";
 import { RouteTransition } from "@/components/RouteTransition";
+import { EluIdentify } from "@/components/EluIdentify";
 import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 
@@ -22,6 +23,11 @@ export default async function AppShellLayout({
   // every page so content never hides behind it.
   return (
     <div className="min-h-svh bg-bg pb-28">
+      {/* ELU Analytics: attach the signed-in user's email to their session so
+          product analytics can attribute behavior to a real person instead of
+          an anonymous device. Optional - safe to remove if you don't want to
+          share email with analytics. See https://elu.dev for docs. */}
+      <EluIdentify email={session.email || null} />
       <RouteTransition>{children}</RouteTransition>
       <BottomNav />
     </div>
