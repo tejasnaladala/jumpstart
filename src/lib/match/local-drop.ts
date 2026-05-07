@@ -30,20 +30,39 @@ function score(me: FounderCard, other: FounderCard): number {
   return sharedTags * 3 + intentOverlap * 2 + sameCityBonus;
 }
 
+// Match explanations. Critical rule: never claim shared characteristics
+// the user did not actually express. Closes the bug where users with
+// no tags / no intents got cofounder-shape matches whose explanation
+// said "we both have X tag" using the candidate's first tag as the
+// stand-in. Each template now branches on actual overlap.
 const EXPLAIN_TEMPLATES: Record<MatchType, (m: FounderCard, o: FounderCard) => string> = {
   domain_peer: (me, o) => {
-    const overlap = me.tags.filter((t) => o.tags.includes(t)).find((t) => !["sf", "india", "remote", "cofounder"].includes(t));
-    return `${o.name.split(" ")[0]} works on ${overlap || o.tags[0]} from a different angle than you. Worth a 30-minute compare-notes call about what each of you has learned in the last 90 days.`;
+    const overlap = me.tags
+      .filter((t) => o.tags.includes(t))
+      .find((t) => !["sf", "india", "remote", "cofounder"].includes(t));
+    const firstName = o.name.split(" ")[0] || o.name;
+    if (overlap) {
+      return `${firstName} works on ${overlap.replace(/-/g, " ")} from a different angle than you. Worth a 30-minute compare-notes call about what each of you has learned recently.`;
+    }
+    return `${firstName} is working in adjacent territory. Different angle, similar shape of problem. Worth a 30-minute compare-notes call.`;
   },
-  cofounder_shape: (me, o) =>
-    `${o.name.split(" ")[0]} is also looking for a cofounder and your domains are adjacent enough to spark serious conversation. The complementarity in skills is worth investigating before either of you locks in elsewhere.`,
+  cofounder_shape: (me, o) => {
+    const firstName = o.name.split(" ")[0] || o.name;
+    return `${firstName} is also looking for a cofounder and your domains are adjacent enough to spark serious conversation. Worth a real call before either of you locks in elsewhere.`;
+  },
   weird_adjacent: (me, o) => {
-    const youTag = me.tags[0] || "your domain";
-    const theirTag = o.tags.find((t) => !me.tags.includes(t)) || o.tags[0];
-    return `${o.name.split(" ")[0]} works on ${theirTag} which has nothing to do with ${youTag} on paper. The unobvious match is the kind of conversation that produces ideas you would not have alone.`;
+    const firstName = o.name.split(" ")[0] || o.name;
+    const theirTag = (o.tags.find((t) => !me.tags.includes(t)) || o.tags[0] || "their work").replace(/-/g, " ");
+    if (me.tags.length === 0) {
+      return `${firstName} works on ${theirTag}. The matchmaker doesn't have a strong overlap signal yet — but unobvious calls are the ones that produce the ideas you wouldn't get alone.`;
+    }
+    const youTag = (me.tags[0] || "your domain").replace(/-/g, " ");
+    return `${firstName} works on ${theirTag} which has nothing to do with ${youTag} on paper. The unobvious match is the kind of conversation that produces ideas you would not have alone.`;
   },
-  city_match: (me, o) =>
-    `${o.name.split(" ")[0]} is in the same city as you and going to overlapping in-person things. Easiest possible coffee, the kind of intro that tends to actually happen rather than sit in a saved list forever.`,
+  city_match: (me, o) => {
+    const firstName = o.name.split(" ")[0] || o.name;
+    return `${firstName} is in the same city as you and going to overlapping in-person things. Easiest possible coffee, the kind of intro that tends to actually happen rather than sit in a saved list forever.`;
+  },
 };
 
 // Humanized opener templates. Per user feedback ("AI generated feel"),
