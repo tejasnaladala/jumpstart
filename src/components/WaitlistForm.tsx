@@ -42,6 +42,11 @@ export function WaitlistForm({
     if (!trimmed) return;
     setStatus("submitting");
     setError(null);
+    // 8s timeout: prevents the only public CTA from spinning forever
+    // when Vercel edge stalls or the JSONL append blocks. May 7
+    // reliability audit finding #1.
+    const ac = new AbortController();
+    const t = setTimeout(() => ac.abort(), 8_000);
     try {
       const res = await fetch("/api/waitlist", {
         method: "POST",
@@ -52,6 +57,7 @@ export function WaitlistForm({
           building: building.trim() || undefined,
           source,
         }),
+        signal: ac.signal,
       });
       if (res.ok) {
         setStatus("success");
@@ -65,9 +71,15 @@ export function WaitlistForm({
         setError("Could not save. Try again in a minute.");
       }
       setStatus("error");
-    } catch {
-      setError("Network hiccup. Try again.");
+    } catch (e) {
+      if (e instanceof Error && e.name === "AbortError") {
+        setError("Slow connection. Try again.");
+      } else {
+        setError("Network hiccup. Try again.");
+      }
       setStatus("error");
+    } finally {
+      clearTimeout(t);
     }
   }
 

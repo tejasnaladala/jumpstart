@@ -133,11 +133,14 @@ export async function POST(req: Request): Promise<Response> {
   });
 }
 
-// GET returns count only when called with the dev-admin header. Used by
-// /admin/health to surface the live waitlist size without exposing
-// emails.
-export async function GET(req: Request): Promise<Response> {
-  if (process.env.JUMPSTART_DEV_ADMIN !== "1") {
+// GET returns count only when called by an authenticated admin user.
+// Previously gated solely on JUMPSTART_DEV_ADMIN env (May 7 security
+// audit flagged this as exposing waitlist size to anonymous traffic
+// in private-beta). Now requires a real admin session via getAdmin().
+export async function GET(_req: Request): Promise<Response> {
+  const { getAdmin } = await import("@/lib/auth/admin");
+  const admin = await getAdmin();
+  if (!admin) {
     return NextResponse.json({ ok: false, code: "FORBIDDEN" }, { status: 403 });
   }
   if (!existsSync(LOG)) return NextResponse.json({ ok: true, count: 0 });
