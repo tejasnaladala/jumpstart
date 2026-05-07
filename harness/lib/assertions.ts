@@ -198,13 +198,24 @@ export async function runAssertions(): Promise<{
     );
 
     results.push(
-      await check("drop_returns_three_matches", async () => {
+      await check("drop_renders", async () => {
+        // Drop refactor (May 7 2026): page now renders ONE match when
+        // delivered, or a countdown when waiting for the next 9pm PT
+        // slot. Either is valid. Failure mode: the page is blank
+        // (neither a match card nor a countdown is visible).
         await page.goto(`${BASE_URL}/drop`, { waitUntil: "domcontentloaded" });
-        // Wait briefly for the matches to render. Not fatal if they
-        // don't appear - that's the assertion failing.
-        await page.waitForSelector('a[href^="/match/"]', { timeout: 5_000 }).catch(() => null);
-        const count = await page.locator('a[href^="/match/"]').count();
-        return { ok: count === 3, detail: `got ${count} match cards` };
+        await page.waitForLoadState("networkidle").catch(() => null);
+        const matchCount = await page.locator('a[href^="/match/"]').count();
+        const countdownVisible = await page
+          .getByText(/ENVELOPE LANDS|DROP PENDING/i)
+          .first()
+          .isVisible()
+          .catch(() => false);
+        const ok = matchCount >= 1 || countdownVisible;
+        return {
+          ok,
+          detail: `match_cards=${matchCount} countdown=${countdownVisible}`,
+        };
       })
     );
 

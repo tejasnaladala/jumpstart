@@ -163,15 +163,23 @@ async function runRound(roundIdx: number): Promise<void> {
             proposal_id: p.id,
             files: result.files_modified,
           });
-          // Only digest auto-applies that actually wrote files. The
-          // logging-only proposals (no edits) would flood the digest
-          // with low-signal entries.
           if (result.files_modified.length > 0) {
+            // Real edits shipped to disk
             appendDigest({
               level: "auto_applied",
               summary: `Multi-agent consensus shipped: ${p.description}`,
               detail: `Files: ${result.files_modified.join(", ")}.`,
               refs: ["git log"],
+            });
+          } else if (f.severity === "critical" || f.severity === "high") {
+            // Logging-only proposal but the underlying finding is
+            // serious. Surface as a consensus note so the founder
+            // sees it. Includes the evidence so they can act.
+            appendDigest({
+              level: "consensus_note",
+              summary: `Multi-agent observed [${f.severity}]: ${p.description}`,
+              detail: f.evidence,
+              refs: ["experiments/coordinator.jsonl"],
             });
           }
           applied += 1;
