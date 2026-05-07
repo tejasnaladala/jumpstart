@@ -148,3 +148,13 @@ export function generateLocalDrop(me: FounderCard): Match[] {
 export function getMatchById(matchId: string, me: FounderCard): Match | undefined {
   return generateLocalDrop(me).find((m) => m.id === matchId);
 }
+
+// Single-match drop. Per the May 7 schedule change, the product ships
+// ONE curated match per drop (Mon/Wed/Fri 9pm PT) instead of three.
+// We take the highest-scoring candidate from generateLocalDrop's full
+// ranked list. Three-match generation stays in the codebase for future
+// "review previous drops" or "weekly digest" surfaces.
+export function generateSingleDrop(me: FounderCard): Match | null {
+  const all = generateLocalDrop(me);
+  return all.length > 0 ? (all[0] as Match) : null;
+}
