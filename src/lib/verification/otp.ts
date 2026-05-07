@@ -1,44 +1,52 @@
-// One-time-password verification. Closed-beta-of-10 ships with a
-// stub-mode OTP that generates a 6-digit code client-side and surfaces
-// it back to the user in a toast (so they can self-verify the flow
-// without real SMS / email infra). The same shape promotes to real
-// Twilio / Resend / PocketBase delivery the moment we wire it.
+// One-time-password verification, client facade.
 //
-// Why client-side stub?
-//   - Real beta needs SMS (Twilio ~$0.008/msg) and transactional
-//     email (Resend / SES). Both want billing setup that we don't
-//     pay for during the closed-beta-of-10.
-//   - Friend testing the flow needs to see how OTP feels: send,
-//     receive, type, confirm. Stub mode preserves the UX without
-//     burning $.
+// Public surface (load-bearing — see CONTRIBUTING.md and the issue #2
+// plan; the verification page imports these):
+//   send(channel, target):   Promise<SendResult>
+//   verify(channel, code):   Promise<VerifyResult>
+//   isVerified(channel):     boolean
+//   verifiedTarget(channel): string | null
+//   load, save, clear:       OtpRecord helpers (sync, localStorage)
 //
-// What changes when we move to PocketBase + real OTP delivery:
-//   - generateAndStore() calls a server endpoint that signs the code
-//     and dispatches via Twilio (phone) / Resend (email).
-//   - The code is NOT returned to the client. The user reads it from
-//     SMS / email and types it back.
-//   - Server-side verify() checks against the signed token.
+// What changed (May 7, issue #2):
+//   send and verify are now async. They call the new server endpoints
+//   /api/verification/otp/send and /api/verification/otp/verify when
+//   real mode is configured server-side. If the server returns 503
+//   config_incomplete (closed-beta-of-2 stub), the facade falls back
+//   to a localStorage stub so the demo never breaks. The localStorage
+//   helpers stay synchronous because they only touch the browser.
 //
-// Stub-mode storage layout (localStorage):
-//   jumpstart.otp.email = { code, target, sent_at, expires_at, verified_at? }
-//   jumpstart.otp.phone = { same shape, target = phone digits }
+// What does NOT change:
+//   - The verification page continues to call sendOtp(...) and
+//     verifyOtp(...) by the same names. The diff there is two `await`
+//     keywords.
+//   - Stub mode never persists the code to a server. Real mode never
+//     stores the code on the client; only target + sent_at + expires_at.
+//
+// Storage layout (localStorage):
+//   jumpstart.otp.email = OtpRecord ({code} present in stub only)
+//   jumpstart.otp.phone = OtpRecord
+//   jumpstart.otp.<ch>.rate = ms timestamp of last send for stub-mode
+//                              throttle (real mode uses server limiter)
 
-export type OtpChannel = "email" | "phone";
+import type {
+  OtpChannel,
+  OtpRecord,
+  SendResult,
+  VerifyResult,
+} from "./types";
 
-export type OtpRecord = {
-  code: string;        // 6 digits
-  target: string;      // email address or phone digits
-  sent_at: string;     // ISO
-  expires_at: string;  // ISO, sent_at + 10 min
-  verified_at?: string; // ISO once user submits matching code
-};
+export type { OtpChannel, OtpRecord, SendResult, VerifyResult };
 
 const KEY = (ch: OtpChannel) => `jumpstart.otp.${ch}`;
 const RATE_LIMIT_KEY = (ch: OtpChannel) => `jumpstart.otp.${ch}.rate`;
-const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 send per minute per channel
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const STUB_TTL_MS = 10 * 60 * 1000;
 
 function generateCode(): string {
-  // Six digits, leading zeros preserved.
+  // Six digits, leading zeros preserved. Math.random is fine for
+  // stub-mode demo codes; real-mode codes come from server-side
+  // crypto.randomInt.
   const n = Math.floor(Math.random() * 1_000_000);
   return String(n).padStart(6, "0");
 }
@@ -59,7 +67,7 @@ export function save(ch: OtpChannel, rec: OtpRecord): void {
   try {
     window.localStorage.setItem(KEY(ch), JSON.stringify(rec));
   } catch {
-    // non-fatal
+    // non-fatal: privacy mode or quota
   }
 }
 
@@ -67,12 +75,13 @@ export function clear(ch: OtpChannel): void {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.removeItem(KEY(ch));
+    window.localStorage.removeItem(RATE_LIMIT_KEY(ch));
   } catch {
     // non-fatal
   }
 }
 
-function isRateLimited(ch: OtpChannel): boolean {
+function isStubRateLimited(ch: OtpChannel): boolean {
   if (typeof window === "undefined") return false;
   const last = window.localStorage.getItem(RATE_LIMIT_KEY(ch));
   if (!last) return false;
@@ -81,7 +90,7 @@ function isRateLimited(ch: OtpChannel): boolean {
   return Date.now() - lastMs < RATE_LIMIT_WINDOW_MS;
 }
 
-function markRateLimit(ch: OtpChannel): void {
+function markStubRateLimit(ch: OtpChannel): void {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(RATE_LIMIT_KEY(ch), String(Date.now()));
@@ -90,61 +99,113 @@ function markRateLimit(ch: OtpChannel): void {
   }
 }
 
-export type SendResult =
-  | { ok: true; record: OtpRecord; demo_code?: string }
-  | { ok: false; reason: "rate_limit" | "invalid_target" | "internal" };
-
-// Send a fresh OTP to the channel. Stub mode generates the code and
-// returns it as `demo_code` so the UI can display it in a toast.
-// Real mode (when wired to PocketBase + Twilio/Resend) does NOT
-// return the code; the user receives it via SMS / email.
-export function send(ch: OtpChannel, target: string): SendResult {
+// Send a fresh OTP. Real mode hits the server; stub mode generates a
+// code locally and surfaces it as demo_code so closed-beta self-verify
+// keeps working without a real Resend/Twilio backend.
+export async function send(
+  ch: OtpChannel,
+  target: string
+): Promise<SendResult> {
   const trimmed = target.trim();
   if (!trimmed) return { ok: false, reason: "invalid_target" };
-  if (ch === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-    return { ok: false, reason: "invalid_target" };
-  }
-  if (ch === "phone") {
-    const digits = trimmed.replace(/[^\d+]/g, "");
-    if (digits.length < 7 || digits.length > 15) {
-      return { ok: false, reason: "invalid_target" };
+
+  // Try real mode first. If the server says config_incomplete, fall
+  // back to stub. If the network is unreachable, fall back to stub
+  // too (closed-beta posture; real beta will surface the failure).
+  let serverResult: SendResult | null = null;
+  let serverConfigIncomplete = false;
+  try {
+    const res = await fetch("/api/verification/otp/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ channel: ch, target: trimmed }),
+    });
+    const body = (await res.json().catch(() => null)) as SendResult | null;
+    if (res.status === 503 && body && !body.ok && body.reason === "config_incomplete") {
+      serverConfigIncomplete = true;
+    } else if (body) {
+      serverResult = body;
     }
+  } catch {
+    serverConfigIncomplete = true;
   }
-  if (isRateLimited(ch)) {
+
+  if (!serverConfigIncomplete && serverResult) {
+    if (serverResult.ok) {
+      // Real mode: persist the metadata only (no code). Pending target
+      // is the seed for verify().
+      save(ch, serverResult.record);
+    }
+    return serverResult;
+  }
+
+  // Stub mode (config incomplete OR network failure).
+  if (isStubRateLimited(ch)) {
     return { ok: false, reason: "rate_limit" };
   }
+
   const code = generateCode();
   const now = new Date();
   const rec: OtpRecord = {
-    code,
     target: trimmed,
     sent_at: now.toISOString(),
-    expires_at: new Date(now.getTime() + 10 * 60 * 1000).toISOString(),
+    expires_at: new Date(now.getTime() + STUB_TTL_MS).toISOString(),
+    code,
   };
   save(ch, rec);
-  markRateLimit(ch);
-  // Stub-mode: return the code so the UI can show it. Closed-beta
-  // friend testing needs this; real beta with Twilio/Resend will
-  // delete the demo_code field and the user reads it from their
-  // device.
+  markStubRateLimit(ch);
   return { ok: true, record: rec, demo_code: code };
 }
 
-export type VerifyResult =
-  | { ok: true; verified_at: string }
-  | { ok: false; reason: "no_pending" | "expired" | "mismatch" };
-
-export function verify(ch: OtpChannel, submitted: string): VerifyResult {
+// Verify a submitted code. Real mode ships the pending target from
+// localStorage to the server; the server compares the hash.
+// Stub mode compares against the localStorage-stored code.
+export async function verify(
+  ch: OtpChannel,
+  submitted: string
+): Promise<VerifyResult> {
   const rec = load(ch);
   if (!rec) return { ok: false, reason: "no_pending" };
-  if (Date.now() > new Date(rec.expires_at).getTime()) {
-    return { ok: false, reason: "expired" };
-  }
+
   const cleaned = submitted.replace(/[^\d]/g, "");
-  if (cleaned !== rec.code) return { ok: false, reason: "mismatch" };
-  const now = new Date().toISOString();
-  save(ch, { ...rec, verified_at: now });
-  return { ok: true, verified_at: now };
+  if (!cleaned) return { ok: false, reason: "mismatch" };
+
+  // Stub-mode rec carries `code`. If it does, we're in stub mode.
+  if (rec.code) {
+    if (Date.now() > new Date(rec.expires_at).getTime()) {
+      return { ok: false, reason: "expired" };
+    }
+    if (cleaned !== rec.code) {
+      return { ok: false, reason: "mismatch" };
+    }
+    const verifiedAt = new Date().toISOString();
+    save(ch, { ...rec, verified_at: verifiedAt });
+    return { ok: true, verified_at: verifiedAt, target: rec.target };
+  }
+
+  // Real mode: send target + code to the verify endpoint. The pending
+  // target is in the localStorage record.
+  let serverResult: VerifyResult | null = null;
+  try {
+    const res = await fetch("/api/verification/otp/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        channel: ch,
+        target: rec.target,
+        code: cleaned,
+      }),
+    });
+    const body = (await res.json().catch(() => null)) as VerifyResult | null;
+    if (body) serverResult = body;
+  } catch {
+    return { ok: false, reason: "internal" };
+  }
+
+  if (serverResult && serverResult.ok) {
+    save(ch, { ...rec, verified_at: serverResult.verified_at });
+  }
+  return serverResult ?? { ok: false, reason: "internal" };
 }
 
 export function isVerified(ch: OtpChannel): boolean {
