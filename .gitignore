@@ -34,6 +34,12 @@ plots/
 harness/state/
 harness/seeds/
 
+# PocketBase: binary downloaded by scripts/start-pocketbase.sh, plus
+# the runtime data directory (SQLite + uploaded files). Schema lives
+# in pocketbase/schema.json and IS tracked.
+pocketbase/bin/
+pocketbase/pb_data/
+
 # Octogent tentacle scaffolding (auto-generated per-tentacle folders).
 # Tracked: README.md, tentacle.json schema. Untracked: per-tentacle folders.
 .octogent/tentacles/*/

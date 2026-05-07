@@ -7,10 +7,20 @@ import { DraftIndicator } from "@/components/primitive/DraftIndicator";
 import { useDraftState } from "@/lib/hooks/useDraftState";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { enqueue } from "@/lib/moderation/queue";
 
 type VerificationDraft = {
   emailSubject: string;
   referral: string;
+  // Fortified verification (May 7 2026): per founder direction, add
+  // phone number, email re-confirm (display-only, OTP deferred to
+  // PocketBase backend), and a ticket photo upload. Each of these
+  // pieces is bundled into a single moderation queue item the founder
+  // approves manually for the first ~50 users.
+  phone: string;
+  email: string;
+  ticketDataUrl: string; // data: URL of the uploaded ticket image
+  ticketName: string;    // original filename for admin display
   opts: {
     sf: boolean;
     india: boolean;
@@ -24,6 +34,10 @@ type VerificationDraft = {
 const EMPTY: VerificationDraft = {
   emailSubject: "",
   referral: "",
+  phone: "",
+  email: "",
+  ticketDataUrl: "",
+  ticketName: "",
   opts: {
     sf: false,
     india: false,
@@ -35,8 +49,6 @@ const EMPTY: VerificationDraft = {
 };
 
 export default function VerificationStep() {
-  // Auto-save every keystroke + toggle. Closes DX top finding (early
-  // onboarding steps lacked save state).
   const [draft, setDraft, status] = useDraftState<VerificationDraft>(
     "jumpstart.onboarding.verification",
     EMPTY,
@@ -45,22 +57,69 @@ export default function VerificationStep() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const router = useRouter();
 
-  const { emailSubject, referral, opts } = draft;
+  const { emailSubject, referral, phone, email, ticketDataUrl, ticketName, opts } = draft;
 
+  // Fortified gates (May 7):
+  //   - phone (required, simple regex for digits + length)
+  //   - email (required at this step; signup also collects, but we
+  //     display + confirm here so the user is reminded what we use)
+  //   - ticket photo OR (acceptance email subject OR referral code)
+  //     The ticket is the strongest proof; subject/referral are softer
+  //     fallbacks for users who didn't keep the email.
+  //   - location (one of sf/india/remote/notSure)
+  const phoneClean = phone.replace(/[^\d+]/g, "");
+  const phoneValid = phoneClean.length >= 7 && phoneClean.length <= 15;
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const proofProvided =
-    emailSubject.trim().length > 5 || referral.trim().length > 2;
+    Boolean(ticketDataUrl) ||
+    emailSubject.trim().length > 5 ||
+    referral.trim().length > 2;
   const locationPicked = opts.sf || opts.india || opts.remote || opts.notSure;
-  const ready = proofProvided && locationPicked;
+  const ready = phoneValid && emailValid && proofProvided && locationPicked;
 
-  // Inline hint that names the second requirement when only the first is
-  // satisfied. Closes DX top finding (silent disabled-button is hostile).
-  const blockedReason = !proofProvided
-    ? "Add the email subject line or a referral code."
+  const blockedReason = !phoneValid
+    ? "Add a valid phone number (7-15 digits, with country code)."
+    : !emailValid
+    ? "Add a valid email."
+    : !proofProvided
+    ? "Upload your YC ticket photo, or add the email subject / referral code."
     : !locationPicked
-    ? "And tell us where you'll be during SS."
+    ? "Tell us where you'll be during SS."
     : "";
 
   function onNext() {
+    // Submit a verification request to the moderation queue. Founder
+    // reviews at /admin/moderation Verifications tab and flips trust
+    // tier manually for each one in the first ~50 users.
+    try {
+      const idRaw = typeof window !== "undefined"
+        ? window.localStorage.getItem("jumpstart.onboarding.identity")
+        : null;
+      let identityName = "Pending user";
+      if (idRaw) {
+        const parsed = JSON.parse(idRaw) as { data?: { name?: string } };
+        if (parsed?.data?.name) identityName = parsed.data.name;
+      }
+      enqueue({
+        kind: "verification",
+        triggered_by: "self",
+        target_id: "self",
+        target_kind: "user",
+        target_label: identityName,
+        target_snippet:
+          `phone=${phoneClean.slice(0, 4)}*** email=${email.slice(0, 5)}*** ` +
+          `ticket=${ticketDataUrl ? "uploaded" : "not_uploaded"} ` +
+          `subject=${emailSubject ? "set" : "empty"} referral=${referral ? "set" : "empty"}`,
+        reasons: [
+          ticketDataUrl ? "ticket_uploaded" : "no_ticket",
+          emailSubject ? "subject_provided" : "subject_empty",
+          referral ? "referral_provided" : "referral_empty",
+        ],
+        severity: "low",
+      });
+    } catch {
+      // queue write is non-fatal; the user still proceeds
+    }
     router.push("/onboarding/intent");
   }
 
@@ -72,6 +131,24 @@ export default function VerificationStep() {
     v: VerificationDraft["opts"][K]
   ) {
     setDraft((s) => ({ ...s, opts: { ...s.opts, [k]: v } }));
+  }
+
+  function onTicketChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    // Cap at 4MB to keep localStorage from blowing up. Real backend
+    // (PocketBase or S3) handles larger files later.
+    if (file.size > 4 * 1024 * 1024) {
+      // eslint-disable-next-line no-alert
+      alert("Image too large. Keep it under 4MB or screenshot a smaller crop.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const url = String(reader.result || "");
+      setDraft((s) => ({ ...s, ticketDataUrl: url, ticketName: file.name }));
+    };
+    reader.readAsDataURL(file);
   }
 
   return (
@@ -89,12 +166,75 @@ export default function VerificationStep() {
         </p>
 
         <p className="text-xxs uppercase tracking-wider text-muted font-semibold mt-7 mb-3">
-          Pick at least one
+          Contact
         </p>
         <div className="flex flex-col gap-3">
           <Input
+            label="Email"
+            type="email"
+            placeholder="you@email.com"
+            value={email}
+            onChange={(e) => set("email", e.target.value)}
+            hint="Used for drop notifications. We never sell, share, or list this anywhere."
+            maxLength={120}
+          />
+          <Input
+            label="Phone number"
+            type="tel"
+            placeholder="+1 415 555 0123"
+            value={phone}
+            onChange={(e) => set("phone", e.target.value)}
+            hint="Founder-only. For trust verification. Never displayed to other attendees."
+            maxLength={20}
+          />
+        </div>
+
+        <p className="text-xxs uppercase tracking-wider text-muted font-semibold mt-7 mb-3">
+          Acceptance proof
+        </p>
+        <div className="flex flex-col gap-3">
+          <div className="surface p-4">
+            <p className="text-xs font-semibold text-ink mb-1">
+              Upload your YC ticket photo (recommended)
+            </p>
+            <p className="text-xs text-muted mb-3 leading-relaxed">
+              Screenshot of your YC Startup School acceptance ticket or email
+              header. Reviewed by the founder, deleted within 24h of verification.
+            </p>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={onTicketChange}
+              className="block w-full text-xs file:mr-3 file:px-3 file:py-1.5 file:rounded-md file:border file:border-border file:bg-bg file:text-ink file:font-medium file:cursor-pointer hover:file:border-ink/40"
+            />
+            {ticketDataUrl ? (
+              <div className="mt-3 flex items-center gap-3">
+                <img
+                  src={ticketDataUrl}
+                  alt={`Uploaded ticket ${ticketName}`}
+                  className="w-20 h-20 object-cover rounded-md border border-border"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-mono text-ink truncate">{ticketName}</p>
+                  <button
+                    type="button"
+                    onClick={() => setDraft((s) => ({ ...s, ticketDataUrl: "", ticketName: "" }))}
+                    className="text-xxs text-error hover:underline mt-1"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="text-xxs uppercase tracking-wider text-muted font-mono text-center my-1">
+            or fall back to
+          </div>
+
+          <Input
             label="Acceptance email subject line"
-            placeholder='Welcome to YC Startup School 2026'
+            placeholder="Welcome to YC Startup School 2026"
             value={emailSubject}
             onChange={(e) => set("emailSubject", e.target.value)}
             hint="The subject line of the YC email confirming your acceptance."
@@ -102,7 +242,7 @@ export default function VerificationStep() {
             showCounter
           />
           <Input
-            label="Referral code (optional)"
+            label="Referral code"
             placeholder="From a verified attendee"
             value={referral}
             onChange={(e) => set("referral", e.target.value)}

@@ -7,6 +7,11 @@ const TILES = [
     body: "Polls /api/health every 4s. Per-dependency probes (Supabase, Anthropic, Upstash) with latency, plus a 30-poll history sparkline.",
   },
   {
+    href: "/admin/curate",
+    title: "Curate matches",
+    body: "Hand-pick matches for users whose countdown reached zero. Closed-beta posture: every match in the first ~50 is curated by you.",
+  },
+  {
     href: "/admin/moderation",
     title: "Moderation queue",
     body: "Reports, flagged intros, verifications waiting on review.",
