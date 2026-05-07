@@ -1,6 +1,6 @@
 # Jumpstart
 
-AI-routed pre-event matchmaker for **YC Startup School 2026**, the AI-focused **2-day in-person event** at **Chase Center, San Francisco, July 25-26, 2026**. Curated drops of founders worth meeting at the event. Built by an attendee. Cadence is Monday, Wednesday, Friday at 09:00 PT during the matchmaking lead-in (~8 weeks before the event), with denser scheduling support during the 2 days on-site, then a follow-up window post-event.
+AI-routed pre-event matchmaker for **YC Startup School 2026**, the AI-focused **2-day in-person event** at **Chase Center, San Francisco, July 25-26, 2026**. Curated drops of founders worth meeting at the event. Built by an attendee. Cadence is Monday, Wednesday, Friday at 9pm PT during the matchmaking lead-in (~8 weeks before the event), with denser scheduling support during the 2 days on-site, then a follow-up window post-event.
 
 **Cohort size: ~2,000 hand-picked attendees**, not 8,000. The 8,000 figure refers to the historical online Startup School program, not the in-person AI Startup School 2026 event. Any user-facing copy or stat referencing 8,000 is wrong and should read 2,000.
 
@@ -65,7 +65,7 @@ Match the user's intent to the skill. Invoke via the Skill tool.
 The original spec described a 90-day distributed cohort with weekly drops. The actual event is a 2-day in-person gathering. Reconcile this way:
 
 - **The cohort exists for ~10-12 weeks** total (8 pre-event + 2 in person + 1-2 follow-up), not 90 days.
-- **Weekly drops** become **3-times-a-week drops** (Mon, Wed, Fri at 09:00 PT) during the pre-event window, more frequent on-site.
+- **Weekly drops** become **3-times-a-week drops** (Mon, Wed, Fri at 9pm PT) during the pre-event window, more frequent on-site.
 - **The success metric** is not "useful meetings during a 90-day program" but **"useful meetings scheduled and completed during or around the 2-day event"**.
 - **The Founder Pass** (the editorial admit-one ticket) and **the Founder Card** (the four-line founder data) are the same identity object, presented as one merged surface.
 - **YC outreach trigger**: not "1000 verified users in 30 days" but a richer signal like "30-50 high-signal verified attendees + 20 meetings scheduled at the event + 10 marked useful afterward + 3 testimonials".

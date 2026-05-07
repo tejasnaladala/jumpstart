@@ -48,7 +48,7 @@ export default function LandingPage() {
               <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
               <span className="ed-serial">No. 001 / Cohort SS 2026</span>
             </div>
-            <span className="ed-serial hidden sm:inline whitespace-nowrap">Filed Mon, Wed, Fri at 09:00 PT</span>
+            <span className="ed-serial hidden sm:inline whitespace-nowrap">Filed Mon, Wed, Fri at 9pm PT</span>
           </div>
         </Reveal>
 
@@ -63,7 +63,7 @@ export default function LandingPage() {
             <Reveal delay={0.08}>
               <p className="mt-7 text-lg text-muted max-w-2xl leading-relaxed">
                 One curated founder match three times a week, Monday, Wednesday, and Friday at
-                09:00 PT.
+                9pm PT.
               </p>
             </Reveal>
             <Reveal delay={0.16}>
@@ -123,7 +123,7 @@ export default function LandingPage() {
           "Drops every other day",
           "Built by an attendee",
           "Verified founders only",
-          "Mon, Wed, Fri at 09:00 PT",
+          "Mon, Wed, Fri at 9pm PT",
           "Not affiliated with Y Combinator",
         ]}
         variant="espresso"
@@ -160,7 +160,7 @@ export default function LandingPage() {
           <div className="ed-masthead">
             <span className="ed-serial">§ 02 / How it works</span>
             <span className="ed-serial hidden sm:inline whitespace-nowrap">
-              Drops land Mon, Wed, Fri at 09:00 PT
+              Drops land Mon, Wed, Fri at 9pm PT
             </span>
           </div>
         </Reveal>
@@ -184,7 +184,7 @@ export default function LandingPage() {
             <Step
               n={2}
               title="A match every other day"
-              body="Monday, Wednesday, Friday at 09:00 PT. One founder worth meeting, with a one-line on why and an opener you can copy."
+              body="Monday, Wednesday, Friday at 9pm PT. One founder worth meeting, with a one-line on why and an opener you can copy."
             />
           </Reveal>
           <Reveal delay={0.16}>
@@ -345,7 +345,7 @@ export default function LandingPage() {
             />
             <div className="relative">
               <div className="ed-rule pt-3 mb-10 flex items-center justify-between text-bg/70">
-                <span className="ed-serial text-bg/70 whitespace-nowrap">Mon, Wed, Fri at 09:00 PT</span>
+                <span className="ed-serial text-bg/70 whitespace-nowrap">Mon, Wed, Fri at 9pm PT</span>
                 <span className="ed-serial hidden sm:inline text-bg/70">No. 001 / Drop pending</span>
               </div>
               <h2 className="font-display text-4xl sm:text-6xl max-w-3xl leading-[1.04] text-bg">

@@ -3,7 +3,7 @@ import { Logo } from "@/components/Logo";
 import { Button } from "@/components/primitive/Button";
 import { Input } from "@/components/primitive/Input";
 import { useToast } from "@/components/primitive/Toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
@@ -12,6 +12,27 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const toast = useToast();
+
+  // Demo-mode wipe. Per founder direction (May 7 2026): every visit to
+  // the signup surface is treated as a brand-new attempt for testing,
+  // so a friend / the founder can demo the full flow without seeing
+  // their own old onboarding bleed through. Wipes every jumpstart.*
+  // localStorage key on mount. During real beta this gets replaced
+  // with proper auth where the user explicitly opts out via "Sign out"
+  // on /you. Until then, refresh = reset.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < window.localStorage.length; i++) {
+        const k = window.localStorage.key(i);
+        if (k && k.startsWith("jumpstart.")) keysToRemove.push(k);
+      }
+      for (const k of keysToRemove) window.localStorage.removeItem(k);
+    } catch {
+      // privacy mode / quota — non-fatal, friend just sees stale state
+    }
+  }, []);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
