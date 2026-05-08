@@ -37,7 +37,7 @@ export function GlassNav(): React.JSX.Element {
         <nav className="flex items-center gap-2 text-sm">
           <a
             href="#waitlist"
-            className="inline-flex h-10 items-center rounded-full bg-ink px-4 text-sm font-semibold text-bg transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
+            className="inline-flex h-10 items-center rounded-full bg-accent px-4 text-sm font-semibold text-white transition-all duration-200 hover:bg-accent-edge hover:scale-[1.02] active:scale-[0.98] shadow-sm shadow-accent/20"
           >
             Get on the list
           </a>

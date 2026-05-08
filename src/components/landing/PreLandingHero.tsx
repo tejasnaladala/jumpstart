@@ -1,7 +1,7 @@
 "use client";
 import { SmokeBackground } from "@/components/ui/SmokeBackground";
 import { DottedSurface } from "@/components/ui/DottedSurface";
-import { CodeShimmer } from "@/components/landing/CodeShimmer";
+import { ScrollingCode } from "@/components/landing/ScrollingCode";
 import { useEffect, useState } from "react";
 
 // PreLandingHero — full-viewport "front door" before the editorial
@@ -54,36 +54,56 @@ export function PreLandingHero(): React.JSX.Element {
       </div>
 
       {/* L1: SmokeBackground — orange flames rising. multiply blend so
-          the orange tint reads on top of the cream + dotted backdrop. */}
+          the orange tint reads on top of the cream + dotted backdrop.
+          Bumped to 100% opacity so the smoke ribbons read clearly
+          behind the JUMPSTART wordmark (founder asked to embed
+          shaders behind JUMPSTART). */}
       <div
         aria-hidden
         className={
           "absolute inset-0 mix-blend-multiply transition-opacity duration-700 " +
-          (mounted ? "opacity-85" : "opacity-0")
+          (mounted ? "opacity-100" : "opacity-0")
         }
       >
         <SmokeBackground smokeColor="#FF6600" bgColor="#F4F1DB" />
       </div>
 
-      {/* L2: Bottom orange wash — emphasises rising-flame feel. */}
+      {/* L2: Focal smoke layer behind the JUMPSTART wordmark. A
+          second SmokeBackground masked to a centered ellipse via
+          radial-gradient so the smoke is more concentrated where the
+          wordmark sits. Reads as the wordmark "burning" out of the
+          shader. */}
+      <div
+        aria-hidden
+        className={
+          "absolute inset-x-0 top-[18%] h-[55%] mix-blend-multiply transition-opacity duration-700 " +
+          (mounted ? "opacity-90" : "opacity-0")
+        }
+        style={{
+          maskImage:
+            "radial-gradient(ellipse at center, black 0%, black 45%, transparent 80%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at center, black 0%, black 45%, transparent 80%)",
+        }}
+      >
+        <SmokeBackground smokeColor="#FB651E" bgColor="#F4F1DB" />
+      </div>
+
+      {/* L3: Bottom orange wash — emphasises rising-flame feel. */}
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to top, rgba(255,102,0,0.16), transparent 58%)",
+            "linear-gradient(to top, rgba(255,102,0,0.18), transparent 58%)",
         }}
       />
 
-      {/* L3: Code shimmer cursor trail — gentler now (longer fade,
-          softer easing — see CodeShimmer.tsx). */}
-      <CodeShimmer
-        radius={260}
-        intervalMs={120}
-        lifetimeMs={3400}
-        tone="warm"
-        peakOpacity={0.22}
-      />
+      {/* L4: ScrollingCode — continuous vertical streams of mono code
+          across 5 columns. Replaces the previous cursor-trail
+          CodeShimmer (founder asked for scrolling code, not just
+          appearing). Pure CSS keyframe transform-Y, no JS state churn. */}
+      <ScrollingCode direction="up" tone="warm" />
 
       {/* L4: Foreground content. No.001 serial removed (founder asked
           to drop). Descriptor sub-line removed too. JUMPSTART wordmark

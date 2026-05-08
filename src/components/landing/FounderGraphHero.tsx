@@ -501,29 +501,9 @@ export function FounderGraphHero(): React.JSX.Element {
         </foreignObject>
       </svg>
 
-      {/* Caption strip below the SVG. Two-row, breathable layout:
-          left = a single short stat + path, right = nothing (used to
-          have a separate path label that wrapped weirdly). */}
-      <div className="mt-5 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 text-xs">
-        <span className="font-mono uppercase tracking-[0.18em] text-muted/80">
-          Showing 30 of 6,000 in the cohort
-        </span>
-        <span className="font-mono tracking-[0.14em] text-accent-text">
-          you{" "}
-          <span aria-hidden className="text-muted/60">
-            →
-          </span>{" "}
-          AT{" "}
-          <span aria-hidden className="text-muted/60">
-            →
-          </span>{" "}
-          SK{" "}
-          <span aria-hidden className="text-muted/60">
-            →
-          </span>{" "}
-          Maya
-        </span>
-      </div>
+      {/* Caption removed (founder asked to strip). The graph + the
+          floating quote + target chip + path animation already tell
+          the whole story; the caption was redundant. */}
 
       {/* Inline animation styles (path pulse + node breath) */}
       <style jsx>{`
