@@ -52,7 +52,9 @@ export default function IdentityStep() {
   const router = useRouter();
 
   function onNext() {
-    router.push("/onboarding/verification");
+    // Verification step removed (waitlist-only pre-product). Users now
+    // skip straight from identity to intent.
+    router.push("/onboarding/intent");
   }
 
   function set<K extends keyof IdentityDraft>(k: K, v: IdentityDraft[K]) {

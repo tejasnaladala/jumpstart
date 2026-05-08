@@ -12,7 +12,15 @@
 // browser would be catastrophic.
 
 import PocketBase from "pocketbase";
-import type { OtpRealConfig } from "@/lib/verification/config";
+
+// Inline config shape — used to live in @/lib/verification/config but
+// the verification flow has been removed (waitlist-only pre-product).
+// Keeping this admin client around for future PocketBase usage.
+type OtpRealConfig = {
+  pocketbaseUrl: string;
+  pocketbaseAdminEmail: string;
+  pocketbaseAdminPassword: string;
+};
 
 let cachedClient: PocketBase | null = null;
 let cachedClientUrl: string | null = null;

@@ -8,7 +8,7 @@
 //
 // What we deliberately don't do:
 //   - No magic-link email. The founder reviews the list manually and
-//     invites people via existing /onboarding/verification flow.
+//     invites people directly into onboarding.
 //   - No public count of waitlist size. Avoid herd metrics that pressure
 //     the founder into batch-admitting.
 //   - No leaderboard / referral codes in v1. Keep the surface boring.

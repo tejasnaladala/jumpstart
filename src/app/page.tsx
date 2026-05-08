@@ -6,7 +6,7 @@ import { NextDropCountdown } from "@/components/NextDropCountdown";
 import { Marquee } from "@/components/Marquee";
 import { CohortGlobe } from "@/components/CohortGlobe";
 import { CursorGlow } from "@/components/landing/CursorGlow";
-import { FounderGraph } from "@/components/landing/FounderGraph";
+import { FounderGraphHero } from "@/components/landing/FounderGraphHero";
 import { TerminalLine } from "@/components/landing/TerminalLine";
 import { ComprehensiveMatchCard } from "@/components/landing/ComprehensiveMatchCard";
 import { MOCK_MATCHES } from "@/components/landing/mockMatches";
@@ -49,21 +49,22 @@ export default function LandingPage(): React.JSX.Element {
       {/* === LANDING BODY === */}
       <div id="landing-body" />
 
-      {/* HERO. Two-column on lg+. RippleShader sits behind the
-          FounderGraph as ambient pulse texture. */}
-      <section className="relative pt-[80px] pb-14 sm:pt-[88px] sm:pb-16 lg:pt-[96px] lg:pb-20">
-        {/* Ambient orange-glow pad behind the graph */}
+      {/* HERO — the founder graph IS the centerpiece. Headline + sub
+          float above; waitlist + trust + stats + countdown sit below.
+          RippleShader pulses behind the graph as ambient heartbeat. */}
+      <section className="relative pt-[80px] pb-12 sm:pt-[88px] sm:pb-14 lg:pt-[96px] lg:pb-16">
+        {/* Ambient orange glow behind the entire hero (subtle) */}
         <div
           aria-hidden
-          className="pointer-events-none absolute right-[-200px] top-[40px] hidden lg:block w-[700px] h-[700px] rounded-full"
+          className="pointer-events-none absolute inset-x-0 top-[120px] hidden lg:block h-[800px]"
           style={{
             background:
-              "radial-gradient(circle at center, rgba(255,102,0,0.10), transparent 65%)",
+              "radial-gradient(ellipse at 65% 40%, rgba(255,102,0,0.08), transparent 60%)",
           }}
         />
         <div className="container-wide relative">
           <BlurFade>
-            <div className="ed-rule mb-4 lg:mb-5 flex items-center justify-between gap-4 pt-3 text-xs">
+            <div className="ed-rule mb-5 lg:mb-6 flex items-center justify-between gap-4 pt-3 text-xs">
               <div className="flex items-center gap-2">
                 <span
                   aria-hidden
@@ -79,34 +80,48 @@ export default function LandingPage(): React.JSX.Element {
             </div>
           </BlurFade>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-            <div className="lg:col-span-7">
-              <BlurFade>
-                <h1 className="font-display text-[48px] leading-[0.94] tracking-[-0.018em] text-ink sm:text-7xl lg:text-[88px] xl:text-[104px]">
-                  A founder graph for{" "}
-                  <span className="italic text-accent">
-                    YC Startup School.
-                  </span>
-                </h1>
-              </BlurFade>
-              <BlurFade delay={0.06}>
-                <p className="mt-6 max-w-xl text-lg lg:text-xl text-muted leading-relaxed">
-                  Knowing people through people, and people&apos;s people.
-                  6,000 builders, woven into one cohort, scored by an AI
-                  that reads what you&apos;re shipping.
-                </p>
-              </BlurFade>
+          {/* Headline above the graph */}
+          <BlurFade>
+            <h1 className="font-display text-[44px] leading-[0.94] tracking-[-0.018em] text-ink sm:text-6xl lg:text-7xl xl:text-[88px] max-w-5xl">
+              A founder graph for{" "}
+              <span className="italic text-accent">YC Startup School.</span>
+            </h1>
+          </BlurFade>
+          <BlurFade delay={0.06}>
+            <p className="mt-5 max-w-2xl text-lg lg:text-xl text-muted leading-relaxed">
+              Knowing people through people, and people&apos;s people.
+              6,000 builders, woven into one cohort, scored by an AI that
+              reads what you&apos;re shipping.
+            </p>
+          </BlurFade>
 
-              <BlurFade delay={0.12}>
-                <div id="waitlist" className="mt-9 max-w-xl scroll-mt-24">
+          {/* THE GRAPH — full width centerpiece. RippleShader behind. */}
+          <BlurFade delay={0.14}>
+            <div className="relative mt-10 lg:mt-14">
+              {/* Ripple pulse shader, very subtle, behind the graph */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -inset-4 sm:-inset-6 opacity-20 mix-blend-multiply"
+                style={{ filter: "blur(0.5px)" }}
+              >
+                <RippleShader bgColor="#F4F1DB" accentColor="#FF6600" />
+              </div>
+              <div className="relative">
+                <FounderGraphHero />
+              </div>
+            </div>
+          </BlurFade>
+
+          {/* Waitlist row + countdown below the graph */}
+          <BlurFade delay={0.22}>
+            <div className="mt-12 lg:mt-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+              <div className="lg:col-span-7">
+                <div id="waitlist" className="max-w-xl scroll-mt-24">
                   <InlineWaitlist
                     source="hero"
                     buttonLabel="Get on the graph"
                   />
                 </div>
-              </BlurFade>
-
-              <BlurFade delay={0.18}>
                 <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
                   <Verified />
                   <span>Verified SS 2026 attendees first.</span>
@@ -119,46 +134,19 @@ export default function LandingPage(): React.JSX.Element {
                   </span>
                   <span>Not affiliated with Y Combinator.</span>
                 </div>
-              </BlurFade>
-
-              <BlurFade delay={0.24}>
-                <div className="mt-10 grid grid-cols-3 gap-px bg-border max-w-md">
+                <div className="mt-8 grid grid-cols-3 gap-px bg-border max-w-md">
                   <Stat n="6,000" label="Cohort attendees" />
                   <Stat n="48 hrs" label="At Chase Center" />
                   <Stat n="3×/wk" label="Drop cadence" />
                 </div>
-              </BlurFade>
-            </div>
-
-            {/* Right column: FounderGraph SVG layered over RippleShader.
-                The shader is opacity-30 + blend-multiply so it reads as
-                a slow heartbeat behind the graph nodes. */}
-            <div className="lg:col-span-5 relative mt-4 lg:mt-0">
-              <BlurFade delay={0.18}>
-                <div className="relative">
-                  {/* Concentric pulse shader behind the graph */}
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute -inset-6 sm:-inset-8 opacity-25 mix-blend-multiply"
-                    style={{ filter: "blur(0.5px)" }}
-                  >
-                    <RippleShader
-                      bgColor="#F4F1DB"
-                      accentColor="#FF6600"
-                    />
-                  </div>
-                  <div className="relative">
-                    <FounderGraph />
-                  </div>
-                </div>
-              </BlurFade>
-              <BlurFade delay={0.34}>
-                <div className="mt-6 surface bg-bg/60 p-5 sm:p-6">
+              </div>
+              <div className="lg:col-span-5">
+                <div className="surface bg-bg/60 p-5 sm:p-6">
                   <NextDropCountdown />
                 </div>
-              </BlurFade>
+              </div>
             </div>
-          </div>
+          </BlurFade>
         </div>
       </section>
 
