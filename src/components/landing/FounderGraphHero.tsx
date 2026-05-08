@@ -475,10 +475,10 @@ export function FounderGraphHero(): React.JSX.Element {
             <div className="rounded-md border border-ink/20 bg-bg shadow-sm p-3">
               <div className="flex items-center justify-between gap-2 mb-1.5">
                 <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-text">
-                  matchmaker pick
+                  via 2 friends
                 </span>
                 <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted tabular-nums">
-                  match {TARGET_PROFILE.matchScore}
+                  3-hop intro
                 </span>
               </div>
               <p className="font-display text-[18px] leading-tight text-ink">
@@ -505,8 +505,8 @@ export function FounderGraphHero(): React.JSX.Element {
       {/* Caption strip below the SVG */}
       <div className="mt-5 flex items-center justify-between gap-3 text-xs">
         <span className="font-mono uppercase tracking-[0.18em] text-muted/80">
-          30 of 6,000 in the YC SS 2026 graph · matchmaker traverses
-          friends-of-friends to find the answer
+          30 of 6,000 in the YC SS 2026 graph · introductions through
+          friends of friends
         </span>
         <span className="hidden sm:inline font-mono uppercase tracking-[0.18em] text-accent-text">
           path: YOU → AT → SK → MAYA

@@ -29,27 +29,30 @@ type Spark = {
   rot: number;
 };
 
+// Snippets are graph/connection-themed (not score/embed). Reads as
+// "we're building the network", not "we score you with AI" — founder
+// asked to drop the AI-judgment language across the site.
 const SNIPPETS: string[] = [
-  "while drop_queue:",
-  "for card in cohort:",
-  "score = embed(card.profile)",
-  "if match.score > 0.78:",
-  "await self.queue.get()",
-  "node.next = head",
   "graph.add_edge(you, them)",
-  "match = topk(scores, k=1)",
+  "for friend in your_circle:",
+  "intro.send(via=mutual)",
+  "node.next = head",
   "if both_yes: open_calendar()",
-  "self.batch.append(card)",
-  "asyncio.create_task(score)",
-  "tags = card.tags & yours",
-  "return matches[0]",
-  "embedding[:768]",
+  "graph.path(you, target)",
+  "tags = you.tags & them.tags",
+  "for peer in cohort.iter():",
   "drop = next_drop_after(now)",
   "if accepted: graph.commit()",
-  "rank = bm25 + embed_sim",
   "card.fingerprint()",
-  "for peer in cohort.iter():",
-  "intro.send(reason=why)",
+  "intro.note(why=mutual_friend)",
+  "you.knows(them) ? bridge() : null",
+  "graph.bfs(start=you, depth=3)",
+  "queue.push(curated_intro)",
+  "return suggestion",
+  "calendar.open(both_sides=true)",
+  "for ring in graph.rings:",
+  "edge.weight += accepted",
+  "graph.compounds()",
 ];
 
 export function CodeShimmer({
