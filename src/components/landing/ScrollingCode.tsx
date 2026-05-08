@@ -1,115 +1,183 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-// ScrollingCode — grid of code mini-cells that are INVISIBLE by default
-// and only fade in when the cursor moves near them. Each cell streams
-// vertical code lines via CSS keyframe transform.
+// ScrollingCode — grid of code mini-cells, INVISIBLE by default, fade
+// in when the cursor moves near.
 //
-// Founder ask: "by default invisible. when cursor goes near, code
-// scrolls in a radius. messy lengths. 16-20 squares not 4-5 columns."
+// Founder ask v2: lines should NOT all be left-aligned. They should
+// look like flowing Python source with proper indentation depth — a
+// `for` block nested inside a `while` block nested inside a `def`,
+// etc. Reads as real code, not a column of equal-width tokens.
 //
-// Layout: 5 cols x 4 rows = 20 cells. Cells are positioned via CSS
-// grid spanning the whole container. Each cell has a tiny scrolling
-// column inside (10-14 lines) with seamless wrap (doubled content).
-//
-// Reveal:
-//   - Pointer position tracked via window pointermove + container
-//     bounding rect.
-//   - Each cell computes its center and the distance to the cursor.
-//   - Cells inside RADIUS_PX get full opacity (0.18); cells just
-//     outside get a falloff to 0; cells far away are fully invisible.
-//   - 220ms opacity transition so the reveal/fade is smooth as you
-//     drag the cursor.
-//
-// Performance:
-//   - The scroll animation is pure CSS keyframe transform — no JS
-//     per frame.
-//   - Pointer tracking is throttled to one rAF tick so the cell
-//     opacity update fires at most 60/sec.
-//   - prefers-reduced-motion: scroll animation paused; reveal still
-//     fires (user can hover to read code).
+// Implementation: each cell renders one CODE_BLOCK (a multi-line
+// Python snippet with leading whitespace preserved via white-space:
+// pre). Each block is a coherent function or class so the indentation
+// reads as legitimate hierarchy.
 
-const SNIPPETS_LONG: string[] = [
-  "graph.add_edge(you, them)",
-  "for friend in your_circle:",
-  "intro.send(via=mutual)",
-  "if both_yes: open_calendar()",
-  "graph.path(you, target)",
-  "tags = you.tags & them.tags",
-  "for peer in cohort.iter():",
-  "drop = next_drop_after(now)",
-  "if accepted: graph.commit()",
-  "card.fingerprint()",
-  "intro.note(why=mutual_friend)",
-  "graph.bfs(start=you, depth=3)",
-  "queue.push(curated_intro)",
-  "calendar.open(both_sides=true)",
-  "for ring in graph.rings:",
-  "edge.weight += accepted",
-  "graph.compounds()",
-  "you.knows(them) ? bridge() : null",
-  "match = next_drop.pick()",
-  "circle.add(new_intro)",
-  "for hop in path.steps():",
-  "node.degree += 1",
-  "graph.persist(state)",
+// Multi-line Python snippets, graph/network/scheduler themed. Each
+// block reads as coherent source code (proper indentation, syntactic
+// shape) so when a visitor's cursor passes over it they see what
+// looks like the actual matchmaker source streaming by.
+const CODE_BLOCKS: string[] = [
+  `async def _worker(self):
+    while True:
+        batch = []
+        for _ in range(self.batch_size):
+            item = await self.queue.get()
+            batch.append(item)
+        await self._flush(batch)
+        for _ in batch:
+            self.queue.task_done()`,
+
+  `def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    return merge(left, right)`,
+
+  `class Graph:
+    def __init__(self):
+        self.edges = {}
+        self.nodes = set()
+
+    def add_edge(self, a, b):
+        self.edges.setdefault(a, [])
+        self.edges[a].append(b)
+        self.nodes.add(a)
+        self.nodes.add(b)`,
+
+  `def bfs(graph, start, target):
+    queue = [(start, [start])]
+    seen = {start}
+    while queue:
+        node, path = queue.pop(0)
+        if node == target:
+            return path
+        for nb in graph.edges.get(node, []):
+            if nb not in seen:
+                seen.add(nb)
+                queue.append((nb, path + [nb]))`,
+
+  `async def make_drop(user):
+    cards = await load_cohort()
+    pool = score(user, cards)
+    for c in pool[:50]:
+        if has_bridge(user, c):
+            return await persist(user, c)
+    return None`,
+
+  `def score(user, cards):
+    out = []
+    for c in cards:
+        s = embed_sim(user, c)
+        s += tag_overlap(user, c)
+        s += stage_match(user, c)
+        out.append((s, c))
+    return sorted(out, reverse=True)`,
+
+  `class Drop:
+    def __init__(self, user, match):
+        self.user = user
+        self.match = match
+        self.created_at = now()
+        self.both_yes = False
+
+    def accept(self, side):
+        self.responses[side] = "yes"
+        if all(self.responses.values()):
+            self.both_yes = True
+            calendar.open(self)`,
+
+  `def find_path(you, target, max_hops=4):
+    paths = [[you]]
+    while paths:
+        path = paths.pop(0)
+        if path[-1] == target:
+            return path
+        if len(path) >= max_hops:
+            continue
+        for nb in friends_of(path[-1]):
+            paths.append(path + [nb])
+    return None`,
+
+  `async def commit_intro(intro):
+    async with db.tx() as t:
+        await t.execute(
+            "insert into intros values (?, ?, ?)",
+            intro.from_user,
+            intro.to_user,
+            intro.reason,
+        )
+        graph.add_edge(intro.from_user, intro.to_user)
+        await t.commit()`,
+
+  `def next_drop_after(now):
+    for i in range(14):
+        d = now + timedelta(days=i)
+        wd = d.strftime("%a")
+        if wd in ("Mon", "Wed", "Fri"):
+            drop = d.replace(hour=21, minute=0)
+            if drop > now:
+                return drop`,
+
+  `class Cohort:
+    def __init__(self, members):
+        self.members = members
+        self.tags = collect_tags(members)
+        self.cities = collect_cities(members)
+
+    def filter_by(self, tag):
+        return [m for m in self.members
+                if tag in m.tags]`,
+
+  `def explain(match, user):
+    reasons = []
+    if shared_stage(user, match):
+        reasons.append("same stage")
+    if mutual_friend(user, match):
+        reasons.append("you both know X")
+    if tags_overlap(user, match):
+        reasons.append("stack overlap")
+    return ". ".join(reasons)`,
+
+  `async def deliver(drop):
+    email = render_email(drop)
+    sms = render_sms(drop)
+    await asyncio.gather(
+        send_email(drop.user.email, email),
+        send_sms(drop.user.phone, sms),
+    )
+    drop.delivered_at = now()`,
+
+  `def rank(candidates, user):
+    sims = [embed_sim(user, c) for c in candidates]
+    bm25 = [text_score(user, c) for c in candidates]
+    blended = [
+        0.6 * sims[i] + 0.4 * bm25[i]
+        for i in range(len(candidates))
+    ]
+    return sorted(zip(candidates, blended),
+                  key=lambda x: -x[1])`,
+
+  `def has_bridge(a, b):
+    a_friends = set(friends_of(a))
+    b_friends = set(friends_of(b))
+    common = a_friends & b_friends
+    return len(common) > 0`,
+
+  `class Scheduler:
+    def __init__(self):
+        self.queue = asyncio.Queue()
+        self.workers = []
+
+    async def start(self, n=4):
+        for _ in range(n):
+            t = asyncio.create_task(self._worker())
+            self.workers.append(t)
+        await asyncio.gather(*self.workers)`,
 ];
-
-// Variable-length set so cells don't all read the same width.
-const SNIPPETS_SHORT: string[] = [
-  "node.next",
-  "you.tags",
-  "graph.commit()",
-  "intro.send()",
-  "++degree",
-  "circle.add(x)",
-  "if mutual:",
-  "for x in cohort:",
-  "match()",
-  "you → them",
-  "drop[0]",
-  "graph.bfs",
-  "edge.weight",
-  "tags & yours",
-  "intro = ok",
-  "// noted",
-  "open_cal()",
-  "depth=3",
-  "ring[i]",
-  "find(x)",
-];
-
-const SNIPPETS_MEDIUM: string[] = [
-  "intro.send(via=mutual)",
-  "graph.path(you, x)",
-  "for n in cohort:",
-  "tags = a & b",
-  "drop = next_drop()",
-  "graph.compounds()",
-  "if both_yes:",
-  "edge.weight++",
-  "node.degree++",
-  "queue.push(it)",
-];
-
-// PRNG helpers so the same column doesn't get the same lines on
-// every render but is deterministic per-mount.
-function seededShuffle<T>(arr: T[], seed: number): T[] {
-  const a = [...arr];
-  let s = seed;
-  for (let i = a.length - 1; i > 0; i--) {
-    s = (s * 1103515245 + 12345) & 0x7fffffff;
-    const j = s % (i + 1);
-    [a[i]!, a[j]!] = [a[j]!, a[i]!];
-  }
-  return a;
-}
-
-function makeCellLines(seed: number, lineCount: number): string[] {
-  // Mix of short, medium, long lines so cell widths vary naturally.
-  const pool = [...SNIPPETS_SHORT, ...SNIPPETS_MEDIUM, ...SNIPPETS_LONG];
-  return seededShuffle(pool, seed).slice(0, lineCount);
-}
 
 // Grid layout: 5 cols x 4 rows = 20 cells.
 const COLS = 5;
@@ -121,6 +189,13 @@ const CELL_COUNT = COLS * ROWS;
 const RADIUS_PX = 280;
 // Falloff zone — cells in this distance band fade smoothly to 0.
 const FALLOFF_PX = 140;
+
+// Deterministic PRNG so each cell picks a stable code block per mount
+// (not flickering between blocks on every render).
+function seededIndex(seed: number, modulo: number): number {
+  const s = (seed * 1103515245 + 12345) & 0x7fffffff;
+  return s % modulo;
+}
 
 export function ScrollingCode({
   tone = "warm",
@@ -135,31 +210,26 @@ export function ScrollingCode({
   const rafRef = useRef(0);
   const [enabled, setEnabled] = useState(false);
 
-  // Build cell config once per mount. Each cell has slightly
-  // different line counts and animation speeds so they don't
-  // synchronize.
+  // Each cell gets a stable code block + animation params.
   const cells = useMemo(() => {
     const arr: {
-      lines: string[];
+      block: string;
       durationSec: number;
       delaySec: number;
     }[] = [];
     for (let i = 0; i < CELL_COUNT; i++) {
-      const seed = i * 73 + 17;
-      arr.push({
-        lines: makeCellLines(seed, 10 + ((seed >> 3) % 5)), // 10-14 lines
-        durationSec: 28 + ((seed >> 5) % 22), // 28-50s
-        delaySec: -((seed >> 7) % 30), // -0 to -30s offset
-      });
+      const blockIdx = seededIndex(i * 73 + 17, CODE_BLOCKS.length);
+      const block = CODE_BLOCKS[blockIdx] ?? CODE_BLOCKS[0]!;
+      // Vary scroll speed per cell so they don't lock-step.
+      const durationSec = 36 + seededIndex(i * 41 + 7, 24); // 36-60s
+      const delaySec = -seededIndex(i * 19 + 3, 30); // -0..-30s offset
+      arr.push({ block, durationSec, delaySec });
     }
     return arr;
   }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    // Desktop only — phones don't have a hover cursor, the reveal
-    // mechanic doesn't apply. We bail entirely; the section is just
-    // empty space on phones.
     const mqDesktop = window.matchMedia("(min-width: 1024px)");
     if (!mqDesktop.matches) return;
     setEnabled(true);
@@ -179,10 +249,6 @@ export function ScrollingCode({
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerleave", onLeave);
 
-    // rAF tick: read cursor position, compute opacity per cell, write
-    // it to the DOM. We do this in a single rAF instead of per-cell
-    // listeners so 20 cells = 20 cheap style updates per frame, not
-    // 20 events.
     const tick = (): void => {
       const el = containerRef.current;
       if (el) {
@@ -203,12 +269,10 @@ export function ScrollingCode({
           const dist = Math.sqrt(dx * dx + dy * dy);
           let opacity = 0;
           if (dist < RADIUS_PX) {
-            // Full visible inside core radius.
-            opacity = 0.2;
+            opacity = 0.22;
           } else if (dist < RADIUS_PX + FALLOFF_PX) {
-            // Linear falloff in the band.
             const t = (dist - RADIUS_PX) / FALLOFF_PX;
-            opacity = 0.2 * (1 - t);
+            opacity = 0.22 * (1 - t);
           }
           cell.style.opacity = String(opacity);
         }
@@ -235,8 +299,6 @@ export function ScrollingCode({
         (className || "")
       }
     >
-      {/* CSS grid: 5x4 cells. Each cell is invisible by default and
-          only revealed via per-cell opacity from the rAF tick. */}
       <div
         className="absolute inset-0 grid"
         style={{
@@ -265,16 +327,24 @@ export function ScrollingCode({
                   willChange: "transform",
                 }}
               >
-                {[...cell.lines, ...cell.lines].map((line, j) => (
-                  <span
-                    key={j}
+                {/* Each cell renders its code block TWICE for seamless
+                    wrap. white-space: pre preserves the leading
+                    indentation so each line sits at its real column
+                    (4-space-per-level Python convention). */}
+                {[0, 1].map((copy) => (
+                  <pre
+                    key={copy}
                     className={
-                      "block font-mono text-[11px] leading-[2.2] whitespace-nowrap " +
+                      "block font-mono text-[11px] leading-[1.5] m-0 mb-4 " +
                       colorClass
                     }
+                    style={{
+                      whiteSpace: "pre",
+                      fontVariantLigatures: "none",
+                    }}
                   >
-                    {line}
-                  </span>
+                    {cell.block}
+                  </pre>
                 ))}
               </div>
             ) : null}
