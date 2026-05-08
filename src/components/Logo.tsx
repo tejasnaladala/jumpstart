@@ -47,8 +47,11 @@ export function Logo({
         <circle cx="22" cy="11" r={dotR} fill="#FF6600" />
       </svg>
       {withWord ? (
-        <span className="text-[17px] font-semibold tracking-[-0.02em] text-ink leading-none -ml-0.5">
-          umpstart
+        // Full "Jumpstart" wordmark sits tight to the J mark. Reads as
+        // [icon] + [brand name], not [icon-as-J] + [umpstart] which the
+        // founder flagged as awkward.
+        <span className="text-[17px] font-semibold tracking-[-0.015em] text-ink leading-none">
+          Jumpstart
         </span>
       ) : null}
     </span>
