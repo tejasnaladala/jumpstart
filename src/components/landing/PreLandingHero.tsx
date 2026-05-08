@@ -106,11 +106,70 @@ export function PreLandingHero(): React.JSX.Element {
         }}
       />
 
+      {/* L3.5: Orange ascending sun — bright radial glow centered at
+          bottom-center, reads as the YC SS reference's signature
+          flame/sun shape. Layered with vertical streak emanations
+          (repeating-linear-gradient masked to the sun's vertical band)
+          so light beams shoot up from the horizon. Pure CSS, no
+          shader cost. */}
+      <div
+        aria-hidden
+        className={
+          "absolute inset-x-0 bottom-0 h-[55%] pointer-events-none transition-opacity duration-1000 " +
+          (mounted ? "opacity-100" : "opacity-0")
+        }
+      >
+        {/* Vertical streaks — masked so they only show in the sun's
+            vertical band and fade out before reaching the top */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "repeating-linear-gradient(to right, transparent 0px, transparent 6px, rgba(232,90,27,0.18) 6px, rgba(232,90,27,0.18) 7px)",
+            maskImage:
+              "radial-gradient(ellipse 50% 90% at 60% 100%, black 0%, black 30%, transparent 70%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 50% 90% at 60% 100%, black 0%, black 30%, transparent 70%)",
+          }}
+        />
+        {/* Sun glow — bright orange core fading to transparent */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 45% 80% at 60% 105%, rgba(232,90,27,0.55) 0%, rgba(232,90,27,0.18) 35%, transparent 65%)",
+          }}
+        />
+      </div>
+
       {/* L4: ScrollingCode — grid of 5x4=20 cells, INVISIBLE by
           default. Cells fade in only when the cursor moves within
           280px of their center. Pure CSS keyframe scroll inside each
           cell. Mobile: skipped entirely (no hover cursor). */}
       <ScrollingCode tone="warm" />
+
+      {/* L4.5: SF.CA location + dates label, positioned absolute on
+          the right side of the viewport. Mirrors the YC SS reference
+          where 'SF.CA' floats large to the right of the headline.
+          Pulls the eye across the canvas and gives the page a sense
+          of place + time without crowding the JUMPSTART wordmark. */}
+      <div
+        aria-hidden
+        className="absolute right-5 sm:right-8 lg:right-12 top-1/2 -translate-y-1/2 z-[5] text-right pointer-events-none hidden md:block"
+      >
+        <div
+          className="font-mono uppercase font-bold text-ink leading-[0.86] tracking-[-0.02em]"
+          style={{ fontSize: "clamp(56px, 8vw, 120px)" }}
+        >
+          SF.CA
+        </div>
+        <div className="mt-3 lg:mt-4 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-muted">
+          Jul 25 — 26 · 2026
+        </div>
+        <div className="mt-1 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-muted">
+          Chase Center
+        </div>
+      </div>
 
       {/* L5: Foreground content. Three rows: top spacer, middle
           headline cluster, bottom scroll prompt. */}
