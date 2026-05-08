@@ -82,14 +82,14 @@ export default function LandingPage(): React.JSX.Element {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-start">
             <div className="lg:col-span-7">
               <BlurFade>
-                <h1 className="font-display text-[44px] leading-[0.96] tracking-[-0.02em] text-ink sm:text-6xl lg:text-7xl xl:text-[84px]">
+                <h1 className="font-display text-[44px] leading-[0.96] tracking-[-0.015em] text-ink sm:text-6xl lg:text-7xl xl:text-[80px]">
                   A founder graph for{" "}
                   <span className="italic text-accent">
                     YC Startup School.
                   </span>
                 </h1>
               </BlurFade>
-              <BlurFade delay={0.08}>
+              <BlurFade delay={0.06}>
                 <p className="mt-6 max-w-xl text-lg lg:text-xl text-muted leading-relaxed">
                   Meet the builders moving at your speed. One match per
                   drop, scored by an AI that reads what you&apos;re shipping.
@@ -97,7 +97,7 @@ export default function LandingPage(): React.JSX.Element {
                 </p>
               </BlurFade>
 
-              <BlurFade delay={0.16}>
+              <BlurFade delay={0.12}>
                 <div id="waitlist" className="mt-9 max-w-xl scroll-mt-24">
                   <InlineWaitlist
                     source="hero"
@@ -106,7 +106,7 @@ export default function LandingPage(): React.JSX.Element {
                 </div>
               </BlurFade>
 
-              <BlurFade delay={0.22}>
+              <BlurFade delay={0.18}>
                 <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
                   <Verified />
                   <span>Verified SS 2026 attendees first.</span>
@@ -121,7 +121,7 @@ export default function LandingPage(): React.JSX.Element {
                 </div>
               </BlurFade>
 
-              <BlurFade delay={0.3}>
+              <BlurFade delay={0.24}>
                 <div className="mt-10 grid grid-cols-3 gap-px bg-border max-w-md">
                   <Stat n="2,000" label="Cohort attendees" />
                   <Stat n="48 hrs" label="At Chase Center" />
@@ -204,7 +204,7 @@ export default function LandingPage(): React.JSX.Element {
 
           <BlurFade delay={0.16} className="lg:col-span-5">
             <div className="surface bg-surface p-6 lg:p-8 space-y-5">
-              <p className="ed-serial text-accent">By the numbers</p>
+              <p className="ed-serial text-accent-text">By the numbers</p>
               <ul className="space-y-4">
                 <NumRow lhs="2,000" rhs="hand-picked attendees" />
                 <NumRow lhs="≈ 1,999,000" rhs="possible 1:1 pairs" />
@@ -456,7 +456,7 @@ function DarkStep({
 }): React.JSX.Element {
   return (
     <div className="border-t border-bg/20 pt-5">
-      <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent block">
+      <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent-text block">
         {String(n).padStart(2, "0")}
       </span>
       <h3 className="font-display italic text-2xl text-bg mt-3 leading-tight">

@@ -13,9 +13,17 @@ export default {
         ink: "#16140F", // warm near-black, primary text
         muted: "#463325", // warm dark brown, secondary text
         border: "#E8E3CC", // tinted divider derived from the cream
-        accent: "#FF6600", // the iconic YC orange
+        accent: "#FF6600", // the iconic YC orange (LARGE display text + decorative only)
         "accent-soft": "#FFF0E9", // pale peach for accent backgrounds
         "accent-edge": "#FB651E", // hotter orange for hovers and edges
+        // accent-text: WCAG AA (4.5:1+) on cream bg. Use this for body-size
+        // text on cream backgrounds (ed-serial labels, building/needs caps,
+        // small mono chips). Pure #FF6600 fails contrast at 2.6:1 — flagged
+        // by impeccable's detect CLI on the live site.
+        "accent-text": "#A33800",
+        // accent-wash: 10% orange tint for card backgrounds. Adds editorial
+        // depth without clashing with cream surface.
+        "accent-wash": "#FFE8D9",
         success: "#48B584",
         error: "#E4544B",
 
@@ -40,7 +48,9 @@ export default {
           DEFAULT: "#2D2417",
           deep: "#1F1A11",
           warm: "#3A2C1C",
-          dust: "#4A3B2A", // lightest, for inset dark-on-dark elements
+          // dust refined from #4A3B2A → #453622 for better text contrast on
+          // espresso bg (Linear+YC SS pattern: secondary text needs ≥3:1).
+          dust: "#453622",
         },
       },
       fontFamily: {
@@ -49,16 +59,23 @@ export default {
         display: ["var(--font-display)", "Georgia", "serif"],
       },
       fontSize: {
-        xxs: ["10px", { lineHeight: "14px" }],
-        xs: ["11px", { lineHeight: "16px" }],
+        // Bumped xxs floor 10→11 and xs floor 11→12 to clear impeccable's
+        // tiny-text rule (12px minimum for body content). Editorial mono
+        // serials use xxs only as decorative chips, never as body copy.
+        xxs: ["11px", { lineHeight: "15px" }],
+        xs: ["12px", { lineHeight: "16px" }],
         sm: ["13px", { lineHeight: "18px" }],
-        base: ["14px", { lineHeight: "20px" }],
-        lg: ["16px", { lineHeight: "22px" }],
-        xl: ["18px", { lineHeight: "26px" }],
-        "2xl": ["22px", { lineHeight: "28px" }],
-        "3xl": ["28px", { lineHeight: "34px" }],
-        "4xl": ["36px", { lineHeight: "42px" }],
-        "5xl": ["48px", { lineHeight: "54px" }],
+        // Body bumped from 14/20 → 15/22 for legibility at desktop widths.
+        // Linear baseline body is 15-16px; Stripe is 16px. We split the
+        // difference at 15px to keep our editorial density.
+        base: ["15px", { lineHeight: "22px" }],
+        // lg bumped from 16/22 → 17/26 for hero subhead readability.
+        lg: ["17px", { lineHeight: "26px" }],
+        xl: ["19px", { lineHeight: "28px" }],
+        "2xl": ["22px", { lineHeight: "30px" }],
+        "3xl": ["28px", { lineHeight: "36px" }],
+        "4xl": ["36px", { lineHeight: "44px" }],
+        "5xl": ["48px", { lineHeight: "56px" }],
       },
       borderRadius: {
         xs: "4px",

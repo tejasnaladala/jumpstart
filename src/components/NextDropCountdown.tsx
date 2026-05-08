@@ -53,7 +53,7 @@ export function NextDropCountdown({
       <div aria-hidden className={"h-px w-12 " + accentLine} />
       <p
         className={
-          "ed-serial " + (isDark ? "text-accent" : "text-accent")
+          "ed-serial " + (isDark ? "text-accent" : "text-accent-text")
         }
       >
         Next drop

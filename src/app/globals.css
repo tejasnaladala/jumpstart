@@ -17,6 +17,8 @@
     --color-accent: #ff6600;
     --color-accent-soft: #fff0e9;
     --color-accent-edge: #fb651e;
+    --color-accent-text: #a33800;
+    --color-accent-wash: #ffe8d9;
     --color-success: #48b584;
     --color-error: #e4544b;
     --color-espresso: #2d2417;
@@ -47,11 +49,13 @@
   }
   h1 { letter-spacing: -0.018em; }
 
-  /* Numeric serials and timestamps live in mono with tabular figures */
+  /* Numeric serials and timestamps live in mono with tabular figures.
+     Bumped from 0.7rem (11.2px) → 0.75rem (12px) so impeccable's tiny-text
+     rule (12px floor for body) stops flagging the editorial mono labels. */
   .ed-serial {
     font-family: var(--font-mono), ui-monospace, monospace;
     font-feature-settings: "tnum", "ss01";
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     letter-spacing: 0.04em;
     color: theme("colors.muted");
     text-transform: uppercase;
