@@ -5,6 +5,21 @@
 @layer base {
   :root {
     color-scheme: light;
+    /* Mirror the Tailwind palette as CSS custom properties so SVG and
+       inline styles can reference them via var(). Tailwind v3 doesn't
+       expose theme tokens as CSS vars by default. Keep these in sync
+       with tailwind.config.ts when the palette evolves. */
+    --color-bg: #f4f1db;
+    --color-surface: #fdfdf8;
+    --color-ink: #16140f;
+    --color-muted: #463325;
+    --color-border: #e8e3cc;
+    --color-accent: #ff6600;
+    --color-accent-soft: #fff0e9;
+    --color-accent-edge: #fb651e;
+    --color-success: #48b584;
+    --color-error: #e4544b;
+    --color-espresso: #2d2417;
   }
 
   html {
