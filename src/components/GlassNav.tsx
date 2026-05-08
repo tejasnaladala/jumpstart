@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
-import Link from "next/link";
 
 // Glass-morph nav inspired by ditto.ai: transparent at top, switches to
 // cream-tinted backdrop-blur after the first scroll commit. Fixed position,
@@ -32,13 +31,9 @@ export function GlassNav(): React.JSX.Element {
     >
       <div className="container-wide h-full flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Logo />
+        {/* Sign in removed for the pre-product window. Waitlist is the
+            single CTA. Once the product is shipped, sign-in returns. */}
         <nav className="flex items-center gap-2 text-sm">
-          <Link
-            href="/signup"
-            className="hidden sm:inline-flex items-center px-3 py-2 text-muted hover:text-ink transition-colors"
-          >
-            Sign in
-          </Link>
           <a
             href="#waitlist"
             className="inline-flex h-10 items-center rounded-full bg-ink px-4 text-sm font-semibold text-bg transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
