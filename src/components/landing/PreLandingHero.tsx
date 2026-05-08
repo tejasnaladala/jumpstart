@@ -106,38 +106,46 @@ export function PreLandingHero(): React.JSX.Element {
         }}
       />
 
-      {/* L3.5: Orange ascending sun — bright radial glow centered at
-          bottom-center, reads as the YC SS reference's signature
-          flame/sun shape. Layered with vertical streak emanations
-          (repeating-linear-gradient masked to the sun's vertical band)
-          so light beams shoot up from the horizon. Pure CSS, no
-          shader cost. */}
+      {/* L3.5: Orange ascending sun — boosted size + brighter streaks
+          per founder ask ('orange lights too thin too small'). Three
+          stacked layers:
+            1. Wide sun core glow — large radial, bright orange center
+            2. Outer ambient halo — pulls warmth out to the edges
+            3. Vertical streak beams — thicker (3px every 12px gap)
+               and darker so they read clearly as light shafts. */}
       <div
         aria-hidden
         className={
-          "absolute inset-x-0 bottom-0 h-[55%] pointer-events-none transition-opacity duration-1000 " +
+          "absolute inset-x-0 bottom-0 h-[70%] pointer-events-none transition-opacity duration-1000 " +
           (mounted ? "opacity-100" : "opacity-0")
         }
       >
-        {/* Vertical streaks — masked so they only show in the sun's
-            vertical band and fade out before reaching the top */}
+        {/* Outer ambient halo — broadest, softest layer */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "repeating-linear-gradient(to right, transparent 0px, transparent 6px, rgba(232,90,27,0.18) 6px, rgba(232,90,27,0.18) 7px)",
-            maskImage:
-              "radial-gradient(ellipse 50% 90% at 60% 100%, black 0%, black 30%, transparent 70%)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse 50% 90% at 60% 100%, black 0%, black 30%, transparent 70%)",
+              "radial-gradient(ellipse 80% 100% at 55% 110%, rgba(232,90,27,0.30) 0%, rgba(232,90,27,0.10) 40%, transparent 75%)",
           }}
         />
-        {/* Sun glow — bright orange core fading to transparent */}
+        {/* Vertical streak beams — thicker (3px ever 12px), darker */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 45% 80% at 60% 105%, rgba(232,90,27,0.55) 0%, rgba(232,90,27,0.18) 35%, transparent 65%)",
+              "repeating-linear-gradient(to right, transparent 0px, transparent 12px, rgba(204,78,21,0.32) 12px, rgba(204,78,21,0.32) 14px)",
+            maskImage:
+              "radial-gradient(ellipse 60% 100% at 55% 100%, black 0%, black 35%, transparent 75%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 60% 100% at 55% 100%, black 0%, black 35%, transparent 75%)",
+          }}
+        />
+        {/* Bright sun core — concentrated bright glow at the horizon */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 50% 75% at 55% 105%, rgba(232,90,27,0.75) 0%, rgba(232,90,27,0.30) 30%, rgba(232,90,27,0.08) 55%, transparent 75%)",
           }}
         />
       </div>

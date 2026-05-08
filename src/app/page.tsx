@@ -136,11 +136,10 @@ export default function LandingPage(): React.JSX.Element {
       </section>
 
       {/* Tagline pull-quote strip — sits between the hero (graph) and
-          §01 Why this exists, breaks the cream surface with one
-          editorial line that hooks the visitor before they hit the
-          O(n²) thesis. Stays loud (font-display, no card) — feels
-          like a pull-quote, not a section. */}
-      <section className="container-wide py-10 lg:py-14">
+          §01 Why this exists. Padding tightened (py-10/14 -> py-4/6)
+          per founder ask: 'too much space above and below'. Now hugs
+          the surrounding content. */}
+      <section className="container-wide py-4 lg:py-6">
         <BlurFade>
           <p className="font-display italic text-3xl sm:text-4xl lg:text-5xl text-ink leading-tight max-w-4xl">
             Builder finds builder.{" "}
