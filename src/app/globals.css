@@ -196,4 +196,32 @@
   .double-bezel-inner {
     border-radius: calc(2rem - 0.375rem);
   }
+
+  /* Founder-graph SVG: edges have a slow draw-in dash animation that
+     gives the network a "matchmaker scanning" feel. Each edge picks up
+     the animation via `.graph-pulse .graph-edge` ancestry; staggered
+     delays inline via style="animationDelay:Xs". prefers-reduced-motion
+     collapses these per the global rule above. */
+  @keyframes graphDash {
+    0% { stroke-dashoffset: 80; opacity: 0; }
+    25% { opacity: 1; }
+    100% { stroke-dashoffset: 0; opacity: 1; }
+  }
+  @keyframes graphShimmer {
+    0%, 100% { stroke-dashoffset: 0; }
+    50% { stroke-dashoffset: -20; }
+  }
+  .graph-pulse .graph-edge {
+    animation: graphDash 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+      graphShimmer 6s linear 1.6s infinite;
+  }
+
+  /* Holo-stamp: slow shimmer for "verified" trust marks. Subtle. */
+  @keyframes holoShimmer {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
+  }
+  .holo-stamp {
+    animation: holoShimmer 3.2s ease-in-out infinite;
+  }
 }
