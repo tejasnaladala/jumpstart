@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import {
   countdownTo,
   formatDropLabel,
-  nextDropAfter,
+  firstOrNextDrop,
+  FIRST_DROP_AT,
 } from "@/lib/drop/schedule";
 
 // Live countdown to the next Mon/Wed/Fri 9pm PT drop, rendered as a
@@ -26,7 +27,12 @@ export function NextDropCountdown({
   tone = "light",
   className,
 }: Props): React.JSX.Element {
-  const target = nextDropAfter(new Date());
+  const target = firstOrNextDrop(new Date());
+  const isFirstDrop = target.getTime() === FIRST_DROP_AT.getTime();
+  const eyebrow = isFirstDrop ? "First drop" : "Next drop";
+  const cadenceCopy = isFirstDrop
+    ? "Cohort opens with the first drop. Mon/Wed/Fri at 9 PM PT after."
+    : "Mon, Wed, Fri at 9 PM PT. One curated founder per drop.";
   const [c, setC] = useState(() => countdownTo(target));
 
   useEffect(() => {
@@ -56,7 +62,7 @@ export function NextDropCountdown({
           "ed-serial " + (isDark ? "text-accent" : "text-accent-text")
         }
       >
-        Next drop
+        {eyebrow}
       </p>
       <p
         className={
@@ -78,9 +84,7 @@ export function NextDropCountdown({
         <Sep tone={tone} />
         <Cell n={c.seconds} label="s" tone={tone} />
       </div>
-      <p className={"text-xs " + eyebrowTone + " mt-1"}>
-        Mon, Wed, Fri at 9 PM PT. One curated founder per drop.
-      </p>
+      <p className={"text-xs " + eyebrowTone + " mt-1"}>{cadenceCopy}</p>
     </div>
   );
 }

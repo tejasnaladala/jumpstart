@@ -123,8 +123,9 @@ export function CodeShimmer({
           prev.length >= 24 ? [...prev.slice(1), spark] : [...prev, spark]
         );
       }
-      // Drop sparks older than 1.6s.
-      setSparks((prev) => prev.filter((s) => now - s.born < 1600));
+      // Drop sparks older than 2.6s (was 1.6s — longer fade reads as
+      // smoother ambient text instead of jittery flashes).
+      setSparks((prev) => prev.filter((s) => now - s.born < 2600));
       rafRef.current = requestAnimationFrame(tick);
     };
     rafRef.current = requestAnimationFrame(tick);
@@ -159,7 +160,7 @@ export function CodeShimmer({
               top: s.y,
               transform: `translate(-50%, -50%) translate(${s.dx}px, ${s.dy}px) rotate(${s.rot}deg)`,
               opacity: 0,
-              animation: `codeShimmerFade 1.6s ease-out forwards`,
+              animation: `codeShimmerFade 2.6s cubic-bezier(0.4, 0, 0.2, 1) forwards`,
               ["--peak-opacity" as string]: String(peakOpacity),
             }}
           >
@@ -172,18 +173,19 @@ export function CodeShimmer({
         @keyframes codeShimmerFade {
           0% {
             opacity: 0;
-            filter: blur(2px);
+            filter: blur(3px);
           }
-          15% {
+          22% {
             opacity: var(--peak-opacity);
             filter: blur(0);
           }
-          75% {
+          70% {
             opacity: var(--peak-opacity);
+            filter: blur(0);
           }
           100% {
             opacity: 0;
-            filter: blur(2px);
+            filter: blur(3px);
           }
         }
       `}</style>
