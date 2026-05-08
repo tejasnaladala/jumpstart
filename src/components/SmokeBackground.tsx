@@ -2,7 +2,7 @@
 import { useEffect, useRef } from "react";
 
 // Fragment shader smoke background. Adapted from a 21st.dev recipe but
-// retuned for our palette: highlight color is our YC orange (#FF6600 default)
+// retuned for our palette: highlight color is our YC orange (#E85A1B default)
 // over the espresso surface, with the noise field tinted warm.
 //
 // Tuning vs the source:
@@ -54,7 +54,7 @@ const vertexShaderSrc = [
 ].join("\n");
 
 type Props = {
-  // Highlight color in hex. Default: our YC accent #FF6600.
+  // Highlight color in hex. Default: our YC accent #E85A1B.
   color?: string;
   // 0..1, how strongly the highlight color shows. Default 0.6 so the
   // smoke is atmospheric, not loud.
@@ -73,7 +73,7 @@ function hexToRgb(hex: string): [number, number, number] {
 }
 
 export function SmokeBackground({
-  color = "#FF6600",
+  color = "#E85A1B",
   intensity = 0.6,
   className,
 }: Props) {

@@ -34,7 +34,7 @@ type Props = {
 };
 
 export function DitherWarp({
-  colorFront = "#FF6600",
+  colorFront = "#E85A1B",
   colorBack = "#00000000",
   speed = 0.25,
   className,

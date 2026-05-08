@@ -74,18 +74,19 @@ export default function LandingPage(): React.JSX.Element {
             </div>
           </BlurFade>
 
-          {/* Headline above the graph */}
+          {/* Power tagline — short, punchy, owns the room. The graph
+              IS the hero (the visual below); the H1 is the punchline,
+              not 'A founder graph for...'. */}
           <BlurFade>
             <h1 className="font-display text-[44px] leading-[0.94] tracking-[-0.018em] text-ink sm:text-6xl lg:text-7xl xl:text-[88px] max-w-5xl">
-              A founder graph for{" "}
-              <span className="italic text-accent">YC Startup School.</span>
+              Six thousand builders.{" "}
+              <span className="italic text-accent">One graph.</span>
             </h1>
           </BlurFade>
           <BlurFade delay={0.06}>
             <p className="mt-5 max-w-2xl text-lg lg:text-xl text-muted leading-relaxed">
               Knowing people through people, and people&apos;s people.
-              6,000 builders, woven into one cohort. Hand-curated
-              introductions, three times a week.
+              Hand-curated introductions, three times a week.
             </p>
           </BlurFade>
 
@@ -134,8 +135,19 @@ export default function LandingPage(): React.JSX.Element {
         </div>
       </section>
 
-      {/* Marquee strip removed (founder asked to drop). The graph
-          and the headline already carry the cohort tagline. */}
+      {/* Tagline pull-quote strip — sits between the hero (graph) and
+          §01 Why this exists, breaks the cream surface with one
+          editorial line that hooks the visitor before they hit the
+          O(n²) thesis. Stays loud (font-display, no card) — feels
+          like a pull-quote, not a section. */}
+      <section className="container-wide py-10 lg:py-14">
+        <BlurFade>
+          <p className="font-display italic text-3xl sm:text-4xl lg:text-5xl text-ink leading-tight max-w-4xl">
+            Builder finds builder.{" "}
+            <span className="text-accent">Three times a week.</span>
+          </p>
+        </BlurFade>
+      </section>
 
       {/* WHY THIS EXISTS — heavy section with accent masthead and
           boosted H2 (one tier bigger than the other H2s for thesis
@@ -168,10 +180,15 @@ export default function LandingPage(): React.JSX.Element {
                 to a builder a friend of a friend already vouches for.
               </p>
             </BlurFade>
+            {/* Highlighted callout — drops the 'not another networking
+                app' negation framing the founder asked to remove.
+                Just the matching-layer line, given a left-bordered
+                accent treatment so it stands out from the body prose
+                above. */}
             <BlurFade delay={0.18}>
-              <p className="mt-5 text-lg text-ink leading-relaxed max-w-prose font-display italic">
-                Not another networking app. A matching layer for serious
-                YC builders.
+              <p className="mt-7 border-l-2 border-accent pl-5 py-1 font-display italic text-2xl sm:text-3xl text-ink leading-snug max-w-prose">
+                A matching layer for serious{" "}
+                <span className="text-accent">YC builders.</span>
               </p>
             </BlurFade>
           </div>
@@ -185,8 +202,8 @@ export default function LandingPage(): React.JSX.Element {
               <p className="ed-serial text-accent-text">By the numbers</p>
               <ul className="space-y-4">
                 <NumRow lhs="6,000" rhs="hand-picked attendees" />
-                <NumRow lhs="≈ 18M" rhs="possible 1:1 pairs" />
-                <NumRow lhs="≈ 30" rhs="you’ll actually meet" />
+                <NumRow lhs="18M" rhs="possible 1:1 pairs" />
+                <NumRow lhs="30" rhs="you’ll actually meet" />
                 <NumRow
                   lhs="1"
                   rhs="curated introduction per drop"
@@ -202,11 +219,11 @@ export default function LandingPage(): React.JSX.Element {
           The headline + globe section was meaningless given the graph
           itself already shows the same thesis. The graph IS the demo. */}
 
-      {/* FINAL CTA — espresso block. Top padding tightened (was
-          section-pad-tight = py-12/14/16 stacking with Why's py-28
-          bottom = ~176px gap). Now pt-2/pt-4/pt-6 + same py-bottom
-          for breathing only beneath the block. */}
-      <section className="container-wide pt-2 sm:pt-4 lg:pt-6 pb-12 sm:pb-14 lg:pb-16">
+      {/* FINAL CTA — espresso block. Top padding stripped to 0 so the
+          panel sits flush below §01 (was 16/24/48px gap; founder asked
+          'bring this whole panel a few cm above'). Pulls the espresso
+          block tight to the bottom of the Why section. */}
+      <section className="container-wide pt-0 pb-12 sm:pb-14 lg:pb-16 -mt-6 sm:-mt-10 lg:-mt-14">
         <BlurFade>
           <div className="bg-espresso text-bg rounded-2xl px-6 py-12 sm:px-12 sm:py-14 lg:px-16 lg:py-20 relative overflow-hidden">
             {/* Dithering shader as the ambient backdrop, blended subtly

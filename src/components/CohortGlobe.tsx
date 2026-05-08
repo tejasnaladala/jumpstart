@@ -29,7 +29,7 @@ const COLORS = {
   ink: "#16140F",
   muted: "#463325",
   border: "#E8E3CC",
-  accent: "#FF6600",
+  accent: "#E85A1B",
   accentGlow: "rgba(255, 102, 0, 0.55)",
   accentFaint: "rgba(255, 102, 0, 0.32)",
   accentLand: "rgba(255, 102, 0, 0.85)",

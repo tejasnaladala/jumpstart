@@ -61,7 +61,7 @@ const hexToVec3 = (hex: string): [number, number, number] => {
 
 export function RippleShader({
   bgColor = "#F4F1DB",
-  accentColor = "#FF6600",
+  accentColor = "#E85A1B",
   className,
   paused = false,
 }: Props): React.JSX.Element {

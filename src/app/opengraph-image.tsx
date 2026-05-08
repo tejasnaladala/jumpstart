@@ -23,7 +23,7 @@ export default function OG() {
           <span
             style={{
               fontSize: 56,
-              color: "#FF6600",
+              color: "#E85A1B",
               fontWeight: 700,
               fontStyle: "italic",
               fontFamily: "Georgia, serif",
@@ -47,7 +47,7 @@ export default function OG() {
           <p
             style={{
               fontSize: 16,
-              color: "#FF6600",
+              color: "#E85A1B",
               fontWeight: 700,
               textTransform: "uppercase",
               letterSpacing: 1.2,
@@ -68,7 +68,7 @@ export default function OG() {
               letterSpacing: -0.02,
             }}
           >
-            One founder match <em style={{ color: "#FF6600" }}>every other day</em>.
+            One founder match <em style={{ color: "#E85A1B" }}>every other day</em>.
           </h1>
           <p
             style={{
@@ -93,7 +93,7 @@ export default function OG() {
           <span style={{ fontSize: 18, color: "#463325" }}>
             Verified attendees only. Not affiliated with Y Combinator.
           </span>
-          <span style={{ fontSize: 18, fontWeight: 600, color: "#FF6600" }}>
+          <span style={{ fontSize: 18, fontWeight: 600, color: "#E85A1B" }}>
             jumpstart →
           </span>
         </div>

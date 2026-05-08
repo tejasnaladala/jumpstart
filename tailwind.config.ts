@@ -13,17 +13,17 @@ export default {
         ink: "#16140F", // warm near-black, primary text
         muted: "#463325", // warm dark brown, secondary text
         border: "#E8E3CC", // tinted divider derived from the cream
-        accent: "#FF6600", // the iconic YC orange (LARGE display text + decorative only)
-        "accent-soft": "#FFF0E9", // pale peach for accent backgrounds
-        "accent-edge": "#FB651E", // hotter orange for hovers and edges
-        // accent-text: WCAG AA (4.5:1+) on cream bg. Use this for body-size
-        // text on cream backgrounds (ed-serial labels, building/needs caps,
-        // small mono chips). Pure #FF6600 fails contrast at 2.6:1 — flagged
-        // by impeccable's detect CLI on the live site.
-        "accent-text": "#A33800",
-        // accent-wash: 10% orange tint for card backgrounds. Adds editorial
-        // depth without clashing with cream surface.
-        "accent-wash": "#FFE8D9",
+        // Orange palette toned down 1-2 shades from the strict YC #FF6600
+        // (founder felt the neon was too hot vs the YC SS site's actual
+        // rendered orange, which sits a touch darker / more amber).
+        accent: "#E85A1B", // toned from #FF6600 — still YC-coded, less neon
+        "accent-soft": "#FCEAE0", // pale peach (slightly cooler now)
+        "accent-edge": "#CC4E15", // hover state — deeper, warmer
+        // accent-text: still passes WCAG AA on cream. Pulled deeper to
+        // match the new accent's reduced saturation.
+        "accent-text": "#8C2F00",
+        // accent-wash: 10% orange tint for card backgrounds.
+        "accent-wash": "#FBE0CD",
         success: "#48B584",
         error: "#E4544B",
 
