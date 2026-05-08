@@ -188,17 +188,25 @@ export function PreLandingHero(): React.JSX.Element {
       </div>
 
       {/* L5: Foreground content. Three rows: top spacer, middle
-          headline cluster, bottom scroll prompt. */}
+          headline cluster, bottom scroll prompt.
+          Tightening pass — founder said the arrow was below the fold
+          on standard viewports. Pulled JUMPSTART up by:
+            (a) shrinking top spacer 96/112 -> 72/80 (just clears the
+                72px GlassNav, no extra breathing room)
+            (b) middle row justify-center -> justify-start (don't
+                center vertically; sit at top)
+            (c) middle py 10/12 -> 2/4
+            (d) bottom pb 72/88 -> 40/56
+          With min-h-svh on the section, this puts the arrow back
+          inside the viewport on a typical 800-900px tall window. */}
       <div className="relative z-10 flex min-h-svh flex-col items-stretch px-5 sm:px-8 text-ink">
         {/* TOP — spacer to clear the 72px GlassNav. */}
-        <div className="h-[96px] sm:h-[112px]" aria-hidden />
+        <div className="h-[72px] sm:h-[80px]" aria-hidden />
 
-        {/* MIDDLE — JUMPSTART wordmark + tagline + sub. All three lines
-            left-align together (tagline + sub used to be ml-8/16/24
-            offset right of the wordmark; founder asked to align with
-            the J of Jumpstart). JUMPSTART text-ink -> text-mocha for
-            the warm dark brown look. */}
-        <div className="flex-1 w-full max-w-[1280px] mx-auto flex flex-col justify-center py-10 sm:py-12">
+        {/* MIDDLE — JUMPSTART wordmark + tagline + sub. justify-start
+            so content sits high in the row instead of being centered
+            in the leftover flex-1 space. */}
+        <div className="flex-1 w-full max-w-[1280px] mx-auto flex flex-col justify-start py-2 sm:py-4">
           <h1
             className="font-mono uppercase text-mocha leading-[0.86] tracking-[-0.02em] font-bold"
             style={{ fontSize: "clamp(72px, 14vw, 220px)" }}
@@ -206,11 +214,12 @@ export function PreLandingHero(): React.JSX.Element {
             JUMPSTART
           </h1>
 
-          {/* Tagline — now left-aligned with the J of Jumpstart (no
-              ml offset). Hard <br /> before 'builders' so the morph
-              word can cycle freely without pushing 'builders' right. */}
+          {/* Tagline — left-aligned with the J of Jumpstart. Hard
+              <br /> before 'builders' so the morph word can cycle
+              freely without pushing 'builders' right. mt-8/10 -> 5/7
+              as part of the vertical compression pass. */}
           <p
-            className="mt-8 sm:mt-10 max-w-3xl font-display italic text-ink/85 leading-tight"
+            className="mt-5 sm:mt-7 max-w-3xl font-display italic text-ink/85 leading-tight"
             style={{ fontSize: "clamp(22px, 3.0vw, 40px)" }}
           >
             YC Startup School puts the most{" "}
@@ -224,9 +233,10 @@ export function PreLandingHero(): React.JSX.Element {
             builders in one room for two days.
           </p>
 
-          {/* Sub — also left-aligned with the wordmark now. */}
+          {/* Sub — left-aligned with the wordmark. mt 5/6 -> 3/4
+              as part of the vertical compression. */}
           <p
-            className="mt-5 sm:mt-6 max-w-2xl font-display italic text-muted leading-snug"
+            className="mt-3 sm:mt-4 max-w-2xl font-display italic text-muted leading-snug"
             style={{ fontSize: "clamp(16px, 1.8vw, 22px)" }}
           >
             Jumpstart helps them find each other.
@@ -234,9 +244,10 @@ export function PreLandingHero(): React.JSX.Element {
         </div>
 
         {/* BOTTOM — Scroll prompt. 'Press ↓ or scroll to enter' text
-            removed (founder ask). Just a bigger chevron arrow with a
-            circle ring that animates in on hover. */}
-        <div className="pb-[72px] sm:pb-[88px] w-full max-w-[1280px] mx-auto flex items-center justify-center">
+            removed (founder ask). Bigger chevron arrow with a circle
+            ring that animates in on hover. pb 72/88 -> 40/56 to bring
+            the arrow above the fold on standard viewports. */}
+        <div className="pb-[40px] sm:pb-[56px] w-full max-w-[1280px] mx-auto flex items-center justify-center">
           <button
             type="button"
             onClick={scrollToBody}
