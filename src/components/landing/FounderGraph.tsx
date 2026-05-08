@@ -249,7 +249,7 @@ export function FounderGraph(): React.JSX.Element {
           </p>
         ) : (
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted/70">
-            hover a node · 9 of 2,000 in the YC SS 2026 graph
+            hover a node · 9 of 6,000 in the YC SS 2026 graph
           </p>
         )}
       </div>
