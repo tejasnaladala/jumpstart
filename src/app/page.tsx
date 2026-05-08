@@ -7,9 +7,6 @@ import { Marquee } from "@/components/Marquee";
 import { CohortGlobe } from "@/components/CohortGlobe";
 import { CursorGlow } from "@/components/landing/CursorGlow";
 import { FounderGraphHero } from "@/components/landing/FounderGraphHero";
-import { TerminalLine } from "@/components/landing/TerminalLine";
-import { ComprehensiveMatchCard } from "@/components/landing/ComprehensiveMatchCard";
-import { MOCK_MATCHES } from "@/components/landing/mockMatches";
 import { PreLandingHero } from "@/components/landing/PreLandingHero";
 import { RippleShader } from "@/components/ui/RippleShader";
 import { DitherWarp } from "@/components/ui/DitherWarp";
@@ -221,7 +218,9 @@ export default function LandingPage(): React.JSX.Element {
         </div>
       </section>
 
-      {/* PEOPLE'S PEOPLE — globe + collage placeholders */}
+      {/* PEOPLE'S PEOPLE — globe-centered, single column. Founder asked
+          to strip the photo collage; the rotating globe now carries the
+          section on its own. Headline + sub above, globe below, centered. */}
       <section className="container-wide section-pad relative">
         <BlurFade>
           <div className="ed-masthead-accent">
@@ -231,195 +230,35 @@ export default function LandingPage(): React.JSX.Element {
             </span>
           </div>
         </BlurFade>
-        <div className="grid grid-cols-1 lg:grid-cols-12 grid-gap-std items-start">
-          <div className="lg:col-span-6">
-            <BlurFade>
-              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-ink leading-[1.04]">
-                Knowing people{" "}
-                <span className="italic text-accent">through people,</span>{" "}
-                and people&apos;s people.
-              </h2>
-            </BlurFade>
-            <BlurFade delay={0.08}>
-              <p className="mt-6 text-lg text-muted leading-relaxed max-w-prose">
-                Every match comes with a reason. Every accepted intro adds
-                an edge. The graph compounds: the people you meet bring
-                people you&apos;d never find on your own.
-              </p>
-            </BlurFade>
-            <BlurFade delay={0.14}>
-              <div className="mt-10 flex items-center justify-center lg:justify-start">
-                <div className="w-full max-w-[460px]">
-                  <CohortGlobe size={460} />
-                </div>
-              </div>
-            </BlurFade>
-          </div>
-
-          {/* Collage placeholder grid: 2-col on mobile (was 3, audit
-              flagged tiny cells), 3-col on lg. */}
-          <div className="lg:col-span-6">
-            <BlurFade delay={0.1}>
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
-                <CollagePlaceholder span="row-span-2" label="founder dinners" />
-                <CollagePlaceholder label="demo night" />
-                <CollagePlaceholder label="off-site" />
-                <CollagePlaceholder span="col-span-2" label="cohort photo" />
-                <CollagePlaceholder label="hack" />
-                <CollagePlaceholder label="intros" />
-                <CollagePlaceholder span="col-span-2" label="meetings" />
-              </div>
-            </BlurFade>
-            <BlurFade delay={0.18}>
-              <p className="mt-4 ed-serial text-muted">
-                Photos drop in as the cohort builds.
-              </p>
-            </BlurFade>
-          </div>
-        </div>
-      </section>
-
-      {/* HOW IT WORKS. Espresso section, terminal block + dark steps. */}
-      <section
-        id="how"
-        className="bg-espresso text-bg section-pad-tight relative overflow-hidden"
-      >
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-[0.06] grain"
-          style={{ mixBlendMode: "screen" }}
-        />
-        <div className="container-wide relative">
+        <div className="max-w-3xl">
           <BlurFade>
-            <div className="ed-rule mb-8 lg:mb-12 flex items-baseline justify-between gap-4 pt-3 border-bg/20 before:!bg-accent">
-              <span className="ed-serial text-bg/70">§ 03 / How it works</span>
-              <span className="ed-serial hidden sm:inline text-bg/70">
-                Onboarding builds the card the matchmaker reads forever
-              </span>
-            </div>
-          </BlurFade>
-          <BlurFade>
-            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-bg leading-[1.04] max-w-4xl">
-              Tell the matchmaker who you are.{" "}
-              <span className="italic text-accent">It does the rest.</span>
+            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-ink leading-[1.04]">
+              Knowing people{" "}
+              <span className="italic text-accent">through people,</span> and
+              people&apos;s people.
             </h2>
           </BlurFade>
-
-          <div className="mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-12 grid-gap-std items-stretch">
-            <div className="lg:col-span-7 flex">
-              <div className="rounded-lg border border-bg/15 bg-espresso-deep/60 p-5 sm:p-7 font-mono text-sm w-full text-bg">
-                <div className="flex items-center gap-2 mb-5 text-bg/40 text-[10px] uppercase tracking-[0.2em]">
-                  <span className="h-2 w-2 rounded-full bg-bg/30" />
-                  <span className="h-2 w-2 rounded-full bg-bg/30" />
-                  <span className="h-2 w-2 rounded-full bg-bg/30" />
-                  <span className="ml-2">jumpstart · matchmaker</span>
-                </div>
-                <div className="space-y-3 text-bg">
-                  <TerminalLine
-                    text="40 questions. preference scales, picks, free text."
-                    delaySec={0}
-                  />
-                  <TerminalLine
-                    text="what you ship. how you work. what you read."
-                    delaySec={2.6}
-                  />
-                  <TerminalLine
-                    text="the weird interest most founders don't have."
-                    delaySec={4.7}
-                  />
-                  <TerminalLine
-                    text="indexing your card against 6,000 in the cohort"
-                    delaySec={6.7}
-                  />
-                  <TerminalLine
-                    text="one match arrives mon · wed · fri at 9 pm pt"
-                    delaySec={9.0}
-                  />
-                  <TerminalLine
-                    text="both yes? calendar opens. both no? next drop, fresh pick."
-                    delaySec={11.4}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-5 space-y-6 lg:space-y-7">
-              {STEPS.map((s, i) => (
-                <BlurFade key={s.title} delay={0.06 * i}>
-                  <DarkStep n={i + 1} title={s.title} body={s.body} />
-                </BlurFade>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SOCIAL PROOF — comprehensive match cards. Featured Maya gets a
-          DitherWarp backdrop; Devansh stays cream. */}
-      <section className="container-wide section-pad">
-        <BlurFade>
-          <div className="ed-masthead-accent">
-            <span className="ed-serial">§ 04 / What a match looks like</span>
-            <span className="ed-serial hidden sm:inline">
-              Two cards from the cohort, comprehensive
-            </span>
-          </div>
-        </BlurFade>
-        <div className="grid grid-cols-1 lg:grid-cols-12 grid-gap-std items-start mb-12">
-          <div className="lg:col-span-7">
-            <BlurFade>
-              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.04]">
-                Real builders.{" "}
-                <span className="italic text-accent">
-                  Comprehensive cards.
-                </span>
-              </h2>
-            </BlurFade>
-            <BlurFade delay={0.08}>
-              <p className="mt-6 text-lg text-muted leading-relaxed max-w-prose">
-                Not a checklist. The matchmaker reads what you&apos;re
-                shipping, what you&apos;d offer back, what you read, the
-                weird interest most founders don&apos;t have, and the line
-                a friend would forward. Two examples, full size.
-              </p>
-            </BlurFade>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-          <BlurFade delay={0.06}>
-            {/* Featured card with subtle dither warp behind it. */}
-            <div className="relative rounded-md overflow-hidden h-full">
-              <div className="absolute inset-0 opacity-[0.18] mix-blend-screen pointer-events-none">
-                <DitherWarp
-                  colorFront="#FF6600"
-                  colorBack="#00000000"
-                  speed={0.22}
-                  type="4x4"
-                  shape="warp"
-                />
-              </div>
-              <ComprehensiveMatchCard
-                match={MOCK_MATCHES[0]!}
-                className="h-full relative z-10"
-              />
-            </div>
-          </BlurFade>
-          <BlurFade delay={0.14}>
-            <ComprehensiveMatchCard
-              match={MOCK_MATCHES[1]!}
-              className="h-full"
-            />
+          <BlurFade delay={0.08}>
+            <p className="mt-6 text-lg text-muted leading-relaxed max-w-prose">
+              Every match comes with a reason. Every accepted intro adds an
+              edge. The graph compounds: the people you meet bring people you
+              would never find on your own.
+            </p>
           </BlurFade>
         </div>
-
-        <BlurFade delay={0.3}>
-          <p className="mt-10 ed-serial text-muted text-center sm:text-left">
-            Illustrative · the actual cohort sheet is private to verified
-            attendees.
-          </p>
+        <BlurFade delay={0.14}>
+          <div className="mt-10 lg:mt-14 flex items-center justify-center">
+            <div className="w-full max-w-[560px]">
+              <CohortGlobe size={560} />
+            </div>
+          </div>
         </BlurFade>
       </section>
+
+      {/* HOW IT WORKS section removed (founder asked to strip).
+          Comprehensive cards section removed (founder asked to strip).
+          The waitlist + final CTA are the only remaining funnel surfaces;
+          card examples drop on social as snapshots instead. */}
 
       {/* FINAL CTA — espresso block with DitherWarp backdrop overlay. */}
       <section className="container-wide section-pad-tight">
@@ -460,9 +299,13 @@ export default function LandingPage(): React.JSX.Element {
                   </span>
                 </div>
                 <h2 className="font-display text-5xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-[-0.012em] text-bg max-w-2xl">
-                  For founders who ship before they{" "}
-                  <span className="italic text-accent">announce.</span>
+                  Skip the{" "}
+                  <span className="italic text-accent">seating chart.</span>
                 </h2>
+                <p className="mt-5 text-bg/75 leading-relaxed max-w-prose">
+                  Six thousand builders. One graph. One match per drop, three
+                  times a week.
+                </p>
               </div>
               <div className="lg:col-span-5">
                 <InlineWaitlist
@@ -487,47 +330,6 @@ export default function LandingPage(): React.JSX.Element {
         </div>
       </footer>
     </main>
-  );
-}
-
-const STEPS: { title: string; body: string }[] = [
-  {
-    title: "Build your card.",
-    body: "Forty short prompts. Preference scales, multi-picks, a few free-text questions about what you ship and how you read.",
-  },
-  {
-    title: "We index the cohort.",
-    body: "6,000 cards, embedded against yours. Stack, stage, ask, what you offer back, and the weird interest most founders don't have.",
-  },
-  {
-    title: "One match per drop.",
-    body: "Mon · Wed · Fri at 9 PM PT. One name. One card. The reason we picked them.",
-  },
-  {
-    title: "Both yes opens calendar.",
-    body: "Both no? Next drop, fresh pick. Nothing in between. No swipe pile.",
-  },
-];
-
-function DarkStep({
-  n,
-  title,
-  body,
-}: {
-  n: number;
-  title: string;
-  body: string;
-}): React.JSX.Element {
-  return (
-    <div className="border-t border-bg/20 pt-5">
-      <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent block">
-        {String(n).padStart(2, "0")}
-      </span>
-      <h3 className="font-display italic text-2xl text-bg mt-3 leading-tight">
-        {title}
-      </h3>
-      <p className="text-sm text-bg/70 mt-3 leading-relaxed">{body}</p>
-    </div>
   );
 }
 
@@ -565,37 +367,6 @@ function NumRow({
       </span>
       <span className="text-sm text-muted leading-snug">{rhs}</span>
     </li>
-  );
-}
-
-function CollagePlaceholder({
-  label,
-  span,
-}: {
-  label: string;
-  span?: string;
-}): React.JSX.Element {
-  return (
-    <div
-      className={
-        "relative aspect-[4/3] overflow-hidden border border-border-strong/60 bg-accent-wash/40 group transition-colors duration-300 hover:border-accent-edge/40 hover:bg-accent-wash " +
-        (span || "")
-      }
-    >
-      <div
-        aria-hidden
-        className="absolute inset-0 opacity-[0.05] grain pointer-events-none"
-      />
-      <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-accent-edge/40" />
-      <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-accent-edge/40" />
-      <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-accent-edge/40" />
-      <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-accent-edge/40" />
-      <div className="absolute inset-0 flex items-end p-3">
-        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
-          {label}
-        </span>
-      </div>
-    </div>
   );
 }
 
