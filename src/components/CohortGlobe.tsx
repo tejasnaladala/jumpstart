@@ -24,7 +24,7 @@ const WAYPOINTS: Array<{ name: string; lat: number; lng: number }> = [
 ];
 
 const COLORS = {
-  cream: "#F4F1DB",
+  cream: "#F8F5EA",
   surface: "#FDFDF8",
   ink: "#16140F",
   muted: "#463325",

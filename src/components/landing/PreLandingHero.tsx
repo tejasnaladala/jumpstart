@@ -74,7 +74,7 @@ export function PreLandingHero(): React.JSX.Element {
           (mounted ? "opacity-55" : "opacity-0")
         }
       >
-        <SmokeBackground smokeColor="#E85A1B" bgColor="#F4F1DB" />
+        <SmokeBackground smokeColor="#E85A1B" bgColor="#F8F5EA" />
       </div>
 
       {/* L2: Focal smoke behind JUMPSTART — opacity dropped 90% -> 35%
@@ -92,7 +92,7 @@ export function PreLandingHero(): React.JSX.Element {
             "radial-gradient(ellipse at center, black 0%, black 45%, transparent 80%)",
         }}
       >
-        <SmokeBackground smokeColor="#CC4E15" bgColor="#F4F1DB" />
+        <SmokeBackground smokeColor="#CC4E15" bgColor="#F8F5EA" />
       </div>
 
       {/* L3: Bottom orange wash — dropped 0.18 -> 0.08 so the bottom
@@ -156,29 +156,21 @@ export function PreLandingHero(): React.JSX.Element {
           cell. Mobile: skipped entirely (no hover cursor). */}
       <ScrollingCode tone="warm" />
 
-      {/* L4.5: SF.CA location + dates label. Positioned bottom-right
-          of the viewport so it doesn't collide with the JUMPSTART
-          wordmark above (the wordmark is too wide to leave horizontal
-          room for a same-height SF.CA on the right, like the YC SS
-          reference does — JUMPSTART is 9 chars at clamp 220 vs YC's
-          two-line break). Bottom-right placement reads as a "footer
-          mark" of place/time/venue, mirroring how YC SS has SF.CA
-          near the bottom-right of the orange sun. */}
+      {/* L4.5: SF.CA mark, bottom-right. Dates label (JUL 25-26 +
+          CHASE CENTER) removed because the scrolling code grid was
+          colliding with it visually (founder shared a screenshot
+          showing illegible overlap). SF.CA stays as the place mark.
+          Color shifted text-ink -> text-mocha (warm dark brown,
+          softer than near-black). */}
       <div
         aria-hidden
         className="absolute right-5 sm:right-8 lg:right-12 bottom-[140px] sm:bottom-[160px] lg:bottom-[180px] z-[5] text-right pointer-events-none hidden md:block"
       >
         <div
-          className="font-mono uppercase font-bold text-ink leading-[0.86] tracking-[-0.02em]"
+          className="font-mono uppercase font-bold text-mocha leading-[0.86] tracking-[-0.02em]"
           style={{ fontSize: "clamp(48px, 6vw, 96px)" }}
         >
           SF.CA
-        </div>
-        <div className="mt-3 lg:mt-4 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-muted">
-          Jul 25 — 26 · 2026
-        </div>
-        <div className="mt-1 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-muted">
-          Chase Center
         </div>
       </div>
 
@@ -188,22 +180,24 @@ export function PreLandingHero(): React.JSX.Element {
         {/* TOP — spacer to clear the 72px GlassNav. */}
         <div className="h-[96px] sm:h-[112px]" aria-hidden />
 
-        {/* MIDDLE — JUMPSTART wordmark + tagline + sub. */}
+        {/* MIDDLE — JUMPSTART wordmark + tagline + sub. All three lines
+            left-align together (tagline + sub used to be ml-8/16/24
+            offset right of the wordmark; founder asked to align with
+            the J of Jumpstart). JUMPSTART text-ink -> text-mocha for
+            the warm dark brown look. */}
         <div className="flex-1 w-full max-w-[1280px] mx-auto flex flex-col justify-center py-10 sm:py-12">
           <h1
-            className="font-mono uppercase text-ink leading-[0.86] tracking-[-0.02em] font-bold"
+            className="font-mono uppercase text-mocha leading-[0.86] tracking-[-0.02em] font-bold"
             style={{ fontSize: "clamp(72px, 14vw, 220px)" }}
           >
             JUMPSTART
           </h1>
 
-          {/* Tagline. Hard line break BEFORE 'builders' so when the
-              morph word cycles to a shorter token (e.g. 'earnest'),
-              the trailing 'builders in one room for two days.' stays
-              on its own line and doesn't get pushed right by the
-              GooeyText width sizer. */}
+          {/* Tagline — now left-aligned with the J of Jumpstart (no
+              ml offset). Hard <br /> before 'builders' so the morph
+              word can cycle freely without pushing 'builders' right. */}
           <p
-            className="mt-8 sm:mt-10 max-w-3xl font-display italic text-ink/85 leading-tight ml-8 sm:ml-16 lg:ml-24"
+            className="mt-8 sm:mt-10 max-w-3xl font-display italic text-ink/85 leading-tight"
             style={{ fontSize: "clamp(22px, 3.0vw, 40px)" }}
           >
             YC Startup School puts the most{" "}
@@ -217,33 +211,33 @@ export function PreLandingHero(): React.JSX.Element {
             builders in one room for two days.
           </p>
 
-          {/* New sub line — the Jumpstart promise paired against the
-              YC framing above it. Smaller, italic too, but in muted
-              tone so the rotating tagline keeps weight. */}
+          {/* Sub — also left-aligned with the wordmark now. */}
           <p
-            className="mt-5 sm:mt-6 max-w-2xl font-display italic text-muted leading-snug ml-8 sm:ml-16 lg:ml-24"
+            className="mt-5 sm:mt-6 max-w-2xl font-display italic text-muted leading-snug"
             style={{ fontSize: "clamp(16px, 1.8vw, 22px)" }}
           >
             Jumpstart helps them find each other.
           </p>
         </div>
 
-        {/* BOTTOM — Scroll prompt. */}
+        {/* BOTTOM — Scroll prompt. 'Press ↓ or scroll to enter' text
+            removed (founder ask). Just a bigger chevron arrow with a
+            circle ring that animates in on hover. */}
         <div className="pb-[72px] sm:pb-[88px] w-full max-w-[1280px] mx-auto flex items-center justify-center">
           <button
             type="button"
             onClick={scrollToBody}
-            className="group flex flex-col items-center gap-6 text-muted hover:text-ink transition-colors focus-visible:outline-none focus-visible:text-ink"
+            className="scroll-arrow-btn group relative inline-flex items-center justify-center text-muted hover:text-mocha transition-colors focus-visible:outline-none focus-visible:text-mocha"
             aria-label="Scroll to enter the site"
+            style={{ width: 64, height: 64 }}
           >
-            <span className="ed-serial">Press ↓ or scroll to enter</span>
             <svg
-              width="22"
-              height="22"
+              width="36"
+              height="36"
               viewBox="0 0 24 24"
               fill="none"
               aria-hidden
-              className="animate-bounce-slow"
+              className="animate-bounce-slow relative z-10"
             >
               <path
                 d="M12 5v14m0 0l-6-6m6 6l6-6"
@@ -269,9 +263,32 @@ export function PreLandingHero(): React.JSX.Element {
         .animate-bounce-slow {
           animation: bounceSlow 2.2s ease-in-out infinite;
         }
+        /* Scroll-arrow circle reveal on hover. Pseudo-element ring that
+           starts scaled down + invisible, expands to full circle on
+           hover. Border-color follows currentColor so it inherits
+           the muted -> mocha color shift on hover. */
+        .scroll-arrow-btn::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border: 1px solid currentColor;
+          border-radius: 9999px;
+          transform: scale(0.55);
+          opacity: 0;
+          transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+            opacity 220ms ease-out;
+        }
+        .scroll-arrow-btn:hover::before,
+        .scroll-arrow-btn:focus-visible::before {
+          transform: scale(1);
+          opacity: 0.6;
+        }
         @media (prefers-reduced-motion: reduce) {
           .animate-bounce-slow {
             animation: none;
+          }
+          .scroll-arrow-btn::before {
+            transition: none;
           }
         }
       `}</style>

@@ -9,9 +9,10 @@
        inline styles can reference them via var(). Tailwind v3 doesn't
        expose theme tokens as CSS vars by default. Keep these in sync
        with tailwind.config.ts when the palette evolves. */
-    --color-bg: #f4f1db;
+    --color-bg: #f8f5ea;
     --color-surface: #fdfdf8;
     --color-ink: #16140f;
+    --color-mocha: #3a2418;
     --color-muted: #463325;
     --color-border: #e8e3cc;
     /* Toned-down palette to match the rendered YC SS orange (less neon,

@@ -184,11 +184,11 @@ const COLS = 5;
 const ROWS = 4;
 const CELL_COUNT = COLS * ROWS;
 
-// Reveal radius (px) — cursor must be within this distance of a
-// cell center for it to fade in.
-const RADIUS_PX = 280;
+// Reveal radius (px) — tightened 280 -> 180 per founder ask (smaller
+// reveal zone, code closer to cursor only).
+const RADIUS_PX = 180;
 // Falloff zone — cells in this distance band fade smoothly to 0.
-const FALLOFF_PX = 140;
+const FALLOFF_PX = 100;
 
 // Deterministic PRNG so each cell picks a stable code block per mount
 // (not flickering between blocks on every render).
@@ -220,8 +220,10 @@ export function ScrollingCode({
     for (let i = 0; i < CELL_COUNT; i++) {
       const blockIdx = seededIndex(i * 73 + 17, CODE_BLOCKS.length);
       const block = CODE_BLOCKS[blockIdx] ?? CODE_BLOCKS[0]!;
-      // Vary scroll speed per cell so they don't lock-step.
-      const durationSec = 36 + seededIndex(i * 41 + 7, 24); // 36-60s
+      // Faster scroll per founder ask: 36-60s -> 22-40s. Each cell
+      // still picks a different duration so the columns don't lock-
+      // step into a uniform vertical wave.
+      const durationSec = 22 + seededIndex(i * 41 + 7, 18); // 22-40s
       const delaySec = -seededIndex(i * 19 + 3, 30); // -0..-30s offset
       arr.push({ block, durationSec, delaySec });
     }

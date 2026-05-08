@@ -398,7 +398,7 @@ export function FounderGraphHero(): React.JSX.Element {
                   <>
                     <circle
                       r={radius + 10}
-                      fill="#F4F1DB"
+                      fill="#F8F5EA"
                       stroke="#E85A1B"
                       strokeWidth="2"
                     />
@@ -409,7 +409,7 @@ export function FounderGraphHero(): React.JSX.Element {
                       className="font-mono"
                       fontSize="13"
                       fontWeight="700"
-                      fill="#F4F1DB"
+                      fill="#F8F5EA"
                       style={{ letterSpacing: "0.18em" }}
                     >
                       YOU
@@ -434,7 +434,7 @@ export function FounderGraphHero(): React.JSX.Element {
                     />
                     <circle
                       r={radius + 8}
-                      fill="#F4F1DB"
+                      fill="#F8F5EA"
                       stroke="#E85A1B"
                       strokeWidth="2"
                     />
@@ -459,7 +459,7 @@ export function FounderGraphHero(): React.JSX.Element {
                   <>
                     <circle
                       r={radius}
-                      fill="#F4F1DB"
+                      fill="#F8F5EA"
                       stroke="#16140F"
                       strokeOpacity={
                         isHovered ? 1 : onPath ? 0.85 : 0.45
