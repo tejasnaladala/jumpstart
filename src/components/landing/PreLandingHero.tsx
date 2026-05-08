@@ -1,8 +1,22 @@
 "use client";
 import { SmokeBackground } from "@/components/ui/SmokeBackground";
 import { DottedSurface } from "@/components/ui/DottedSurface";
+import { GooeyText } from "@/components/ui/GooeyText";
 import { ScrollingCode } from "@/components/landing/ScrollingCode";
 import { useEffect, useState } from "react";
+
+// Rotating adjectives for the tagline — all YC-coded words PG and
+// the YC essays use to describe high-signal founders. Ordered to
+// pulse: ambitious-positive, sincere-positive, intense-positive,
+// independent-positive. Lengths kept in the 7-10 char range so the
+// inline morph doesn't jump the surrounding sentence width.
+const TAGLINE_WORDS = [
+  "formidable",
+  "earnest",
+  "relentless",
+  "contrarian",
+  "audacious",
+];
 
 // PreLandingHero — full-viewport "front door" before the editorial
 // landing body. Layers, top of stack down:
@@ -122,16 +136,25 @@ export function PreLandingHero(): React.JSX.Element {
           >
             JUMPSTART
           </h1>
-          {/* Tagline nudged right (ml-12 lg:ml-24) so it visually offsets
-              from the left-aligned giant wordmark, reading as a
-              subtitle anchored under JUMPSTART rather than another
-              headline glued to the same column. */}
+          {/* Tagline nudged right (ml-8/16/24) so it visually offsets
+              from the left-aligned JUMPSTART wordmark. The adjective
+              ('formidable') is a GooeyText that morphs through several
+              YC-coded words (formidable / earnest / relentless /
+              contrarian / audacious) every ~2.5s. Inline-flow variant
+              of GooeyText so it sits inside the sentence inheriting
+              font-size, italic, and color from the parent <p>. */}
           <p
             className="mt-8 sm:mt-10 max-w-3xl font-display italic text-ink/85 leading-tight ml-8 sm:ml-16 lg:ml-24"
             style={{ fontSize: "clamp(22px, 3.0vw, 40px)" }}
           >
-            YC Startup School puts the most formidable builders in one room
-            for two days.
+            YC Startup School puts the most{" "}
+            <GooeyText
+              texts={TAGLINE_WORDS}
+              morphTime={1}
+              cooldownTime={1.6}
+              className="text-accent"
+            />{" "}
+            builders in one room for two days.
           </p>
         </div>
 
