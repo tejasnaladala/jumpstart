@@ -222,14 +222,18 @@ export function FounderGraphHero(): React.JSX.Element {
     return () => obs.disconnect();
   }, []);
 
-  // Quote bubble position: midpoint of the highlighted path.
-  // YOU (760, 450) → p1 (920, 390) → p2 (1090, 340) → target (1280, 280)
-  // Midpoint of the middle edge (p1 → p2) = (1005, 365). Bubble sits
-  // slightly above so it doesn't overlap edges.
-  const QUOTE_X = 760;
-  const QUOTE_Y = 540;
+  // Quote bubble — positioned in the empty top-left quadrant of the
+  // canvas (founder flagged the previous mid-bottom position was on
+  // top of the agents cluster nodes). Top-left is clear: leftmost
+  // node (ai4 BL) is at (350, 250), so a bubble at x=40 y=40 width=480
+  // sits cleanly above the cluster.
+  //
+  // Reads narratively as the user's question floating IN before the
+  // graph traverses to the answer (target chip top-right).
+  const QUOTE_X = 40;
+  const QUOTE_Y = 40;
   const TARGET_CHIP_X = 1310;
-  const TARGET_CHIP_Y = 110;
+  const TARGET_CHIP_Y = 40;
 
   return (
     <div ref={wrapperRef} className="relative w-full">
@@ -432,12 +436,7 @@ export function FounderGraphHero(): React.JSX.Element {
         </g>
 
         {/* === Floating quote (foreignObject for selectable text) === */}
-        <foreignObject
-          x={QUOTE_X - 240}
-          y={QUOTE_Y}
-          width="400"
-          height="120"
-        >
+        <foreignObject x={QUOTE_X} y={QUOTE_Y} width="500" height="140">
           <div
             className={
               "fgh-quote " + (revealed ? "fgh-quote-shown" : "")
@@ -448,9 +447,9 @@ export function FounderGraphHero(): React.JSX.Element {
             }}
           >
             <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-text mb-1.5">
-              you
+              you ask
             </div>
-            <p className="font-display italic text-[20px] sm:text-[24px] leading-tight text-ink">
+            <p className="font-display italic text-[22px] sm:text-[26px] leading-tight text-ink max-w-[460px]">
               &ldquo;{QUOTE_TEXT}&rdquo;
             </p>
           </div>
@@ -502,14 +501,27 @@ export function FounderGraphHero(): React.JSX.Element {
         </foreignObject>
       </svg>
 
-      {/* Caption strip below the SVG */}
-      <div className="mt-5 flex items-center justify-between gap-3 text-xs">
+      {/* Caption strip below the SVG. Two-row, breathable layout:
+          left = a single short stat + path, right = nothing (used to
+          have a separate path label that wrapped weirdly). */}
+      <div className="mt-5 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 text-xs">
         <span className="font-mono uppercase tracking-[0.18em] text-muted/80">
-          30 of 6,000 in the YC SS 2026 graph · introductions through
-          friends of friends
+          Showing 30 of 6,000 in the cohort
         </span>
-        <span className="hidden sm:inline font-mono uppercase tracking-[0.18em] text-accent-text">
-          path: YOU → AT → SK → MAYA
+        <span className="font-mono tracking-[0.14em] text-accent-text">
+          you{" "}
+          <span aria-hidden className="text-muted/60">
+            →
+          </span>{" "}
+          AT{" "}
+          <span aria-hidden className="text-muted/60">
+            →
+          </span>{" "}
+          SK{" "}
+          <span aria-hidden className="text-muted/60">
+            →
+          </span>{" "}
+          Maya
         </span>
       </div>
 

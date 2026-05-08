@@ -3,8 +3,6 @@ import { GlassNav } from "@/components/GlassNav";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { InlineWaitlist } from "@/components/InlineWaitlist";
 import { NextDropCountdown } from "@/components/NextDropCountdown";
-import { Marquee } from "@/components/Marquee";
-import { CohortGlobeLazy as CohortGlobe } from "@/components/landing/CohortGlobeLazy";
 import { CursorGlow } from "@/components/landing/CursorGlow";
 import { FounderGraphHero } from "@/components/landing/FounderGraphHero";
 import { PreLandingHero } from "@/components/landing/PreLandingHero";
@@ -160,19 +158,8 @@ export default function LandingPage(): React.JSX.Element {
         </div>
       </section>
 
-      {/* Espresso marquee strip */}
-      <Marquee
-        items={[
-          "Cohort YC SS 2026",
-          "6,000 hand-picked builders",
-          "One match per drop",
-          "People through people · people's people",
-          "Mon · Wed · Fri · 9 PM PT",
-          "Chase Center · July 25–26",
-          "Not affiliated with Y Combinator",
-        ]}
-        variant="espresso"
-      />
+      {/* Marquee strip removed (founder asked to drop). The graph
+          and the headline already carry the cohort tagline. */}
 
       {/* WHY THIS EXISTS — heavy section with accent masthead and
           boosted H2 (one tier bigger than the other H2s for thesis
@@ -231,47 +218,9 @@ export default function LandingPage(): React.JSX.Element {
         </div>
       </section>
 
-      {/* PEOPLE'S PEOPLE — globe-centered, single column. Founder asked
-          to strip the photo collage; the rotating globe now carries the
-          section on its own. Headline + sub above, globe below, centered. */}
-      <section className="container-wide section-pad relative">
-        <BlurFade>
-          <div className="ed-masthead-accent">
-            <span className="ed-serial">§ 02 / People&apos;s people</span>
-            <span className="ed-serial hidden sm:inline">
-              The graph extends through everyone you meet
-            </span>
-          </div>
-        </BlurFade>
-        <div className="max-w-3xl">
-          <BlurFade>
-            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-ink leading-[1.04]">
-              Knowing people{" "}
-              <span className="italic text-accent">through people,</span> and
-              people&apos;s people.
-            </h2>
-          </BlurFade>
-          <BlurFade delay={0.08}>
-            <p className="mt-6 text-lg text-muted leading-relaxed max-w-prose">
-              Every match comes with a reason. Every accepted intro adds an
-              edge. The graph compounds: the people you meet bring people you
-              would never find on your own.
-            </p>
-          </BlurFade>
-        </div>
-        <BlurFade delay={0.14}>
-          <div className="mt-10 lg:mt-14 flex items-center justify-center">
-            <div className="w-full max-w-[560px]">
-              <CohortGlobe size={560} />
-            </div>
-          </div>
-        </BlurFade>
-      </section>
-
-      {/* HOW IT WORKS section removed (founder asked to strip).
-          Comprehensive cards section removed (founder asked to strip).
-          The waitlist + final CTA are the only remaining funnel surfaces;
-          card examples drop on social as snapshots instead. */}
+      {/* §02 People's people removed entirely (founder asked to strip).
+          The headline + globe section was meaningless given the graph
+          itself already shows the same thesis. The graph IS the demo. */}
 
       {/* FINAL CTA — espresso block with DitherWarp backdrop overlay. */}
       <section className="container-wide section-pad-tight">

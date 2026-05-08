@@ -18,10 +18,11 @@ export const DROP_HOUR_PT = 21; // 21:00 PT == 9pm PT
 export const CUTOFF_HOUR_PT = 15; // 15:00 PT == 3pm PT (6 hours before drop)
 
 // First drop date — fixed, public-facing. The v1 closed beta opens
-// with a single anchored drop on Monday June 15 2026 9 PM PT (six
-// weeks before the YC SS event). After this date, the countdown
-// rolls forward to the regular Mon/Wed/Fri cadence.
-export const FIRST_DROP_AT = new Date("2026-06-15T21:00:00-07:00");
+// with the first drop on Friday May 15 2026 at 9 PM PT (~10 weeks
+// before the YC SS event, fits the Mon/Wed/Fri cadence as a Friday
+// drop). After this date the countdown rolls forward to the regular
+// Mon/Wed/Fri schedule.
+export const FIRST_DROP_AT = new Date("2026-05-15T21:00:00-07:00");
 
 // firstOrNextDrop: returns the FIRST_DROP_AT until that date passes,
 // then returns the normal next drop in the rolling schedule.

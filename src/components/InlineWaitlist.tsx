@@ -18,9 +18,9 @@ type Props = {
   source?: string;
   // tone "light" = cream surface (hero); "dark" = espresso surface (closing CTA)
   tone?: "light" | "dark";
-  // Optional: when true, second click on the input expands a 2nd field
-  // (handle) so we capture intent without making the row look heavy
-  // out of the gate.
+  // Handle field disabled by default (waitlist-only pre-product;
+  // founder asked to drop the 'helps the founder verify' framing).
+  // Kept as an opt-in flag in case we want it back later.
   allowHandle?: boolean;
   className?: string;
   placeholder?: string;
@@ -30,7 +30,7 @@ type Props = {
 export function InlineWaitlist({
   source = "hero",
   tone = "light",
-  allowHandle = true,
+  allowHandle = false,
   className,
   placeholder = "you@email.com",
   buttonLabel = "Get on the list",
@@ -191,7 +191,7 @@ export function InlineWaitlist({
           inputMode="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          onFocus={() => setShowHandle(true)}
+          onFocus={() => allowHandle && setShowHandle(true)}
           placeholder={placeholder}
           maxLength={120}
           className={
