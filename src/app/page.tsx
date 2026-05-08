@@ -8,7 +8,7 @@ import { CohortGlobe } from "@/components/CohortGlobe";
 import { CursorGlow } from "@/components/landing/CursorGlow";
 import { FounderGraph } from "@/components/landing/FounderGraph";
 import { TerminalLine } from "@/components/landing/TerminalLine";
-import { MockMatchCard } from "@/components/landing/MockMatchCard";
+import { ComprehensiveMatchCard } from "@/components/landing/ComprehensiveMatchCard";
 import { MOCK_MATCHES } from "@/components/landing/mockMatches";
 import { PreLandingHero } from "@/components/landing/PreLandingHero";
 
@@ -365,54 +365,61 @@ export default function LandingPage(): React.JSX.Element {
         </div>
       </section>
 
-      {/* SOCIAL PROOF BENTO. Mock match cards arranged in a 3-up bento. */}
+      {/* SOCIAL PROOF — comprehensive match cards. Founder asked for
+          1-2 big personality-driven examples instead of 6 small
+          transactional cards. Each card now reads as a magazine profile:
+          building, shipping next, needs, offers back, working style,
+          off-the-clock, reads, and the matchmaker's reason for picking
+          them. Two cards side-by-side at lg. */}
       <section className="container-wide py-16 lg:py-24">
         <BlurFade>
           <div className="ed-masthead mb-8 lg:mb-12">
             <span className="ed-serial">§ 04 / What a match looks like</span>
             <span className="ed-serial hidden sm:inline">
-              Six illustrative cards from the cohort
+              Two cards from the cohort, comprehensive
             </span>
           </div>
         </BlurFade>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-10">
-          <div className="lg:col-span-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-12">
+          <div className="lg:col-span-7">
             <BlurFade>
               <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.04]">
                 Real builders.{" "}
-                <span className="italic text-accent">Specific asks.</span>
+                <span className="italic text-accent">
+                  Comprehensive cards.
+                </span>
               </h2>
             </BlurFade>
             <BlurFade delay={0.08}>
               <p className="mt-6 text-lg text-muted leading-relaxed max-w-prose">
-                The matchmaker reads what you&apos;re building, who you need,
-                and what you can offer back. No bios. No buzzwords. Just
-                the lines that decide whether the next 30 minutes are
-                worth a calendar slot.
+                Not a checklist. The matchmaker reads what you&apos;re
+                shipping, what you&apos;d offer back, what you read, the
+                weird interest most founders don&apos;t have, and the line
+                a friend would forward. Two examples, full size.
               </p>
             </BlurFade>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5 lg:gap-6">
-          <BlurFade
-            delay={0.06}
-            className="sm:col-span-2 lg:col-span-3 lg:row-span-2"
-          >
-            <MockMatchCard match={MOCK_MATCHES[0]!} className="h-full" />
+        {/* Two big cards side-by-side on lg, stacked on smaller screens.
+            Featured Maya is dark espresso; Devansh is the cream surface
+            counterpart. Equal width so neither feels secondary. */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+          <BlurFade delay={0.06}>
+            <ComprehensiveMatchCard
+              match={MOCK_MATCHES[0]!}
+              className="h-full"
+            />
           </BlurFade>
-          {MOCK_MATCHES.slice(1, 5).map((m, i) => (
-            <BlurFade
-              key={m.name}
-              delay={0.1 + i * 0.05}
-              className="lg:col-span-3"
-            >
-              <MockMatchCard match={m} className="h-full" />
-            </BlurFade>
-          ))}
+          <BlurFade delay={0.14}>
+            <ComprehensiveMatchCard
+              match={MOCK_MATCHES[1]!}
+              className="h-full"
+            />
+          </BlurFade>
         </div>
 
-        <BlurFade delay={0.4}>
+        <BlurFade delay={0.3}>
           <p className="mt-10 ed-serial text-muted text-center sm:text-left">
             Illustrative · the actual cohort sheet is private to verified
             attendees.
