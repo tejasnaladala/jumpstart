@@ -4,11 +4,10 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { InlineWaitlist } from "@/components/InlineWaitlist";
 import { NextDropCountdown } from "@/components/NextDropCountdown";
 import { Marquee } from "@/components/Marquee";
-import { CohortGlobe } from "@/components/CohortGlobe";
+import { CohortGlobeLazy as CohortGlobe } from "@/components/landing/CohortGlobeLazy";
 import { CursorGlow } from "@/components/landing/CursorGlow";
 import { FounderGraphHero } from "@/components/landing/FounderGraphHero";
 import { PreLandingHero } from "@/components/landing/PreLandingHero";
-import { RippleShader } from "@/components/ui/RippleShader";
 import { DitherWarp } from "@/components/ui/DitherWarp";
 
 // Landing page rebuild (May 7 2026, fourth pass — "make it crazy").
@@ -92,20 +91,34 @@ export default function LandingPage(): React.JSX.Element {
             </p>
           </BlurFade>
 
-          {/* THE GRAPH — full width centerpiece. RippleShader behind. */}
-          <BlurFade delay={0.14}>
-            <div className="relative mt-10 lg:mt-14">
-              {/* Ripple pulse shader, very subtle, behind the graph */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -inset-4 sm:-inset-6 opacity-20 mix-blend-multiply"
-                style={{ filter: "blur(0.5px)" }}
-              >
-                <RippleShader bgColor="#F4F1DB" accentColor="#FF6600" />
+          {/* THE GRAPH — full width centerpiece. No shader behind it
+              (founder asked to keep shader use to the pre-landing only).
+              Above the graph: an explicit value-prop strip so visitors
+              read the demo as a story ('say what you need; the graph
+              traverses friends-of-friends to find the answer'), not
+              just a pretty SVG. */}
+          <BlurFade delay={0.10}>
+            <div className="mt-10 lg:mt-14 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 max-w-5xl">
+              <div>
+                <p className="ed-serial text-accent-text">
+                  Demo · live matchmaker traversal
+                </p>
+                <p className="font-display text-lg sm:text-xl lg:text-2xl text-ink leading-snug mt-1.5 max-w-3xl">
+                  Say what you need. The graph traverses{" "}
+                  <span className="italic text-accent">
+                    friends of friends of friends
+                  </span>{" "}
+                  to find the right person across 6,000 builders.
+                </p>
               </div>
-              <div className="relative">
-                <FounderGraphHero />
-              </div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted whitespace-nowrap shrink-0">
+                hover the highlighted path
+              </p>
+            </div>
+          </BlurFade>
+          <BlurFade delay={0.16}>
+            <div className="relative mt-6 lg:mt-8">
+              <FounderGraphHero />
             </div>
           </BlurFade>
 

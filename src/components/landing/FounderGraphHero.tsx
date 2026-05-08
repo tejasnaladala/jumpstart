@@ -282,7 +282,10 @@ export function FounderGraphHero(): React.JSX.Element {
         {/* Target glow */}
         <circle cx="1280" cy="280" r="140" fill="url(#fghTargetGlow)" />
 
-        {/* === ALL EDGES (faint background fabric) === */}
+        {/* === ALL EDGES (faint background fabric) ===
+            Bumped opacity 0.13 -> 0.22 + width 0.9 -> 1.1 + dasharray
+            tightened so every edge actually reads at 1440px. Was barely
+            visible before (founder flagged invisible lines). */}
         <g className="fgh-edges-bg">
           {EDGES.map((e, i) => {
             const a = nodeMap.get(e.from);
@@ -296,10 +299,10 @@ export function FounderGraphHero(): React.JSX.Element {
                 x2={b.x}
                 y2={b.y}
                 stroke="#16140F"
-                strokeOpacity="0.13"
-                strokeWidth="0.9"
+                strokeOpacity="0.22"
+                strokeWidth="1.1"
                 strokeLinecap="round"
-                strokeDasharray="3 5"
+                strokeDasharray="2 4"
               />
             );
           })}
