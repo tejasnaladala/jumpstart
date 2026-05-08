@@ -3,24 +3,19 @@ import { SmokeBackground } from "@/components/ui/SmokeBackground";
 import { DottedSurface } from "@/components/ui/DottedSurface";
 import { useEffect, useState } from "react";
 
-// PreLandingHero — compressed brand splash above the editorial body.
+// PreLandingHero — clean editorial brand splash.
 //
-// Audit pass (May 8 2026, "implement everything end to end"):
-//   - Cut the GooeyText morphing-adjective tagline (formidable / earnest /
-//     relentless / contrarian / audacious) — read as performance, not
-//     positioning. Replaced with one declarative line.
-//   - Cut the ScrollingCode cursor-radius reveal grid — vibe-coder
-//     showcase, no product value, invisible to most users.
-//   - Compressed min-h from svh → 60svh so the real hero (with the email
-//     field) peeks above the fold instead of being a full screen below.
-//   - Dropped smoke shader opacity hard (25 → 10) so the new warm cream
-//     bg (#F2E5C2) shows through cleanly.
-//   - Down arrow removed (hero is visible below now, no need to hint).
-//   - Dome streak spacing widened (16/17 → 22/23) so they don't read as
-//     a regular grid at the smaller dome size.
+// Founder ask (May 8 2026): revert to a state before the orange dome
+// and the vertical streaks ("red streaks or semi circle"). Stripped:
+//   - L3 bottom orange wash (linear-gradient warming the bottom edge)
+//   - L3.5 orange dome (halo + solid radial-gradient + vertical
+//     repeating-linear-gradient streaks)
 //
-// What remains: JUMPSTART wordmark + one-line tagline + sub + SF.CA
-// event mark + compact orange dome at bottom-center. That's it.
+// What remains: DottedSurface particles (low opacity), a faint
+// SmokeBackground for ambient warmth, the SF.CA event mark in the
+// corner, JUMPSTART wordmark, one-line tagline, sub. The orange now
+// only appears as the accent color on the tagline highlight, not as
+// a page-spanning dome.
 
 export function PreLandingHero(): React.JSX.Element {
   const [mounted, setMounted] = useState(false);
@@ -35,8 +30,7 @@ export function PreLandingHero(): React.JSX.Element {
       className="relative min-h-[60svh] w-full overflow-hidden bg-bg"
       aria-label="Jumpstart intro"
     >
-      {/* L0: DottedSurface — Three.js particle wave, deepest layer.
-          Toned to opacity-25 so the cream shows through more. */}
+      {/* L0: DottedSurface — Three.js particle wave, deepest layer. */}
       <div
         aria-hidden
         className={
@@ -47,84 +41,17 @@ export function PreLandingHero(): React.JSX.Element {
         <DottedSurface dotColor={[70, 51, 37]} />
       </div>
 
-      {/* L1: SmokeBackground — minimal warm texture. Was 25%, now 10%.
-          The shader stays for ambient motion but no longer tints the
-          page bg orange. */}
+      {/* L1: SmokeBackground — barely-there ambient texture. Was 10%,
+          dropped further to 6% so there is no perceptible orange tint
+          on the cream bg. Pure motion as background atmosphere. */}
       <div
         aria-hidden
         className={
           "absolute inset-0 mix-blend-multiply transition-opacity duration-700 " +
-          (mounted ? "opacity-10" : "opacity-0")
+          (mounted ? "opacity-[0.06]" : "opacity-0")
         }
       >
         <SmokeBackground smokeColor="#E85A1B" bgColor="#F2E5C2" />
-      </div>
-
-      {/* L3: Bottom orange wash — quiet base warmth. */}
-      <div
-        aria-hidden
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(to top, rgba(232,90,27,0.06), transparent 50%)",
-        }}
-      />
-
-      {/* L3.5: Compact orange dome at bottom-center. Sized to fit the
-          new 60vh hero without dominating it. True semi-ellipse via
-          the slash border-radius syntax. */}
-      <div
-        aria-hidden
-        className={
-          "absolute inset-x-0 bottom-0 pointer-events-none flex justify-center items-end transition-opacity duration-1000 " +
-          (mounted ? "opacity-100" : "opacity-0")
-        }
-      >
-        <div
-          className="relative"
-          style={{
-            width: "min(36vw, 540px)",
-            height: "min(22vh, 200px)",
-          }}
-        >
-          {/* Halo — soft glow ring around the dome. */}
-          <div
-            className="absolute"
-            style={{
-              left: "-22%",
-              right: "-22%",
-              top: "-18%",
-              bottom: 0,
-              borderRadius: "50% 50% 0 0 / 100% 100% 0 0",
-              background:
-                "radial-gradient(ellipse at 50% 100%, rgba(232,90,27,0.32) 0%, rgba(232,90,27,0.14) 55%, transparent 85%)",
-              filter: "blur(28px)",
-            }}
-          />
-          {/* Solid dome. */}
-          <div
-            className="absolute inset-0"
-            style={{
-              borderRadius: "50% 50% 0 0 / 100% 100% 0 0",
-              background:
-                "radial-gradient(ellipse at 50% 100%, rgba(232,90,27,0.98) 0%, rgba(232,90,27,0.93) 55%, rgba(232,90,27,0.80) 82%, rgba(232,90,27,0.50) 96%, rgba(232,90,27,0.18) 100%)",
-            }}
-          />
-          {/* Vertical light rays — wider spacing (22/23 px) so they read
-              as rays not a regular grid at the compact dome size. */}
-          <div
-            className="absolute inset-0"
-            style={{
-              borderRadius: "50% 50% 0 0 / 100% 100% 0 0",
-              background:
-                "repeating-linear-gradient(to right, transparent 0, transparent 22px, rgba(242,229,194,0.50) 22px, rgba(242,229,194,0.50) 23px)",
-              maskImage:
-                "radial-gradient(ellipse at 50% 100%, black 0%, black 78%, transparent 100%)",
-              WebkitMaskImage:
-                "radial-gradient(ellipse at 50% 100%, black 0%, black 78%, transparent 100%)",
-            }}
-          />
-        </div>
       </div>
 
       {/* SF.CA event mark, top-right. Mocha tone matches JUMPSTART. */}
@@ -143,14 +70,12 @@ export function PreLandingHero(): React.JSX.Element {
         </div>
       </div>
 
-      {/* Foreground content. Two rows: top spacer + JUMPSTART/tagline/sub. */}
+      {/* Foreground content — JUMPSTART wordmark + one-line tagline + sub. */}
       <div className="relative z-10 flex min-h-[60svh] flex-col items-stretch px-5 sm:px-8 text-ink">
         {/* TOP — spacer to clear the 72px GlassNav. */}
         <div className="h-[72px] sm:h-[80px]" aria-hidden />
 
-        {/* MIDDLE — JUMPSTART wordmark + one-line tagline + sub.
-            JUMPSTART size dropped (clamp 72/14vw/220 → 56/10vw/160) to
-            fit the compressed 60vh hero. */}
+        {/* MIDDLE — wordmark + tagline + sub. */}
         <div className="flex-1 w-full max-w-[1280px] mx-auto flex flex-col justify-start py-2 sm:py-4">
           <h1
             className="font-mono uppercase text-mocha leading-[0.86] tracking-[-0.02em] font-bold"
@@ -159,7 +84,7 @@ export function PreLandingHero(): React.JSX.Element {
             JUMPSTART
           </h1>
 
-          {/* Tagline — direct, single line. No more morphing adjective. */}
+          {/* Tagline — direct, single line. */}
           <p
             className="mt-5 sm:mt-7 max-w-3xl font-display italic text-ink/85 leading-tight"
             style={{ fontSize: "clamp(20px, 2.6vw, 36px)" }}
@@ -177,9 +102,8 @@ export function PreLandingHero(): React.JSX.Element {
           </p>
         </div>
 
-        {/* BOTTOM — small bottom padding only. The down arrow was
-            removed because the hero waitlist is now visible below the
-            fold (60vh hero), so the user doesn't need a scroll hint. */}
+        {/* BOTTOM — small bottom padding only. The hero waitlist is
+            visible below the 60vh fold so no scroll hint is needed. */}
         <div className="pb-6 sm:pb-8" aria-hidden />
       </div>
     </section>
