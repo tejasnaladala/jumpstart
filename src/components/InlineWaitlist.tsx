@@ -109,9 +109,14 @@ export function InlineWaitlist({
   const inputTone = isDark
     ? "bg-bg/10 text-bg placeholder:text-bg/60 border-bg/30"
     : "bg-bg text-ink placeholder:text-muted/70 border-border";
+  // Buttons are YC orange (filled accent) on both light and dark
+  // tones. Founder asked to drop the black/cream button look — orange
+  // is the through-line. Cream surface (light) gets the standard
+  // accent + white; espresso surface (dark) gets the same orange but
+  // with a slightly hotter edge variant for pop against the dark bg.
   const buttonTone = isDark
-    ? "bg-bg text-ink hover:bg-bg/90"
-    : "bg-ink text-bg hover:bg-ink/90";
+    ? "bg-accent text-white hover:bg-accent-edge shadow-sm shadow-accent/30"
+    : "bg-accent text-white hover:bg-accent-edge shadow-sm shadow-accent/20";
   const helperTone = isDark ? "text-bg/70" : "text-muted";
   const labelTone = isDark ? "text-bg/80" : "text-muted";
 

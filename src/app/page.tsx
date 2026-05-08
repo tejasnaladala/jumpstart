@@ -89,33 +89,9 @@ export default function LandingPage(): React.JSX.Element {
             </p>
           </BlurFade>
 
-          {/* THE GRAPH — full width centerpiece. No shader behind it
-              (founder asked to keep shader use to the pre-landing only).
-              Above the graph: an explicit value-prop strip so visitors
-              read the demo as a story ('say what you need; the graph
-              traverses friends-of-friends to find the answer'), not
-              just a pretty SVG. */}
-          <BlurFade delay={0.10}>
-            <div className="mt-10 lg:mt-14 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 max-w-5xl">
-              <div>
-                <p className="ed-serial text-accent-text">
-                  Demo · how the graph connects you
-                </p>
-                <p className="font-display text-lg sm:text-xl lg:text-2xl text-ink leading-snug mt-1.5 max-w-3xl">
-                  Say what you need. The graph runs through{" "}
-                  <span className="italic text-accent">
-                    friends of friends of friends
-                  </span>{" "}
-                  to find the right person across 6,000 builders.
-                </p>
-              </div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted whitespace-nowrap shrink-0">
-                hover the highlighted path
-              </p>
-            </div>
-          </BlurFade>
-          <BlurFade delay={0.16}>
-            <div className="relative mt-6 lg:mt-8">
+          {/* THE GRAPH — full width centerpiece, stands on its own. */}
+          <BlurFade delay={0.14}>
+            <div className="relative mt-10 lg:mt-14">
               <FounderGraphHero />
             </div>
           </BlurFade>
@@ -195,13 +171,17 @@ export default function LandingPage(): React.JSX.Element {
             <BlurFade delay={0.18}>
               <p className="mt-5 text-lg text-ink leading-relaxed max-w-prose font-display italic">
                 Not another networking app. A matching layer for serious
-                builders.
+                YC builders.
               </p>
             </BlurFade>
           </div>
 
+          {/* By the numbers — woven inline (no white card). Anchored
+              to a left accent thread so it reads as part of the same
+              editorial rhythm as the section masthead, not a card on
+              top of the cream surface. */}
           <BlurFade delay={0.16} className="lg:col-span-5">
-            <div className="surface bg-surface p-6 lg:p-8 space-y-5 relative overflow-hidden">
+            <div className="border-l-2 border-accent/40 pl-6 lg:pl-8 space-y-5">
               <p className="ed-serial text-accent-text">By the numbers</p>
               <ul className="space-y-4">
                 <NumRow lhs="6,000" rhs="hand-picked attendees" />
@@ -222,8 +202,11 @@ export default function LandingPage(): React.JSX.Element {
           The headline + globe section was meaningless given the graph
           itself already shows the same thesis. The graph IS the demo. */}
 
-      {/* FINAL CTA — espresso block with DitherWarp backdrop overlay. */}
-      <section className="container-wide section-pad-tight">
+      {/* FINAL CTA — espresso block. Top padding tightened (was
+          section-pad-tight = py-12/14/16 stacking with Why's py-28
+          bottom = ~176px gap). Now pt-2/pt-4/pt-6 + same py-bottom
+          for breathing only beneath the block. */}
+      <section className="container-wide pt-2 sm:pt-4 lg:pt-6 pb-12 sm:pb-14 lg:pb-16">
         <BlurFade>
           <div className="bg-espresso text-bg rounded-2xl px-6 py-12 sm:px-12 sm:py-14 lg:px-16 lg:py-20 relative overflow-hidden">
             {/* Dithering shader as the ambient backdrop, blended subtly
