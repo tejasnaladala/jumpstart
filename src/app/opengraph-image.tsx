@@ -12,7 +12,7 @@ export default function OG() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#F8F5EA",
+          background: "#F2CFA5",
           display: "flex",
           flexDirection: "column",
           padding: "80px 90px",

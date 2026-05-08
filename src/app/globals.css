@@ -9,7 +9,7 @@
        inline styles can reference them via var(). Tailwind v3 doesn't
        expose theme tokens as CSS vars by default. Keep these in sync
        with tailwind.config.ts when the palette evolves. */
-    --color-bg: #f8f5ea;
+    --color-bg: #f2cfa5;
     --color-surface: #fdfdf8;
     --color-ink: #16140f;
     --color-mocha: #3a2418;
