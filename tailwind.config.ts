@@ -8,13 +8,16 @@ export default {
         // == YC Startup School 2026 base palette ==
         // Pulled directly from the YC SS 2026 events stylesheet
         // (bookface-static.ycombinator.com/vite/assets/tailwind-*.css).
-        // YC's actual rendered bg is #F4F1DB. Founder went WHITER
-        // (#F8F5EA) for one pass, then reversed and asked for a
-        // warmer pale peach (~#F2CFA5). Going with the peach: it's
-        // distinct from generic ivory and matches the warm orange
-        // sun motif. WCAG: text-ink (#16140F) on #F2CFA5 = 12.5:1,
-        // text-mocha (#3A2418) = 8.4:1, both pass AAA.
-        bg: "#F2CFA5",
+        // Bg evolution:
+        //   #F4F1DB — YC actual yellow-cream
+        //   #F8F5EA — too white (founder rejected)
+        //   #F2CFA5 — too orange/saturated (founder rejected)
+        //   #F2E5C2 — current. Warm cream, ~20% saturation. Reads as
+        //     warm and editorial, not orange, not bleach-white.
+        //     Halfway between YC's #F4F1DB and the peach #F2CFA5.
+        // WCAG: text-ink (#16140F) on #F2E5C2 = 14.1:1, text-mocha
+        // (#3A2418) = 9.5:1. Both AAA.
+        bg: "#F2E5C2",
         surface: "#FDFDF8", // pale off-white for cards and sheets
         ink: "#16140F", // warm near-black, primary text
         muted: "#463325", // warm dark brown, secondary text

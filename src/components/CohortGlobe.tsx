@@ -24,7 +24,7 @@ const WAYPOINTS: Array<{ name: string; lat: number; lng: number }> = [
 ];
 
 const COLORS = {
-  cream: "#F2CFA5",
+  cream: "#F2E5C2",
   surface: "#FDFDF8",
   ink: "#16140F",
   muted: "#463325",
@@ -221,7 +221,7 @@ export function CohortGlobe({ size = 460 }: { size?: number }) {
         // Thin cream rim so the dot sits on the wireframe cleanly.
         ctx!.beginPath();
         ctx!.arc(px, py, 3.4, 0, Math.PI * 2);
-        ctx!.strokeStyle = "rgba(242, 207, 165, 0.55)";
+        ctx!.strokeStyle = "rgba(242, 229, 194, 0.55)";
         ctx!.lineWidth = 0.6;
         ctx!.stroke();
       });
