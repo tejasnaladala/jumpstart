@@ -29,10 +29,11 @@ export function GlassNav(): React.JSX.Element {
           : "bg-transparent border-b border-transparent")
       }
     >
-      <div className="container-wide h-full flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      {/* Full-viewport flex (no container-wide constraint) so the CTA
+          on the right is pushed flush against the viewport edge. Logo
+          on left, CTA on right, both with normal viewport padding only. */}
+      <div className="h-full w-full flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <Logo />
-        {/* Sign in removed for the pre-product window. Waitlist is the
-            single CTA. Once the product is shipped, sign-in returns. */}
         <nav className="flex items-center gap-2 text-sm">
           <a
             href="#waitlist"
