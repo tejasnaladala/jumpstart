@@ -60,7 +60,7 @@ const hexToVec3 = (hex: string): [number, number, number] => {
 };
 
 export function RippleShader({
-  bgColor = "#F8F5EA",
+  bgColor = "#F2CFA5",
   accentColor = "#E85A1B",
   className,
   paused = false,

@@ -66,7 +66,9 @@ export function PreLandingHero(): React.JSX.Element {
 
       {/* L1: SmokeBackground — orange flames rising. Opacity dropped
           100% -> 55% so the page is brighter. The shader still reads,
-          just doesn't dominate the cream. */}
+          just doesn't dominate the bg. bgColor synced to new peach
+          token (#F2CFA5) so the shader's neutral pixels match the
+          page bg and the multiply blend doesn't bake in stale cream. */}
       <div
         aria-hidden
         className={
@@ -74,7 +76,7 @@ export function PreLandingHero(): React.JSX.Element {
           (mounted ? "opacity-55" : "opacity-0")
         }
       >
-        <SmokeBackground smokeColor="#E85A1B" bgColor="#F8F5EA" />
+        <SmokeBackground smokeColor="#E85A1B" bgColor="#F2CFA5" />
       </div>
 
       {/* L2: Focal smoke behind JUMPSTART — opacity dropped 90% -> 35%
@@ -92,7 +94,7 @@ export function PreLandingHero(): React.JSX.Element {
             "radial-gradient(ellipse at center, black 0%, black 45%, transparent 80%)",
         }}
       >
-        <SmokeBackground smokeColor="#CC4E15" bgColor="#F8F5EA" />
+        <SmokeBackground smokeColor="#CC4E15" bgColor="#F2CFA5" />
       </div>
 
       {/* L3: Bottom orange wash — dropped 0.18 -> 0.08 so the bottom
@@ -106,16 +108,20 @@ export function PreLandingHero(): React.JSX.Element {
         }}
       />
 
-      {/* L3.5: Orange ascending sun — TRUE SEMICIRCLE DOME matching the
-          YC SS 2026 reference (founder shared the screenshot). Two
-          stacked layers, both clipped to a semicircle via
-          border-radius 50% 50% 0 0 sitting at the bottom edge:
-            1. Solid bright orange dome — radial gradient from saturated
-               core out to a soft fade at the edges
-            2. Vertical CREAM streaks rising through the orange — read
-               as light rays cutting through the dome
-          The semicircle is wider than the viewport on small screens
-          (max 1400px on lg) so it always fills the bottom band. */}
+      {/* L3.5: Orange ascending sun — compact dome at bottom-center,
+          matching the YC SS 2026 reference. Previous pass made the
+          dome 120vw x 60vw which on a 1440 desktop = 1440 x 720, i.e.
+          the entire bottom half of the viewport. Founder said it
+          looked 'like an egg taking up half the screen'.
+          Re-tuned to the YC ratio: ~50vw wide x ~40vh tall, capped at
+          720 x 380 on lg+. Sits centered, anchored to bottom edge.
+          Three layers:
+            1. Soft orange halo (slightly larger than the dome) for a
+               glow ring — bleeds the warmth past the hard edge
+            2. Solid orange dome — semicircle of an ellipse via
+               border-radius 50% 50% 0 0
+            3. Vertical peach streaks rising through it — reads as
+               light rays cutting the dome */}
       <div
         aria-hidden
         className={
@@ -126,35 +132,51 @@ export function PreLandingHero(): React.JSX.Element {
         <div
           className="relative"
           style={{
-            // Aspect ratio 2:1 so border-radius 50%/100% creates a
-            // true semicircle (height = half width).
-            width: "min(120vw, 1600px)",
-            height: "min(60vw, 800px)",
+            width: "min(56vw, 760px)",
+            height: "min(42vh, 400px)",
           }}
         >
-          {/* Solid orange dome — radial gradient bright at center,
-              soft fade at the curved edges. */}
+          {/* Soft halo — a wider, fainter orange tint behind the dome
+              so the edge isn't a razor cut. Bleed beyond container via
+              negative inset and matching dome-shaped radius. */}
           <div
-            className="absolute inset-0"
+            className="absolute"
             style={{
+              left: "-12%",
+              right: "-12%",
+              top: "-10%",
+              bottom: 0,
               borderRadius: "50% 50% 0 0",
               background:
-                "radial-gradient(circle at 50% 100%, rgba(232,90,27,0.95) 0%, rgba(232,90,27,0.85) 40%, rgba(232,90,27,0.50) 70%, rgba(232,90,27,0.10) 90%, transparent 100%)",
+                "radial-gradient(ellipse at 50% 100%, rgba(232,90,27,0.30) 0%, rgba(232,90,27,0.15) 55%, transparent 85%)",
+              filter: "blur(20px)",
             }}
           />
-          {/* Cream vertical streaks rising through the dome — masked
-              so they only show inside the semicircle and fade at the
-              edges. Reads as light rays cutting the orange. */}
+          {/* Solid orange dome — saturated core, soft fade only near
+              the very edge so the silhouette stays defined. */}
           <div
             className="absolute inset-0"
             style={{
               borderRadius: "50% 50% 0 0",
               background:
-                "repeating-linear-gradient(to right, transparent 0, transparent 10px, rgba(248,245,234,0.55) 10px, rgba(248,245,234,0.55) 11px)",
+                "radial-gradient(ellipse at 50% 100%, rgba(232,90,27,0.98) 0%, rgba(232,90,27,0.92) 55%, rgba(232,90,27,0.78) 80%, rgba(232,90,27,0.45) 95%, rgba(232,90,27,0.15) 100%)",
+            }}
+          />
+          {/* Vertical peach streaks — the bg-color tinted lines
+              cutting through the orange. rgba synced to the new
+              #F2CFA5 page bg so they read as 'page light' breaking
+              through. Slightly denser stripes (10/9 -> 12/11) so they
+              register at the smaller dome size. */}
+          <div
+            className="absolute inset-0"
+            style={{
+              borderRadius: "50% 50% 0 0",
+              background:
+                "repeating-linear-gradient(to right, transparent 0, transparent 12px, rgba(242,207,165,0.55) 12px, rgba(242,207,165,0.55) 13px)",
               maskImage:
-                "radial-gradient(circle at 50% 100%, black 0%, black 75%, transparent 100%)",
+                "radial-gradient(ellipse at 50% 100%, black 0%, black 80%, transparent 100%)",
               WebkitMaskImage:
-                "radial-gradient(circle at 50% 100%, black 0%, black 75%, transparent 100%)",
+                "radial-gradient(ellipse at 50% 100%, black 0%, black 80%, transparent 100%)",
             }}
           />
         </div>
