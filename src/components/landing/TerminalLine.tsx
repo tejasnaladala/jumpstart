@@ -62,8 +62,13 @@ export function TerminalLine({
   return (
     <div
       ref={ref}
+      // Inherits text color from the parent container so we can drop these
+      // inside espresso-dark blocks (cream-on-espresso) or cream blocks
+      // (ink-on-cream) without the component overriding the chosen tone.
+      // The earlier hardcoded text-ink/90 was rendering as black-on-brown
+      // inside the HowItWorks espresso panel — invisible.
       className={
-        "font-mono text-sm sm:text-base text-ink/90 flex items-baseline gap-3 " +
+        "font-mono text-sm sm:text-base flex items-baseline gap-3 " +
         (className || "")
       }
     >
@@ -75,7 +80,7 @@ export function TerminalLine({
         {animating ? (
           <span
             aria-hidden
-            className="inline-block w-[8px] h-[14px] sm:h-[16px] ml-0.5 bg-ink animate-pulse align-baseline"
+            className="inline-block w-[8px] h-[14px] sm:h-[16px] ml-0.5 bg-current animate-pulse align-baseline"
           />
         ) : null}
       </span>

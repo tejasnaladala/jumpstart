@@ -2,9 +2,9 @@
 
 AI-routed pre-event matchmaker for **YC Startup School 2026**, the AI-focused **2-day in-person event** at **Chase Center, San Francisco, July 25-26, 2026**. Curated drops of founders worth meeting at the event. Built by an attendee. Cadence is Monday, Wednesday, Friday at 9pm PT during the matchmaking lead-in (~8 weeks before the event), with denser scheduling support during the 2 days on-site, then a follow-up window post-event.
 
-**Cohort size: ~2,000 hand-picked attendees**, not 8,000. The 8,000 figure refers to the historical online Startup School program, not the in-person AI Startup School 2026 event. Any user-facing copy or stat referencing 8,000 is wrong and should read 2,000.
+**Cohort size: ~6,000 hand-picked attendees** (corrected from earlier 6,000 estimate; the 8,000 figure is also wrong — that was the historical online Startup School program). Any user-facing copy or stat referencing 6,000 or 8,000 is stale and should read 6,000.
 
-**Source of truth for everything is** `docs/superpowers/specs/2026-05-05-jumpstart-design.md`. Read that first if you're spinning up on this project. **NB:** that spec was written assuming an 8,000-founder, 90-day distributed cohort. Treat all references to "8000 users", "8,000 founders", "90-day cohort", and "Days the cohort runs: 90" as outdated. The corrected facts above (2 days, Chase Center, ~2,000 attendees) override the spec.
+**Source of truth for everything is** `docs/superpowers/specs/2026-05-05-jumpstart-design.md`. Read that first if you're spinning up on this project. **NB:** that spec was written assuming an 8,000-founder, 90-day distributed cohort. Treat all references to "8000 users", "8,000 founders", "90-day cohort", and "Days the cohort runs: 90" as outdated. The corrected facts above (2 days, Chase Center, ~6,000 attendees) override the spec.
 
 ## Event facts (load-bearing, do not get wrong)
 
@@ -12,7 +12,7 @@ AI-routed pre-event matchmaker for **YC Startup School 2026**, the AI-focused **
 - **Dates:** July 25-26, 2026 (Saturday + Sunday)
 - **Venue:** Chase Center, San Francisco
 - **Format:** 2-day in-person event with speakers (Jensen Huang, Sam Altman, Jeff Dean among others), founder programming, networking time
-- **Attendees:** ~2,000 hand-picked accepted founders
+- **Attendees:** ~6,000 hand-picked accepted founders
 - **Pre-event window:** ~8 weeks of pre-event matchmaking (Jumpstart's primary surface)
 - **Post-event window:** ~1-2 weeks of follow-up scheduling
 - **Founder positioning:** "Built by an attendee, for the cohort"

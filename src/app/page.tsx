@@ -4,42 +4,37 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { InlineWaitlist } from "@/components/InlineWaitlist";
 import { NextDropCountdown } from "@/components/NextDropCountdown";
 import { Marquee } from "@/components/Marquee";
+import { CohortGlobe } from "@/components/CohortGlobe";
 import { CursorGlow } from "@/components/landing/CursorGlow";
 import { FounderGraph } from "@/components/landing/FounderGraph";
 import { TerminalLine } from "@/components/landing/TerminalLine";
 import { MockMatchCard } from "@/components/landing/MockMatchCard";
 import { MOCK_MATCHES } from "@/components/landing/mockMatches";
-import Link from "next/link";
 
-// Landing page rebuild (May 7 2026, second pass).
+// Landing page rebuild (May 7 2026, third pass).
 //
-// The first ditto.ai-influenced redo (commit 0e4d625) read as too safe
-// to the founder, who pushed back: "feels too safe, too generic, too
-// AI generated." This rewrite goes the other direction. Founder-coded.
-// Technical density. SVG graph hero. Mock match cards with the language
-// builders actually use ("needs frontend killer", not "thoughtful
-// engineer"). Terminal microinteractions in the how-it-works.
+// Founder asked for several specific edits after the second pass:
+//  - Cohort is 6,000 attendees (not 2,000). Update everywhere.
+//  - Concept lift: "knowing people through people and people's people."
+//    Make this the strongest interconnected cohort. Founder graph stays
+//    the hero, globe gets a mid-page slot.
+//  - Tighten hero spacing (No.001 row sits too far below the navbar).
+//  - GlassNav: remove Sign in. Waitlist is the only CTA pre-product.
+//  - Logo: integrate the J mark with the wordmark (was awkwardly spaced).
+//  - Terminal text in HowItWorks renders black-on-brown (invisible). Fix.
+//  - Drop "founder reads every entry / first 50 manual" copy. Sounds
+//    artisanal-app, not founder-network. Remove from trust strip and CTA.
+//  - Tighten the dead space below the typing terminal.
+//  - Add ditto.ai-style collage placeholders for "People's people". The
+//    site reads non-personal; these placeholders hold space until real
+//    photos land (collages of meetings, founders, on-site moments).
 //
-// Audience anchor: young technical YC founders. Hackers who read Demo
-// Day blurbs every week, ship before they announce, and bounce off
-// "find your people" copy in 4 seconds.
+// DateDrop onboarding study (via playwright MCP) confirmed the question
+// taxonomy worth borrowing for the longer Jumpstart onboarding (referenced
+// in the terminal copy): preference Likert scales, multi-select with
+// search, free-text personality questions with helpful placeholders.
 //
-// Compositional choices kept:
-//   - Editorial brand (cream / orange / espresso, Instrument Serif italic)
-//   - GlassNav fixed top, ScrollProgress thread
-//   - InlineWaitlist as the only CTA primitive (no duplicate forms)
-//   - BlurFade for section reveals (one shared primitive)
-//   - Marquee espresso strip
-//
-// New surfaces:
-//   - CursorGlow (desktop-only accent radial under the cursor)
-//   - FounderGraph (SVG node graph as the hero right column)
-//   - MockMatchCard bento (6 illustrative matches, language is the point)
-//   - TerminalLine (mono command-line for HowItWorks steps)
-//
-// Voice rules from CLAUDE.md still load-bearing: no em-dashes, no AI
-// slop adjectives, no "find your people". Every line is something a
-// technical founder would say to another technical founder over coffee.
+// Voice rules from CLAUDE.md still load-bearing.
 
 export default function LandingPage(): React.JSX.Element {
   return (
@@ -49,13 +44,13 @@ export default function LandingPage(): React.JSX.Element {
       <CursorGlow />
 
       {/* HERO. Two-column on lg+: left = headline + sub + CTA + trust,
-          right = FounderGraph SVG. Mobile: stacked, graph below the
-          waitlist (smaller viewport scaled via SVG viewBox). */}
-      <section className="relative pt-[120px] pb-16 sm:pt-[140px] sm:pb-20 lg:pt-[180px] lg:pb-24">
+          right = FounderGraph SVG. Tightened top padding (was 180px,
+          felt awkwardly low) and reduced rule margin. */}
+      <section className="relative pt-[100px] pb-14 sm:pt-[112px] sm:pb-16 lg:pt-[128px] lg:pb-20">
         {/* Ambient orange-glow pad behind the graph. Decorative only. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute right-[-200px] top-[100px] hidden lg:block w-[700px] h-[700px] rounded-full"
+          className="pointer-events-none absolute right-[-200px] top-[60px] hidden lg:block w-[700px] h-[700px] rounded-full"
           style={{
             background:
               "radial-gradient(circle at center, rgba(255,102,0,0.08), transparent 65%)",
@@ -63,14 +58,14 @@ export default function LandingPage(): React.JSX.Element {
         />
         <div className="container-wide relative">
           <BlurFade>
-            <div className="ed-rule mb-10 lg:mb-14 flex items-center justify-between gap-4 pt-3 text-xs">
+            <div className="ed-rule mb-7 lg:mb-9 flex items-center justify-between gap-4 pt-3 text-xs">
               <div className="flex items-center gap-2">
                 <span
                   aria-hidden
                   className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse"
                 />
                 <span className="ed-serial">
-                  No. 001 / Cohort YC SS 2026 · 2,000 builders
+                  No. 001 / YC SS 2026 · 6,000 builders
                 </span>
               </div>
               <span className="ed-serial hidden sm:inline whitespace-nowrap">
@@ -91,9 +86,9 @@ export default function LandingPage(): React.JSX.Element {
               </BlurFade>
               <BlurFade delay={0.06}>
                 <p className="mt-6 max-w-xl text-lg lg:text-xl text-muted leading-relaxed">
-                  Meet the builders moving at your speed. One match per
-                  drop, scored by an AI that reads what you&apos;re shipping.
-                  Find the person who makes your next 3 months faster.
+                  Knowing people through people, and people&apos;s people.
+                  6,000 builders, woven into one cohort, scored by an AI
+                  that reads what you&apos;re shipping.
                 </p>
               </BlurFade>
 
@@ -113,7 +108,7 @@ export default function LandingPage(): React.JSX.Element {
                   <span aria-hidden className="opacity-50">
                     ·
                   </span>
-                  <span>Founder reads every entry.</span>
+                  <span>No public profile.</span>
                   <span aria-hidden className="opacity-50">
                     ·
                   </span>
@@ -123,16 +118,14 @@ export default function LandingPage(): React.JSX.Element {
 
               <BlurFade delay={0.24}>
                 <div className="mt-10 grid grid-cols-3 gap-px bg-border max-w-md">
-                  <Stat n="2,000" label="Cohort attendees" />
+                  <Stat n="6,000" label="Cohort attendees" />
                   <Stat n="48 hrs" label="At Chase Center" />
                   <Stat n="3×/wk" label="Drop cadence" />
                 </div>
               </BlurFade>
             </div>
 
-            {/* Right column: FounderGraph SVG. On mobile it falls below
-                with a top divider; on lg+ it sits parallel to the copy.
-                Wrapped in a pad so the SVG breathes. */}
+            {/* Right column: FounderGraph SVG + countdown card. */}
             <div className="lg:col-span-5 relative mt-4 lg:mt-0">
               <BlurFade delay={0.18}>
                 <div className="relative">
@@ -153,9 +146,9 @@ export default function LandingPage(): React.JSX.Element {
       <Marquee
         items={[
           "Cohort YC SS 2026",
+          "6,000 hand-picked builders",
           "One match per drop",
-          "Built by an attendee",
-          "Verified founders only",
+          "People through people · people's people",
           "Mon · Wed · Fri · 9 PM PT",
           "Chase Center · July 25–26",
           "Not affiliated with Y Combinator",
@@ -164,14 +157,14 @@ export default function LandingPage(): React.JSX.Element {
       />
 
       {/* WHY THIS EXISTS. The thesis line, then a short stanza. The point
-          isn't to monologue, it's to land the math: 2000 people, 2 days,
-          O(n²) collisions = you'll meet 30 by accident. */}
-      <section className="container-wide py-20 lg:py-28">
+          is the math: 6,000 people, 48 hours, O(n²) collisions = you'll
+          meet 30 by accident. */}
+      <section className="container-wide py-16 lg:py-24">
         <BlurFade>
-          <div className="ed-masthead mb-10 lg:mb-14">
+          <div className="ed-masthead mb-8 lg:mb-12">
             <span className="ed-serial">§ 01 / Why this exists</span>
             <span className="ed-serial hidden sm:inline">
-              Discovery is O(n²) at 2,000 attendees
+              Discovery is O(n²) at 6,000 attendees
             </span>
           </div>
         </BlurFade>
@@ -179,7 +172,7 @@ export default function LandingPage(): React.JSX.Element {
           <div className="lg:col-span-7">
             <BlurFade>
               <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-ink leading-[1.04]">
-                YC Startup School puts 2,000 builders in one room for 48
+                YC Startup School puts 6,000 builders in one room for 48
                 hours.{" "}
                 <span className="italic text-accent">
                   Discovery is still O(n²).
@@ -206,8 +199,8 @@ export default function LandingPage(): React.JSX.Element {
             <div className="surface bg-surface p-6 lg:p-8 space-y-5">
               <p className="ed-serial text-accent-text">By the numbers</p>
               <ul className="space-y-4">
-                <NumRow lhs="2,000" rhs="hand-picked attendees" />
-                <NumRow lhs="≈ 1,999,000" rhs="possible 1:1 pairs" />
+                <NumRow lhs="6,000" rhs="hand-picked attendees" />
+                <NumRow lhs="≈ 18M" rhs="possible 1:1 pairs" />
                 <NumRow lhs="≈ 30" rhs="you’ll actually meet" />
                 <NumRow
                   lhs="1"
@@ -220,12 +213,75 @@ export default function LandingPage(): React.JSX.Element {
         </div>
       </section>
 
-      {/* HOW IT WORKS. Mono terminal lines, 5 steps, staged delays so the
-          eye reads them in sequence. Founder-coded. The animation is
-          honest: it is the matchmaker speaking back to you. */}
+      {/* PEOPLE'S PEOPLE — globe + collage placeholders. The thesis: this
+          isn't a feed, it's a graph. Globe shows geography of the cohort;
+          collage placeholders carry the human warmth (real photos drop
+          in once we have them). Ditto.ai-style: photos do the talking. */}
+      <section className="container-wide py-16 lg:py-24 relative">
+        <BlurFade>
+          <div className="ed-masthead mb-8 lg:mb-12">
+            <span className="ed-serial">§ 02 / People&apos;s people</span>
+            <span className="ed-serial hidden sm:inline">
+              The graph extends through everyone you meet
+            </span>
+          </div>
+        </BlurFade>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+          {/* Left: headline + sub + globe */}
+          <div className="lg:col-span-6">
+            <BlurFade>
+              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-ink leading-[1.04]">
+                Knowing people{" "}
+                <span className="italic text-accent">through people,</span>{" "}
+                and people&apos;s people.
+              </h2>
+            </BlurFade>
+            <BlurFade delay={0.08}>
+              <p className="mt-6 text-lg text-muted leading-relaxed max-w-prose">
+                Every match comes with a reason. Every accepted intro adds
+                an edge. The graph compounds: the people you meet bring
+                people you&apos;d never find on your own.
+              </p>
+            </BlurFade>
+            <BlurFade delay={0.14}>
+              <div className="mt-10 flex items-center justify-center lg:justify-start">
+                <div className="w-full max-w-[460px]">
+                  <CohortGlobe size={460} />
+                </div>
+              </div>
+            </BlurFade>
+          </div>
+
+          {/* Right: 6-up collage placeholder grid. Empty cells with
+              hairline borders + mono labels — drops in real photos
+              later (founder dinners, on-site meetings, demo nights). */}
+          <div className="lg:col-span-6">
+            <BlurFade delay={0.1}>
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                <CollagePlaceholder span="row-span-2" label="founder dinners" />
+                <CollagePlaceholder label="demo night" />
+                <CollagePlaceholder label="off-site" />
+                <CollagePlaceholder span="col-span-2" label="cohort photo" />
+                <CollagePlaceholder label="hack" />
+                <CollagePlaceholder label="intros" />
+                <CollagePlaceholder span="col-span-2" label="meetings" />
+              </div>
+            </BlurFade>
+            <BlurFade delay={0.18}>
+              <p className="mt-4 ed-serial text-muted">
+                Photos drop in as the cohort builds.
+              </p>
+            </BlurFade>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS. Mono terminal + dark steps. Tightened section
+          padding (was py-20, now py-16) to remove the dead space the
+          founder flagged below the typing block. */}
       <section
         id="how"
-        className="bg-espresso text-bg py-20 lg:py-28 relative overflow-hidden"
+        className="bg-espresso text-bg py-16 lg:py-20 relative overflow-hidden"
       >
         <div
           aria-hidden
@@ -234,23 +290,23 @@ export default function LandingPage(): React.JSX.Element {
         />
         <div className="container-wide relative">
           <BlurFade>
-            <div className="ed-rule mb-10 lg:mb-14 flex items-baseline justify-between gap-4 pt-3 border-bg/20 before:!bg-accent">
-              <span className="ed-serial text-bg/70">§ 02 / How it works</span>
+            <div className="ed-rule mb-8 lg:mb-12 flex items-baseline justify-between gap-4 pt-3 border-bg/20 before:!bg-accent">
+              <span className="ed-serial text-bg/70">§ 03 / How it works</span>
               <span className="ed-serial hidden sm:inline text-bg/70">
-                Onboarding to first match in under three minutes
+                Onboarding builds the card the matchmaker reads forever
               </span>
             </div>
           </BlurFade>
           <BlurFade>
             <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-bg leading-[1.04] max-w-4xl">
-              Tell the matchmaker what you&apos;re building.{" "}
+              Tell the matchmaker who you are.{" "}
               <span className="italic text-accent">It does the rest.</span>
             </h2>
           </BlurFade>
 
-          <div className="mt-14 lg:mt-20 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-            <div className="lg:col-span-7">
-              <div className="rounded-lg border border-bg/15 bg-espresso-deep/50 p-5 sm:p-7 font-mono text-sm">
+          <div className="mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-stretch">
+            <div className="lg:col-span-7 flex">
+              <div className="rounded-lg border border-bg/15 bg-espresso-deep/60 p-5 sm:p-7 font-mono text-sm w-full text-bg">
                 <div className="flex items-center gap-2 mb-5 text-bg/40 text-[10px] uppercase tracking-[0.2em]">
                   <span className="h-2 w-2 rounded-full bg-bg/30" />
                   <span className="h-2 w-2 rounded-full bg-bg/30" />
@@ -259,30 +315,34 @@ export default function LandingPage(): React.JSX.Element {
                 </div>
                 <div className="space-y-3 text-bg">
                   <TerminalLine
-                    text="five short questions. free text. two minutes."
+                    text="40 questions. preference scales, picks, free text."
                     delaySec={0}
                   />
                   <TerminalLine
-                    text="indexing your build against 2,000 founder cards"
-                    delaySec={2.4}
+                    text="what you ship. how you work. what you read."
+                    delaySec={2.6}
                   />
                   <TerminalLine
-                    text="scoring on stack, stage, ask, and what you offer back"
-                    delaySec={4.5}
+                    text="the weird interest most founders don't have."
+                    delaySec={4.7}
+                  />
+                  <TerminalLine
+                    text="indexing your card against 6,000 in the cohort"
+                    delaySec={6.7}
                   />
                   <TerminalLine
                     text="one match arrives mon · wed · fri at 9 pm pt"
-                    delaySec={6.8}
+                    delaySec={9.0}
                   />
                   <TerminalLine
                     text="both yes? calendar opens. both no? next drop, fresh pick."
-                    delaySec={9.2}
+                    delaySec={11.4}
                   />
                 </div>
               </div>
             </div>
 
-            <div className="lg:col-span-5 space-y-7">
+            <div className="lg:col-span-5 space-y-6 lg:space-y-7">
               {STEPS.map((s, i) => (
                 <BlurFade key={s.title} delay={0.06 * i}>
                   <DarkStep n={i + 1} title={s.title} body={s.body} />
@@ -293,21 +353,18 @@ export default function LandingPage(): React.JSX.Element {
         </div>
       </section>
 
-      {/* SOCIAL PROOF BENTO. Mock match cards arranged in a 3-up bento.
-          The featured card is the AI infra founder (high match score,
-          accent treatment). The cards exist to teach the visitor what
-          a match looks like, in the language they use. */}
-      <section className="container-wide py-20 lg:py-28">
+      {/* SOCIAL PROOF BENTO. Mock match cards arranged in a 3-up bento. */}
+      <section className="container-wide py-16 lg:py-24">
         <BlurFade>
-          <div className="ed-masthead mb-10 lg:mb-14">
-            <span className="ed-serial">§ 03 / What a match looks like</span>
+          <div className="ed-masthead mb-8 lg:mb-12">
+            <span className="ed-serial">§ 04 / What a match looks like</span>
             <span className="ed-serial hidden sm:inline">
               Six illustrative cards from the cohort
             </span>
           </div>
         </BlurFade>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-12">
-          <div className="lg:col-span-5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-10">
+          <div className="lg:col-span-6">
             <BlurFade>
               <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.04]">
                 Real builders.{" "}
@@ -318,18 +375,14 @@ export default function LandingPage(): React.JSX.Element {
               <p className="mt-6 text-lg text-muted leading-relaxed max-w-prose">
                 The matchmaker reads what you&apos;re building, who you need,
                 and what you can offer back. No bios. No buzzwords. Just
-                the four lines that decide whether the next 30 minutes are
+                the lines that decide whether the next 30 minutes are
                 worth a calendar slot.
               </p>
             </BlurFade>
           </div>
         </div>
 
-        {/* Bento grid: featured (Maya/AI infra) gets 3 cols x 2 rows on
-            lg, the four others spread across half-rows. Hover spotlight
-            on each. */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5 lg:gap-6">
-          {/* Featured card spans 3 cols x 2 rows on lg */}
           <BlurFade
             delay={0.06}
             className="sm:col-span-2 lg:col-span-3 lg:row-span-2"
@@ -355,17 +408,17 @@ export default function LandingPage(): React.JSX.Element {
         </BlurFade>
       </section>
 
-      {/* FINAL CTA. Espresso block. Time-bound deadline + dark-tone
-          waitlist row + a sharp last line. */}
-      <section className="container-wide py-16 sm:py-24">
+      {/* FINAL CTA. Espresso block. Stripped of the "founder reads every
+          entry / first 50 personal" copy at founder's request. The pitch
+          is the headline + the form. Nothing else. */}
+      <section className="container-wide py-16 sm:py-20">
         <BlurFade>
-          <div className="bg-espresso text-bg rounded-2xl px-6 py-12 sm:px-12 sm:py-16 lg:px-16 lg:py-20 relative overflow-hidden">
+          <div className="bg-espresso text-bg rounded-2xl px-6 py-12 sm:px-12 sm:py-14 lg:px-16 lg:py-16 relative overflow-hidden">
             <div
               aria-hidden
               className="absolute inset-0 opacity-[0.06] grain"
               style={{ mixBlendMode: "screen" }}
             />
-            {/* Decorative graph echo: faint nodes in the corner */}
             <div
               aria-hidden
               className="absolute -top-12 -right-12 w-72 h-72 rounded-full pointer-events-none"
@@ -376,30 +429,24 @@ export default function LandingPage(): React.JSX.Element {
             />
             <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
               <div className="lg:col-span-7">
-                <div className="ed-rule pt-3 mb-8 flex items-center justify-between text-bg/70 before:!bg-accent border-bg/20">
+                <div className="ed-rule pt-3 mb-6 flex items-center justify-between text-bg/70 before:!bg-accent border-bg/20">
                   <span className="ed-serial text-bg/70 whitespace-nowrap">
-                    No. 001 / First cohort
+                    No. 001 / Cohort YC SS 2026
                   </span>
                   <span className="ed-serial hidden sm:inline text-bg/70">
-                    Reviewed by hand · 50 spots
+                    6,000 builders · one graph
                   </span>
                 </div>
                 <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.04] text-bg max-w-2xl">
                   For founders who ship before they{" "}
                   <span className="italic text-accent">announce.</span>
                 </h2>
-                <p className="mt-6 text-bg/80 leading-relaxed max-w-prose">
-                  Verified SS 2026 attendees go to the front. The first 50
-                  invites are personal: the founder reads every entry and
-                  replies within 24 to 48 hours. After 50, drops continue
-                  but the queue grows.
-                </p>
               </div>
               <div className="lg:col-span-5">
                 <InlineWaitlist
                   source="closing-cta"
                   tone="dark"
-                  buttonLabel="Apply to the first cohort"
+                  buttonLabel="Get on the graph"
                 />
               </div>
             </div>
@@ -414,26 +461,23 @@ export default function LandingPage(): React.JSX.Element {
             Built by an attendee for the SS 2026 cohort. Not affiliated with Y
             Combinator.
           </p>
-          <Link
-            href="/signup"
-            className="text-muted hover:text-ink transition-colors"
-          >
-            Sign in →
-          </Link>
+          <span className="ed-serial">6,000 builders · one graph</span>
         </div>
       </footer>
     </main>
   );
 }
 
+// HowItWorks step copy — borrows DateDrop's pattern of mixing question
+// types (preference scales, picks, free text) but in a founder register.
 const STEPS: { title: string; body: string }[] = [
   {
-    title: "Tell the matchmaker.",
-    body: "Five questions. Free text. Two minutes flat. We build your card from your answers.",
+    title: "Build your card.",
+    body: "Forty short prompts. Preference scales, multi-picks, a few free-text questions about what you ship and how you read.",
   },
   {
     title: "We index the cohort.",
-    body: "Stack, stage, ask, what you offer back. Embedding-scored against the 2,000.",
+    body: "6,000 cards, embedded against yours. Stack, stage, ask, what you offer back, and the weird interest most founders don't have.",
   },
   {
     title: "One match per drop.",
@@ -473,7 +517,7 @@ function Stat({ n, label }: { n: string; label: string }): React.JSX.Element {
       <p className="font-display text-2xl sm:text-3xl text-ink leading-none tabular-nums">
         {n}
       </p>
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted mt-2">
+      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted mt-2">
         {label}
       </p>
     </div>
@@ -501,6 +545,44 @@ function NumRow({
       </span>
       <span className="text-sm text-muted leading-snug">{rhs}</span>
     </li>
+  );
+}
+
+// CollagePlaceholder: empty bordered cell with a mono label. Holds layout
+// space until real cohort photos drop in (founder dinners, demo nights,
+// on-site meetings). Ditto.ai-style — photos eventually do the talking,
+// but until then the editorial mono tag carries the slot. The cell uses
+// a subtle accent-wash tint so the grid reads warm, not empty.
+function CollagePlaceholder({
+  label,
+  span,
+}: {
+  label: string;
+  span?: string;
+}): React.JSX.Element {
+  return (
+    <div
+      className={
+        "relative aspect-[4/3] overflow-hidden border border-border-strong/60 bg-accent-wash/40 group transition-colors duration-300 hover:border-accent-edge/40 hover:bg-accent-wash " +
+        (span || "")
+      }
+    >
+      {/* Subtle grain so the cell doesn't read as flat */}
+      <div
+        aria-hidden
+        className="absolute inset-0 opacity-[0.05] grain pointer-events-none"
+      />
+      {/* Editorial frame: hairline corners */}
+      <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-accent-edge/40" />
+      <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-accent-edge/40" />
+      <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-accent-edge/40" />
+      <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-accent-edge/40" />
+      <div className="absolute inset-0 flex items-end p-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+          {label}
+        </span>
+      </div>
+    </div>
   );
 }
 
