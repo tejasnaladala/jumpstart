@@ -10,6 +10,7 @@ import { FounderGraph } from "@/components/landing/FounderGraph";
 import { TerminalLine } from "@/components/landing/TerminalLine";
 import { MockMatchCard } from "@/components/landing/MockMatchCard";
 import { MOCK_MATCHES } from "@/components/landing/mockMatches";
+import { PreLandingHero } from "@/components/landing/PreLandingHero";
 
 // Landing page rebuild (May 7 2026, third pass).
 //
@@ -42,6 +43,17 @@ export default function LandingPage(): React.JSX.Element {
       <ScrollProgress />
       <GlassNav />
       <CursorGlow />
+
+      {/* PRE-LANDING HERO. Full-viewport intro: orange smoke shader
+          backdrop + cursor-trail code shimmer + giant JUMPSTART
+          wordmark + tagline + scroll prompt. Inspired by YC Startup
+          School 2026's site. Once visitors scroll past, they land in
+          the editorial body below. */}
+      <PreLandingHero />
+
+      {/* === LANDING BODY === */}
+      {/* Anchor target the PreLandingHero scroll button jumps to. */}
+      <div id="landing-body" />
 
       {/* HERO. Two-column on lg+: left = headline + sub + CTA + trust,
           right = FounderGraph SVG. Tightened top padding (was 180px,
