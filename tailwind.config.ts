@@ -8,10 +8,19 @@ export default {
         // == YC Startup School 2026 base palette ==
         // Pulled directly from the YC SS 2026 events stylesheet
         // (bookface-static.ycombinator.com/vite/assets/tailwind-*.css).
-        bg: "#F4F1DB", // warm cream, the SS hero background
+        // Bg toned whiter — was a yellow-cream (#F4F1DB), founder
+        // asked for 'white ivory'. Pulled toward cooler off-white
+        // while keeping a warm undertone (still reads as ivory, not
+        // sterile-white).
+        bg: "#F8F5EA",
         surface: "#FDFDF8", // pale off-white for cards and sheets
         ink: "#16140F", // warm near-black, primary text
         muted: "#463325", // warm dark brown, secondary text
+        // mocha — dark brown for display headings (JUMPSTART, SF.CA).
+        // Replaces text-ink on those elements per founder ask: 'dark
+        // brown mocha, not black'. Still passes WCAG AA on the new
+        // ivory bg.
+        mocha: "#3A2418",
         border: "#E8E3CC", // tinted divider derived from the cream
         // Orange palette toned down 1-2 shades from the strict YC #FF6600
         // (founder felt the neon was too hot vs the YC SS site's actual
