@@ -276,6 +276,20 @@ export function FounderGraphHero(): React.JSX.Element {
           <filter id="fghSoft" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="6" />
           </filter>
+          {/* Drop-shadow filter for hovered nodes — soft orange-tinted
+              shadow so hover feels like the node is lifting off the
+              cream surface, not just changing border. Adds smoothness
+              the founder asked for ('hover feels artificial'). */}
+          <filter id="fghHoverShadow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
+            <feOffset dx="0" dy="2" result="offsetBlur" />
+            <feFlood floodColor="#E85A1B" floodOpacity="0.35" />
+            <feComposite in2="offsetBlur" operator="in" />
+            <feMerge>
+              <feMergeNode />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
 
         {/* Faint orbital guides under YOU + ambient layout cue */}
@@ -390,8 +404,10 @@ export function FounderGraphHero(): React.JSX.Element {
                 }}
                 style={{
                   cursor: isYou ? "default" : "pointer",
+                  // Smoother: 220ms -> 380ms with a softer spring.
                   transition:
-                    "transform 220ms cubic-bezier(0.16, 1, 0.3, 1)",
+                    "transform 380ms cubic-bezier(0.34, 1.4, 0.64, 1)",
+                  filter: isHovered && !isYou ? "url(#fghHoverShadow)" : "none",
                 }}
               >
                 {isYou ? (
@@ -419,8 +435,7 @@ export function FounderGraphHero(): React.JSX.Element {
                   <>
                     {/* Pulsing hint ring — telegraphs that this node is
                         interactive. Slow infinite pulse on the outer
-                        ring; pauses while hovered (no need to keep
-                        pulling attention once the user found it). */}
+                        ring; pauses while hovered. */}
                     <circle
                       r={radius + 18}
                       fill="none"
@@ -429,7 +444,7 @@ export function FounderGraphHero(): React.JSX.Element {
                       strokeOpacity={isHovered ? 0 : 0.8}
                       className={isHovered ? "" : "fgh-target-pulse"}
                       style={{
-                        transition: "stroke-opacity 220ms ease-out",
+                        transition: "stroke-opacity 320ms ease-out",
                       }}
                     />
                     <circle
@@ -438,11 +453,16 @@ export function FounderGraphHero(): React.JSX.Element {
                       stroke="#E85A1B"
                       strokeWidth="2"
                     />
+                    {/* Maya inner: was black (#16140F) — felt harsh.
+                        Now mocha (#3A2418) for warm dark brown,
+                        softer than near-black, still distinct from
+                        YOU's solid orange fill. Stroke bumped 2 -> 2.5
+                        for cleaner contrast at the new fill. */}
                     <circle
                       r={radius}
-                      fill="#16140F"
+                      fill="#3A2418"
                       stroke="#E85A1B"
-                      strokeWidth="2"
+                      strokeWidth="2.5"
                     />
                     <text
                       textAnchor="middle"
@@ -460,22 +480,26 @@ export function FounderGraphHero(): React.JSX.Element {
                     <circle
                       r={radius}
                       fill="#F8F5EA"
-                      stroke="#16140F"
+                      stroke={isHovered ? "#E85A1B" : "#16140F"}
                       strokeOpacity={
                         isHovered ? 1 : onPath ? 0.85 : 0.45
                       }
                       strokeWidth={
-                        isHovered ? 1.8 : onPath ? 1.5 : 1.1
+                        isHovered ? 2.2 : onPath ? 1.5 : 1.1
                       }
-                      style={{ transition: "all 220ms ease-out" }}
+                      style={{
+                        transition:
+                          "stroke 320ms ease-out, stroke-opacity 320ms ease-out, stroke-width 320ms ease-out",
+                      }}
                     />
                     <text
                       textAnchor="middle"
                       dy="0.32em"
                       fontSize="12"
                       fontWeight="600"
-                      fill="#16140F"
+                      fill={isHovered ? "#3A2418" : "#16140F"}
                       className="font-mono"
+                      style={{ transition: "fill 320ms ease-out" }}
                     >
                       {n.label}
                     </text>
@@ -488,7 +512,8 @@ export function FounderGraphHero(): React.JSX.Element {
                         className="font-mono uppercase"
                         style={{
                           letterSpacing: "0.16em",
-                          transition: "fill 220ms ease-out",
+                          transition: "fill 320ms ease-out",
+                          fontWeight: isHovered ? 700 : 400,
                         }}
                       >
                         {n.tag}
@@ -564,15 +589,19 @@ export function FounderGraphHero(): React.JSX.Element {
             onMouseLeave={() => setHoverTarget(false)}
             style={{
               opacity: hoverTarget ? 1 : 0,
+              // Smoother chip entrance: slides in further (-12px),
+              // scales from 96% to 100%, longer 380ms cubic-bezier
+              // with a soft spring overshoot. Removes the 'rigid'
+              // feel the founder flagged.
               transform: hoverTarget
-                ? "translateY(0)"
-                : "translateY(-6px)",
+                ? "translateY(0) scale(1)"
+                : "translateY(-12px) scale(0.96)",
               transition:
-                "opacity 220ms ease-out, transform 220ms cubic-bezier(0.16, 1, 0.3, 1)",
+                "opacity 320ms ease-out, transform 380ms cubic-bezier(0.34, 1.4, 0.64, 1)",
               pointerEvents: hoverTarget ? "auto" : "none",
             }}
           >
-            <div className="rounded-md border border-ink/30 bg-bg shadow-md p-3.5">
+            <div className="rounded-md border border-ink/30 bg-bg shadow-lg p-3.5">
               <div className="flex items-center justify-between gap-2 mb-1.5">
                 <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-text">
                   via 2 friends

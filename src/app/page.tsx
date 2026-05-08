@@ -90,16 +90,13 @@ export default function LandingPage(): React.JSX.Element {
             </p>
           </BlurFade>
 
-          {/* THE GRAPH — full width centerpiece, stands on its own. */}
-          <BlurFade delay={0.14}>
-            <div className="relative mt-10 lg:mt-14">
-              <FounderGraphHero />
-            </div>
-          </BlurFade>
+          {/* GRAPH MOVED — was here, now lives below the 'matching
+              layer for serious YC builders' callout in §01 (founder
+              ask). The hero stays focused on the headline + waitlist. */}
 
-          {/* Waitlist row + countdown below the graph */}
-          <BlurFade delay={0.22}>
-            <div className="mt-12 lg:mt-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          {/* Waitlist row + countdown */}
+          <BlurFade delay={0.14}>
+            <div className="mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
               <div className="lg:col-span-7">
                 <div id="waitlist" className="max-w-xl scroll-mt-24">
                   <InlineWaitlist
@@ -192,10 +189,7 @@ export default function LandingPage(): React.JSX.Element {
             </BlurFade>
           </div>
 
-          {/* By the numbers — woven inline (no white card). Anchored
-              to a left accent thread so it reads as part of the same
-              editorial rhythm as the section masthead, not a card on
-              top of the cream surface. */}
+          {/* By the numbers — woven inline (no white card). */}
           <BlurFade delay={0.16} className="lg:col-span-5">
             <div className="border-l-2 border-accent/40 pl-6 lg:pl-8 space-y-5">
               <p className="ed-serial text-accent-text">By the numbers</p>
@@ -212,6 +206,15 @@ export default function LandingPage(): React.JSX.Element {
             </div>
           </BlurFade>
         </div>
+
+        {/* THE GRAPH — moved here from the hero per founder ask. Sits
+            beneath the 'A matching layer for serious YC builders'
+            callout so the demo lands AFTER the thesis is stated. */}
+        <BlurFade delay={0.22}>
+          <div className="relative mt-12 lg:mt-16">
+            <FounderGraphHero />
+          </div>
+        </BlurFade>
       </section>
 
       {/* §02 People's people removed entirely (founder asked to strip).
