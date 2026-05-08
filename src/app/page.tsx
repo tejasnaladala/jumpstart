@@ -86,8 +86,8 @@ export default function LandingPage(): React.JSX.Element {
           <BlurFade delay={0.06}>
             <p className="mt-5 max-w-2xl text-lg lg:text-xl text-muted leading-relaxed">
               Knowing people through people, and people&apos;s people.
-              6,000 builders, woven into one cohort, scored by an AI that
-              reads what you&apos;re shipping.
+              6,000 builders, woven into one cohort. Hand-curated
+              introductions, three times a week.
             </p>
           </BlurFade>
 
@@ -101,10 +101,10 @@ export default function LandingPage(): React.JSX.Element {
             <div className="mt-10 lg:mt-14 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 max-w-5xl">
               <div>
                 <p className="ed-serial text-accent-text">
-                  Demo · live matchmaker traversal
+                  Demo · how the graph connects you
                 </p>
                 <p className="font-display text-lg sm:text-xl lg:text-2xl text-ink leading-snug mt-1.5 max-w-3xl">
-                  Say what you need. The graph traverses{" "}
+                  Say what you need. The graph runs through{" "}
                   <span className="italic text-accent">
                     friends of friends of friends
                   </span>{" "}
@@ -201,8 +201,8 @@ export default function LandingPage(): React.JSX.Element {
               <p className="mt-7 text-lg text-muted leading-relaxed max-w-prose">
                 You&apos;ll meet 30 founders by accident. Maybe one of them
                 changes your trajectory. The rest is luck of the seating
-                chart. We index the cohort, score against your build, and
-                drop one match into your inbox three times a week.
+                chart. Three times a week, you get one curated introduction
+                to a builder a friend of a friend already vouches for.
               </p>
             </BlurFade>
             <BlurFade delay={0.18}>
@@ -222,7 +222,7 @@ export default function LandingPage(): React.JSX.Element {
                 <NumRow lhs="≈ 30" rhs="you’ll actually meet" />
                 <NumRow
                   lhs="1"
-                  rhs="match per drop, scored against your card"
+                  rhs="curated introduction per drop"
                   accent
                 />
               </ul>
