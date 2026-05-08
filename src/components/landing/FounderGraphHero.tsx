@@ -195,6 +195,13 @@ export function FounderGraphHero(): React.JSX.Element {
   // scrolls into view.
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [revealed, setRevealed] = useState(false);
+  // Target chip is hidden until the user hovers Maya's circle (founder
+  // ask). Track hover both on the node and on the chip itself so
+  // moving cursor from node to chip doesn't immediately close the chip.
+  const [hoverTarget, setHoverTarget] = useState(false);
+  // Hover state for any node (not just target) — used to scale the
+  // hovered node up subtly + show its tag chip prominently.
+  const [hoverNodeId, setHoverNodeId] = useState<string | null>(null);
   const nodeMap = new Map(NODES.map((n) => [n.id, n]));
 
   useEffect(() => {
@@ -236,12 +243,24 @@ export function FounderGraphHero(): React.JSX.Element {
   const TARGET_CHIP_Y = 40;
 
   return (
-    <div ref={wrapperRef} className="relative w-full">
+    <div
+      ref={wrapperRef}
+      className="relative w-full"
+      // When user moves the cursor away from the entire graph area,
+      // close the target chip if it was open.
+      onMouseLeave={() => {
+        setHoverNodeId(null);
+        setHoverTarget(false);
+      }}
+    >
       <svg
-        viewBox="0 0 1600 900"
+        // ViewBox bumped 900h -> 1000h so the graph reads taller on the
+        // page (founder asked for bigger, easier on the eye). Also
+        // gives a bit more vertical breathing room around clusters.
+        viewBox="0 0 1600 1000"
         className="w-full h-auto block"
         role="img"
-        aria-label={`Founder graph: 30 builder nodes across 8 industry clusters in the YC Startup School 2026 cohort. A highlighted path animates from YOU through two bridge nodes to the target match, an ML researcher named Maya Chen working on voice agents. The quote on the path reads: ${QUOTE_TEXT}`}
+        aria-label={`Founder graph: 30 builder nodes across 8 industry clusters in the YC Startup School 2026 cohort. Hover the highlighted target node (Maya Chen) to reveal her profile. The quote on the path reads: ${QUOTE_TEXT}`}
       >
         <defs>
           <radialGradient id="fghYouGlow" cx="50%" cy="50%" r="50%">
@@ -342,30 +361,54 @@ export function FounderGraphHero(): React.JSX.Element {
           })}
         </g>
 
-        {/* === ALL NODES === */}
+        {/* === ALL NODES ===
+            Bumped node radii (larger circles), bigger labels (12 vs 11),
+            and added per-node hover state: cursor:pointer, scale-up on
+            hover, brighter stroke. Target (Maya) gets a pulsing hint
+            ring that telegraphs interactivity. */}
         <g className="fgh-nodes">
           {NODES.map((n) => {
             const isYou = n.id === "you";
             const isTarget = n.id === "target";
             const onPath = HIGHLIGHTED_NODE_IDS.has(n.id);
-            const radius = isYou ? 36 : isTarget ? 32 : onPath ? 24 : 18;
+            const isHovered = hoverNodeId === n.id;
+            // Bumped node radii: YOU 36->42, target 32->38, path 24->28,
+            // others 18->22. Bigger nodes = easier to read at full
+            // viewport width.
+            const baseRadius = isYou ? 42 : isTarget ? 38 : onPath ? 28 : 22;
+            const radius = isHovered ? baseRadius + 4 : baseRadius;
             return (
-              <g key={n.id} transform={`translate(${n.x} ${n.y})`}>
+              <g
+                key={n.id}
+                transform={`translate(${n.x} ${n.y})`}
+                onMouseEnter={() => {
+                  setHoverNodeId(n.id);
+                  if (isTarget) setHoverTarget(true);
+                }}
+                onMouseLeave={() => {
+                  setHoverNodeId((cur) => (cur === n.id ? null : cur));
+                }}
+                style={{
+                  cursor: isYou ? "default" : "pointer",
+                  transition:
+                    "transform 220ms cubic-bezier(0.16, 1, 0.3, 1)",
+                }}
+              >
                 {isYou ? (
                   <>
                     <circle
-                      r={radius + 8}
+                      r={radius + 10}
                       fill="#F4F1DB"
                       stroke="#E85A1B"
-                      strokeWidth="1.5"
+                      strokeWidth="2"
                     />
                     <circle r={radius} fill="#E85A1B" />
                     <text
                       textAnchor="middle"
                       dy="0.32em"
                       className="font-mono"
-                      fontSize="11"
-                      fontWeight="600"
+                      fontSize="13"
+                      fontWeight="700"
                       fill="#F4F1DB"
                       style={{ letterSpacing: "0.18em" }}
                     >
@@ -374,24 +417,39 @@ export function FounderGraphHero(): React.JSX.Element {
                   </>
                 ) : isTarget ? (
                   <>
+                    {/* Pulsing hint ring — telegraphs that this node is
+                        interactive. Slow infinite pulse on the outer
+                        ring; pauses while hovered (no need to keep
+                        pulling attention once the user found it). */}
                     <circle
-                      r={radius + 6}
-                      fill="#F4F1DB"
+                      r={radius + 18}
+                      fill="none"
                       stroke="#E85A1B"
                       strokeWidth="1.5"
+                      strokeOpacity={isHovered ? 0 : 0.8}
+                      className={isHovered ? "" : "fgh-target-pulse"}
+                      style={{
+                        transition: "stroke-opacity 220ms ease-out",
+                      }}
+                    />
+                    <circle
+                      r={radius + 8}
+                      fill="#F4F1DB"
+                      stroke="#E85A1B"
+                      strokeWidth="2"
                     />
                     <circle
                       r={radius}
                       fill="#16140F"
                       stroke="#E85A1B"
-                      strokeWidth="1.5"
+                      strokeWidth="2"
                     />
                     <text
                       textAnchor="middle"
                       dy="0.32em"
                       className="font-mono"
-                      fontSize="11"
-                      fontWeight="600"
+                      fontSize="13"
+                      fontWeight="700"
                       fill="#E85A1B"
                     >
                       {n.label}
@@ -403,13 +461,18 @@ export function FounderGraphHero(): React.JSX.Element {
                       r={radius}
                       fill="#F4F1DB"
                       stroke="#16140F"
-                      strokeOpacity={onPath ? "0.85" : "0.42"}
-                      strokeWidth={onPath ? "1.4" : "1"}
+                      strokeOpacity={
+                        isHovered ? 1 : onPath ? 0.85 : 0.45
+                      }
+                      strokeWidth={
+                        isHovered ? 1.8 : onPath ? 1.5 : 1.1
+                      }
+                      style={{ transition: "all 220ms ease-out" }}
                     />
                     <text
                       textAnchor="middle"
                       dy="0.32em"
-                      fontSize="11"
+                      fontSize="12"
                       fontWeight="600"
                       fill="#16140F"
                       className="font-mono"
@@ -419,11 +482,14 @@ export function FounderGraphHero(): React.JSX.Element {
                     {n.tag ? (
                       <text
                         textAnchor="middle"
-                        y={radius + 14}
-                        fontSize="9"
-                        fill="#463325"
+                        y={radius + 16}
+                        fontSize="10"
+                        fill={isHovered ? "#8C2F00" : "#463325"}
                         className="font-mono uppercase"
-                        style={{ letterSpacing: "0.16em" }}
+                        style={{
+                          letterSpacing: "0.16em",
+                          transition: "fill 220ms ease-out",
+                        }}
                       >
                         {n.tag}
                       </text>
@@ -434,6 +500,27 @@ export function FounderGraphHero(): React.JSX.Element {
             );
           })}
         </g>
+
+        {/* "Hover Maya" hint label below the target node — appears
+            briefly on first reveal, fades out once user has hovered
+            target at least once. Telegraphs the interaction. */}
+        {!hoverTarget ? (
+          <text
+            x={1280}
+            y={350}
+            textAnchor="middle"
+            fontSize="10"
+            fill="#8C2F00"
+            className="font-mono uppercase"
+            style={{
+              letterSpacing: "0.22em",
+              opacity: revealed ? 0.85 : 0,
+              transition: "opacity 600ms ease-out 2.4s",
+            }}
+          >
+            ↑ hover Maya
+          </text>
+        ) : null}
 
         {/* === Floating quote (foreignObject for selectable text) === */}
         <foreignObject x={QUOTE_X} y={QUOTE_Y} width="500" height="140">
@@ -455,23 +542,37 @@ export function FounderGraphHero(): React.JSX.Element {
           </div>
         </foreignObject>
 
-        {/* === Target profile chip (selectable) === */}
+        {/* === Target profile chip — HIDDEN until user hovers Maya's
+            node (founder ask). Stays open while cursor is over the
+            chip itself too (onMouseEnter/Leave handlers on the chip
+            div) so the user can read the contents without the chip
+            disappearing the moment they slide off the node. ===
+            Hover handler is wired so moving from node -> chip keeps
+            it open. */}
         <foreignObject
           x={TARGET_CHIP_X}
           y={TARGET_CHIP_Y}
           width="280"
-          height="160"
+          height="180"
+          // Always render but only become interactive when hovered;
+          // pointer-events live on the inner chip div so the empty
+          // foreignObject doesn't trap mouse events while invisible.
+          style={{ pointerEvents: hoverTarget ? "auto" : "none" }}
         >
           <div
-            className="fgh-target-chip"
+            onMouseEnter={() => setHoverTarget(true)}
+            onMouseLeave={() => setHoverTarget(false)}
             style={{
-              opacity: revealed ? 1 : 0,
-              transform: revealed ? "translateY(0)" : "translateY(8px)",
+              opacity: hoverTarget ? 1 : 0,
+              transform: hoverTarget
+                ? "translateY(0)"
+                : "translateY(-6px)",
               transition:
-                "opacity 500ms ease-out 2.1s, transform 500ms cubic-bezier(0.16, 1, 0.3, 1) 2.1s",
+                "opacity 220ms ease-out, transform 220ms cubic-bezier(0.16, 1, 0.3, 1)",
+              pointerEvents: hoverTarget ? "auto" : "none",
             }}
           >
-            <div className="rounded-md border border-ink/20 bg-bg shadow-sm p-3">
+            <div className="rounded-md border border-ink/30 bg-bg shadow-md p-3.5">
               <div className="flex items-center justify-between gap-2 mb-1.5">
                 <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-text">
                   via 2 friends
@@ -480,7 +581,7 @@ export function FounderGraphHero(): React.JSX.Element {
                   3-hop intro
                 </span>
               </div>
-              <p className="font-display text-[18px] leading-tight text-ink">
+              <p className="font-display text-[20px] leading-tight text-ink">
                 {TARGET_PROFILE.name}
               </p>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted mt-1">
@@ -505,7 +606,8 @@ export function FounderGraphHero(): React.JSX.Element {
           floating quote + target chip + path animation already tell
           the whole story; the caption was redundant. */}
 
-      {/* Inline animation styles (path pulse + node breath) */}
+      {/* Inline animation styles. Path edges pulse; the target hint
+          ring (around Maya) pulses outward to telegraph "click me". */}
       <style jsx>{`
         @keyframes fghPulse {
           0%, 100% {
@@ -519,8 +621,29 @@ export function FounderGraphHero(): React.JSX.Element {
           animation: fghPulse 3.6s ease-in-out infinite;
           animation-delay: 2.4s;
         }
+        /* Target node hint ring — slow expand + fade to draw the eye */
+        @keyframes fghTargetPulse {
+          0% {
+            transform: scale(1);
+            stroke-opacity: 0.85;
+          }
+          70% {
+            transform: scale(1.4);
+            stroke-opacity: 0;
+          }
+          100% {
+            transform: scale(1.4);
+            stroke-opacity: 0;
+          }
+        }
+        .fgh-target-pulse {
+          transform-box: fill-box;
+          transform-origin: center;
+          animation: fghTargetPulse 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
         @media (prefers-reduced-motion: reduce) {
-          .fgh-revealed line {
+          .fgh-revealed line,
+          .fgh-target-pulse {
             animation: none;
           }
         }
