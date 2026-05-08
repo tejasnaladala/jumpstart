@@ -29,19 +29,12 @@ export function GlassNav(): React.JSX.Element {
           : "bg-transparent border-b border-transparent")
       }
     >
-      {/* Full-viewport flex (no container-wide constraint) so the CTA
-          on the right is pushed flush against the viewport edge. Logo
-          on left, CTA on right, both with normal viewport padding only. */}
+      {/* Full-viewport flex. Logo only — 'Get on the list' button
+          removed from the navbar at founder request (the pre-landing
+          itself is the funnel, no nav CTA needed). Right side stays
+          intentionally empty. */}
       <div className="h-full w-full flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <Logo />
-        <nav className="flex items-center gap-2 text-sm">
-          <a
-            href="#waitlist"
-            className="inline-flex h-10 items-center rounded-full bg-accent px-4 text-sm font-semibold text-white transition-all duration-200 hover:bg-accent-edge hover:scale-[1.02] active:scale-[0.98] shadow-sm shadow-accent/20"
-          >
-            Get on the list
-          </a>
-        </nav>
       </div>
     </header>
   );
