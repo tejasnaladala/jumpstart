@@ -24,12 +24,12 @@ export default function Icon() {
         <svg width={26} height={26} viewBox="0 0 32 32" fill="none">
           <path
             d="M9 12c0-1.5 1-2.5 2.5-2.5h6c2 0 3.5 1.5 3.5 3.5v6c0 3-2 4.5-4.5 4.5-2 0-3.5-1-3.5-3"
-            stroke="#F2CFA5"
+            stroke="#F2E5C2"
             strokeWidth={3.2}
             strokeLinecap="round"
             fill="none"
           />
-          <circle cx="22" cy="11" r={2.2} fill="#F2CFA5" />
+          <circle cx="22" cy="11" r={2.2} fill="#F2E5C2" />
         </svg>
       </div>
     ),

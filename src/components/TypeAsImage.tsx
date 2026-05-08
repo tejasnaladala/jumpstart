@@ -41,8 +41,8 @@ export function TypeAsImage({
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-15% 0px" });
 
-  const strokeColor = tone === "cream" ? "#F2CFA5" : "#16140F";
-  const fillColor = tone === "cream" ? "#F2CFA5" : "#E85A1B";
+  const strokeColor = tone === "cream" ? "#F2E5C2" : "#16140F";
+  const fillColor = tone === "cream" ? "#F2E5C2" : "#E85A1B";
   const kickerColor = tone === "cream" ? "text-bg/70" : "text-muted";
 
   return (

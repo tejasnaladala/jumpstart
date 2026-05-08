@@ -176,7 +176,7 @@ export function PreLandingHero(): React.JSX.Element {
             style={{
               borderRadius: "50% 50% 0 0 / 100% 100% 0 0",
               background:
-                "repeating-linear-gradient(to right, transparent 0, transparent 16px, rgba(242,207,165,0.45) 16px, rgba(242,207,165,0.45) 17px)",
+                "repeating-linear-gradient(to right, transparent 0, transparent 16px, rgba(242,229,194,0.50) 16px, rgba(242,229,194,0.50) 17px)",
               maskImage:
                 "radial-gradient(ellipse at 50% 100%, black 0%, black 78%, transparent 100%)",
               WebkitMaskImage:
