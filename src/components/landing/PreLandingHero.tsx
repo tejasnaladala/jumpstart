@@ -148,18 +148,21 @@ export function PreLandingHero(): React.JSX.Element {
           cell. Mobile: skipped entirely (no hover cursor). */}
       <ScrollingCode tone="warm" />
 
-      {/* L4.5: SF.CA location + dates label, positioned absolute on
-          the right side of the viewport. Mirrors the YC SS reference
-          where 'SF.CA' floats large to the right of the headline.
-          Pulls the eye across the canvas and gives the page a sense
-          of place + time without crowding the JUMPSTART wordmark. */}
+      {/* L4.5: SF.CA location + dates label. Positioned bottom-right
+          of the viewport so it doesn't collide with the JUMPSTART
+          wordmark above (the wordmark is too wide to leave horizontal
+          room for a same-height SF.CA on the right, like the YC SS
+          reference does — JUMPSTART is 9 chars at clamp 220 vs YC's
+          two-line break). Bottom-right placement reads as a "footer
+          mark" of place/time/venue, mirroring how YC SS has SF.CA
+          near the bottom-right of the orange sun. */}
       <div
         aria-hidden
-        className="absolute right-5 sm:right-8 lg:right-12 top-1/2 -translate-y-1/2 z-[5] text-right pointer-events-none hidden md:block"
+        className="absolute right-5 sm:right-8 lg:right-12 bottom-[140px] sm:bottom-[160px] lg:bottom-[180px] z-[5] text-right pointer-events-none hidden md:block"
       >
         <div
           className="font-mono uppercase font-bold text-ink leading-[0.86] tracking-[-0.02em]"
-          style={{ fontSize: "clamp(56px, 8vw, 120px)" }}
+          style={{ fontSize: "clamp(48px, 6vw, 96px)" }}
         >
           SF.CA
         </div>
