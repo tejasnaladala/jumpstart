@@ -77,29 +77,24 @@ export function PreLandingHero(): React.JSX.Element {
 
       {/* L3: Code shimmer cursor trail — gentler now (longer fade,
           softer easing — see CodeShimmer.tsx). */}
-      <CodeShimmer radius={260} rate={14} tone="warm" peakOpacity={0.24} />
+      <CodeShimmer
+        radius={260}
+        intervalMs={120}
+        lifetimeMs={3400}
+        tone="warm"
+        peakOpacity={0.22}
+      />
 
-      {/* L4: Foreground content. Three rows, equal-distributed by
-          flex with explicit gaps so the JUMPSTART wordmark isn't
-          crammed against the chrome above and below it. */}
+      {/* L4: Foreground content. No.001 serial removed (founder asked
+          to drop). Descriptor sub-line removed too. JUMPSTART wordmark
+          gets the full middle, tagline nudged right of the wordmark
+          with a left margin so it visually offsets from the giant
+          word above it. */}
       <div className="relative z-10 flex min-h-svh flex-col items-stretch px-5 sm:px-8 text-ink">
-        {/* TOP — Serial chip, sits 24px below the 72px GlassNav. */}
-        <div className="pt-[96px] sm:pt-[112px]">
-          <div className="w-full max-w-[1280px] mx-auto flex items-center justify-between gap-4 text-xs">
-            <div className="flex items-center gap-2">
-              <span
-                aria-hidden
-                className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse"
-              />
-              <span className="ed-serial">No. 001 / YC SS 2026</span>
-            </div>
-            <span className="ed-serial hidden sm:inline">
-              Chase Center · Jul 25–26
-            </span>
-          </div>
-        </div>
+        {/* TOP — empty spacer to clear the 72px GlassNav. */}
+        <div className="h-[96px] sm:h-[112px]" aria-hidden />
 
-        {/* MIDDLE — Headline cluster (JUMPSTART + tagline + descriptor). */}
+        {/* MIDDLE — Headline cluster: huge wordmark + offset tagline. */}
         <div className="flex-1 w-full max-w-[1280px] mx-auto flex flex-col justify-center py-10 sm:py-12">
           <h1
             className="font-mono uppercase text-ink leading-[0.86] tracking-[-0.02em] font-bold"
@@ -107,20 +102,20 @@ export function PreLandingHero(): React.JSX.Element {
           >
             JUMPSTART
           </h1>
+          {/* Tagline nudged right (ml-12 lg:ml-24) so it visually offsets
+              from the left-aligned giant wordmark, reading as a
+              subtitle anchored under JUMPSTART rather than another
+              headline glued to the same column. */}
           <p
-            className="mt-7 sm:mt-9 max-w-2xl font-display italic text-ink/85 leading-tight"
-            style={{ fontSize: "clamp(22px, 3.2vw, 44px)" }}
+            className="mt-8 sm:mt-10 max-w-3xl font-display italic text-ink/85 leading-tight ml-8 sm:ml-16 lg:ml-24"
+            style={{ fontSize: "clamp(22px, 3.0vw, 40px)" }}
           >
-            Knowing people through people, and people&apos;s people.
-          </p>
-          <p className="mt-5 sm:mt-6 max-w-xl text-sm sm:text-base text-muted leading-relaxed">
-            A founder graph for YC Startup School 2026. 6,000 builders,
-            woven into one cohort.
+            YC Startup School puts the most formidable builders in one room
+            for two days.
           </p>
         </div>
 
-        {/* BOTTOM — Scroll prompt. 64px above the viewport edge so it
-            breathes. Gap between label and arrow bumped 8px -> 24px. */}
+        {/* BOTTOM — Scroll prompt with proper breathing room. */}
         <div className="pb-[72px] sm:pb-[88px] w-full max-w-[1280px] mx-auto flex items-center justify-center">
           <button
             type="button"

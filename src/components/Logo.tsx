@@ -19,13 +19,13 @@ export function Logo({
   const dotR = Math.max(1.5, size * 0.055);
 
   const inner = (
-    // Logo + wordmark sit in a single row with a hairline-tight gap so the
-    // mark reads as one symbol, not "icon + text". The orange J hooks into
-    // the "j" of "jumpstart" — letter-spacing is slightly negative so the
-    // wordmark snaps into the dot of the J.
+    // Icon + wordmark sit on a single horizontal line, vertically
+    // centered together. items-center (not items-baseline) so the
+    // wordmark doesn't float above the icon — founder flagged the
+    // baseline-alignment as misaligned.
     <span
       className={cn(
-        "inline-flex items-baseline gap-1 select-none",
+        "inline-flex items-center gap-1.5 select-none",
         className
       )}
     >
@@ -35,7 +35,6 @@ export function Logo({
         viewBox="0 0 32 32"
         fill="none"
         aria-label="Jumpstart logo"
-        className="self-center -translate-y-[1px]"
       >
         <path
           d="M9 12c0-1.5 1-2.5 2.5-2.5h6c2 0 3.5 1.5 3.5 3.5v6c0 3-2 4.5-4.5 4.5-2 0-3.5-1-3.5-3"
@@ -47,9 +46,6 @@ export function Logo({
         <circle cx="22" cy="11" r={dotR} fill="#FF6600" />
       </svg>
       {withWord ? (
-        // Full "Jumpstart" wordmark sits tight to the J mark. Reads as
-        // [icon] + [brand name], not [icon-as-J] + [umpstart] which the
-        // founder flagged as awkward.
         <span className="text-[17px] font-semibold tracking-[-0.015em] text-ink leading-none">
           Jumpstart
         </span>
