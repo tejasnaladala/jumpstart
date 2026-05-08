@@ -65,27 +65,27 @@ export function PreLandingHero(): React.JSX.Element {
       </div>
 
       {/* L1: SmokeBackground — orange flames rising. Opacity dropped
-          100% -> 55% so the page is brighter. The shader still reads,
-          just doesn't dominate the bg. bgColor synced to new peach
-          token (#F2CFA5) so the shader's neutral pixels match the
-          page bg and the multiply blend doesn't bake in stale cream. */}
+          again (55% -> 22%) since the new peach bg + small dome read
+          better with less full-page orange tint. The shader is still
+          there as quiet motion texture but no longer fights the dome
+          for attention. */}
       <div
         aria-hidden
         className={
           "absolute inset-0 mix-blend-multiply transition-opacity duration-700 " +
-          (mounted ? "opacity-55" : "opacity-0")
+          (mounted ? "opacity-25" : "opacity-0")
         }
       >
         <SmokeBackground smokeColor="#E85A1B" bgColor="#F2CFA5" />
       </div>
 
-      {/* L2: Focal smoke behind JUMPSTART — opacity dropped 90% -> 35%
-          so it adds atmosphere without darkening. */}
+      {/* L2: Focal smoke behind JUMPSTART — also dialed down (35% ->
+          12%) so the tagline area doesn't muddy. */}
       <div
         aria-hidden
         className={
           "absolute inset-x-0 top-[18%] h-[55%] mix-blend-multiply transition-opacity duration-700 " +
-          (mounted ? "opacity-35" : "opacity-0")
+          (mounted ? "opacity-15" : "opacity-0")
         }
         style={{
           maskImage:
@@ -132,51 +132,55 @@ export function PreLandingHero(): React.JSX.Element {
         <div
           className="relative"
           style={{
-            width: "min(56vw, 760px)",
-            height: "min(42vh, 400px)",
+            // Tightened pass: was 56vw x 42vh, founder said still too
+            // big (looked like a flat-topped rectangle taking half the
+            // screen). Now 36vw x 28vh — true semi-ellipse aspect
+            // (~1.65:1) reads as a clean dome, sits in the bottom 30%
+            // of the page rather than dominating it.
+            width: "min(36vw, 540px)",
+            height: "min(28vh, 280px)",
           }}
         >
-          {/* Soft halo — a wider, fainter orange tint behind the dome
-              so the edge isn't a razor cut. Bleed beyond container via
-              negative inset and matching dome-shaped radius. */}
+          {/* Soft halo — wider/fainter orange tint behind the dome so
+              the edge has a glow ring instead of a razor cut. Halo
+              bleeds outside the container via negative inset. */}
           <div
             className="absolute"
             style={{
-              left: "-12%",
-              right: "-12%",
-              top: "-10%",
+              left: "-22%",
+              right: "-22%",
+              top: "-18%",
               bottom: 0,
-              borderRadius: "50% 50% 0 0",
+              borderRadius: "50% 50% 0 0 / 100% 100% 0 0",
               background:
-                "radial-gradient(ellipse at 50% 100%, rgba(232,90,27,0.30) 0%, rgba(232,90,27,0.15) 55%, transparent 85%)",
-              filter: "blur(20px)",
+                "radial-gradient(ellipse at 50% 100%, rgba(232,90,27,0.32) 0%, rgba(232,90,27,0.14) 55%, transparent 85%)",
+              filter: "blur(28px)",
             }}
           />
-          {/* Solid orange dome — saturated core, soft fade only near
-              the very edge so the silhouette stays defined. */}
+          {/* Solid orange dome — saturated core, fade only at the very
+              edge so the silhouette stays defined. */}
           <div
             className="absolute inset-0"
             style={{
-              borderRadius: "50% 50% 0 0",
+              borderRadius: "50% 50% 0 0 / 100% 100% 0 0",
               background:
-                "radial-gradient(ellipse at 50% 100%, rgba(232,90,27,0.98) 0%, rgba(232,90,27,0.92) 55%, rgba(232,90,27,0.78) 80%, rgba(232,90,27,0.45) 95%, rgba(232,90,27,0.15) 100%)",
+                "radial-gradient(ellipse at 50% 100%, rgba(232,90,27,0.98) 0%, rgba(232,90,27,0.93) 55%, rgba(232,90,27,0.80) 82%, rgba(232,90,27,0.50) 96%, rgba(232,90,27,0.18) 100%)",
             }}
           />
-          {/* Vertical peach streaks — the bg-color tinted lines
-              cutting through the orange. rgba synced to the new
-              #F2CFA5 page bg so they read as 'page light' breaking
-              through. Slightly denser stripes (10/9 -> 12/11) so they
-              register at the smaller dome size. */}
+          {/* Vertical peach streaks — page-bg tinted lines cutting
+              through the orange (read as light rays). At the smaller
+              dome size, dial back density: was 12/13 px stripe period,
+              now 16/17 so the rays don't read as a regular grid. */}
           <div
             className="absolute inset-0"
             style={{
-              borderRadius: "50% 50% 0 0",
+              borderRadius: "50% 50% 0 0 / 100% 100% 0 0",
               background:
-                "repeating-linear-gradient(to right, transparent 0, transparent 12px, rgba(242,207,165,0.55) 12px, rgba(242,207,165,0.55) 13px)",
+                "repeating-linear-gradient(to right, transparent 0, transparent 16px, rgba(242,207,165,0.45) 16px, rgba(242,207,165,0.45) 17px)",
               maskImage:
-                "radial-gradient(ellipse at 50% 100%, black 0%, black 80%, transparent 100%)",
+                "radial-gradient(ellipse at 50% 100%, black 0%, black 78%, transparent 100%)",
               WebkitMaskImage:
-                "radial-gradient(ellipse at 50% 100%, black 0%, black 80%, transparent 100%)",
+                "radial-gradient(ellipse at 50% 100%, black 0%, black 78%, transparent 100%)",
             }}
           />
         </div>
