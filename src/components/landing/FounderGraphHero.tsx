@@ -245,14 +245,14 @@ export function FounderGraphHero(): React.JSX.Element {
       >
         <defs>
           <radialGradient id="fghYouGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FF6600" stopOpacity="0.32" />
-            <stop offset="60%" stopColor="#FF6600" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="#FF6600" stopOpacity="0" />
+            <stop offset="0%" stopColor="#E85A1B" stopOpacity="0.32" />
+            <stop offset="60%" stopColor="#E85A1B" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#E85A1B" stopOpacity="0" />
           </radialGradient>
           <radialGradient id="fghTargetGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FF6600" stopOpacity="0.40" />
-            <stop offset="55%" stopColor="#FF6600" stopOpacity="0.10" />
-            <stop offset="100%" stopColor="#FF6600" stopOpacity="0" />
+            <stop offset="0%" stopColor="#E85A1B" stopOpacity="0.40" />
+            <stop offset="55%" stopColor="#E85A1B" stopOpacity="0.10" />
+            <stop offset="100%" stopColor="#E85A1B" stopOpacity="0" />
           </radialGradient>
           <filter id="fghSoft" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="6" />
@@ -328,7 +328,7 @@ export function FounderGraphHero(): React.JSX.Element {
                 y1={a.y}
                 x2={b.x}
                 y2={b.y}
-                stroke="#FF6600"
+                stroke="#E85A1B"
                 strokeOpacity="0.9"
                 strokeWidth="2.8"
                 strokeLinecap="round"
@@ -356,10 +356,10 @@ export function FounderGraphHero(): React.JSX.Element {
                     <circle
                       r={radius + 8}
                       fill="#F4F1DB"
-                      stroke="#FF6600"
+                      stroke="#E85A1B"
                       strokeWidth="1.5"
                     />
-                    <circle r={radius} fill="#FF6600" />
+                    <circle r={radius} fill="#E85A1B" />
                     <text
                       textAnchor="middle"
                       dy="0.32em"
@@ -377,13 +377,13 @@ export function FounderGraphHero(): React.JSX.Element {
                     <circle
                       r={radius + 6}
                       fill="#F4F1DB"
-                      stroke="#FF6600"
+                      stroke="#E85A1B"
                       strokeWidth="1.5"
                     />
                     <circle
                       r={radius}
                       fill="#16140F"
-                      stroke="#FF6600"
+                      stroke="#E85A1B"
                       strokeWidth="1.5"
                     />
                     <text
@@ -392,7 +392,7 @@ export function FounderGraphHero(): React.JSX.Element {
                       className="font-mono"
                       fontSize="11"
                       fontWeight="600"
-                      fill="#FF6600"
+                      fill="#E85A1B"
                     >
                       {n.label}
                     </text>

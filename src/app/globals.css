@@ -14,11 +14,13 @@
     --color-ink: #16140f;
     --color-muted: #463325;
     --color-border: #e8e3cc;
-    --color-accent: #ff6600;
-    --color-accent-soft: #fff0e9;
-    --color-accent-edge: #fb651e;
-    --color-accent-text: #a33800;
-    --color-accent-wash: #ffe8d9;
+    /* Toned-down palette to match the rendered YC SS orange (less neon,
+       deeper amber). Keep these in sync with tailwind.config.ts. */
+    --color-accent: #e85a1b;
+    --color-accent-soft: #fceae0;
+    --color-accent-edge: #cc4e15;
+    --color-accent-text: #8c2f00;
+    --color-accent-wash: #fbe0cd;
     --color-success: #48b584;
     --color-error: #e4544b;
     --color-espresso: #2d2417;

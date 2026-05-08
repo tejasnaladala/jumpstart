@@ -42,7 +42,7 @@ export function TypeAsImage({
   const inView = useInView(ref, { once: true, margin: "-15% 0px" });
 
   const strokeColor = tone === "cream" ? "#F4F1DB" : "#16140F";
-  const fillColor = tone === "cream" ? "#F4F1DB" : "#FF6600";
+  const fillColor = tone === "cream" ? "#F4F1DB" : "#E85A1B";
   const kickerColor = tone === "cream" ? "text-bg/70" : "text-muted";
 
   return (

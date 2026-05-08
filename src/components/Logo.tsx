@@ -38,12 +38,12 @@ export function Logo({
       >
         <path
           d="M9 12c0-1.5 1-2.5 2.5-2.5h6c2 0 3.5 1.5 3.5 3.5v6c0 3-2 4.5-4.5 4.5-2 0-3.5-1-3.5-3"
-          stroke="#FF6600"
+          stroke="#E85A1B"
           strokeWidth={stroke}
           strokeLinecap="round"
           fill="none"
         />
-        <circle cx="22" cy="11" r={dotR} fill="#FF6600" />
+        <circle cx="22" cy="11" r={dotR} fill="#E85A1B" />
       </svg>
       {withWord ? (
         <span className="text-[17px] font-semibold tracking-[-0.015em] text-ink leading-none">

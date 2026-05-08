@@ -5,11 +5,11 @@ import { GooeyText } from "@/components/ui/GooeyText";
 import { ScrollingCode } from "@/components/landing/ScrollingCode";
 import { useEffect, useState } from "react";
 
-// Rotating adjectives for the tagline — all YC-coded words PG and
-// the YC essays use to describe high-signal founders. Ordered to
-// pulse: ambitious-positive, sincere-positive, intense-positive,
-// independent-positive. Lengths kept in the 7-10 char range so the
-// inline morph doesn't jump the surrounding sentence width.
+// Rotating adjectives for the tagline. Lengths intentionally varied
+// (7-10 chars) — the GooeyText sizer reserves the longest width and
+// the rest of the sentence wraps to a new line via a hard <br />,
+// so when the morph cycles to 'earnest' (7) the gap doesn't push
+// 'builders' awkwardly far right.
 const TAGLINE_WORDS = [
   "formidable",
   "earnest",
@@ -19,21 +19,19 @@ const TAGLINE_WORDS = [
 ];
 
 // PreLandingHero — full-viewport "front door" before the editorial
-// landing body. Layers, top of stack down:
+// landing body.
 //
-//   L4 (z-10)   Foreground content: serial chip + JUMPSTART wordmark +
-//               italic tagline + descriptor + scroll prompt
-//   L3 (z-1)    CodeShimmer cursor trail
-//   L2 (z-0)    Bottom orange wash (linear gradient)
-//   L1          SmokeBackground (WebGL2 fbm noise, orange-tinted)
-//   L0          DottedSurface (Three.js particle wave, ambient texture)
-//
-// Spacing rules (after founder feedback):
-//   - Top serial sits 24px BELOW the GlassNav so they don't visually
-//     touch. Doesn't anchor to the navbar; floats independently.
-//   - JUMPSTART wordmark gets the entire middle third of the viewport.
-//   - Scroll prompt has a real 32px gap between the "Press" label and
-//     the chevron arrow (was 8px — felt cramped).
+// Founder feedback this pass:
+//   - Background was too dark. Smoke shader opacities dropped
+//     (100% -> 55%, focal layer 90% -> 35%). Bottom wash dropped
+//     (0.18 -> 0.08). Cream comes through more.
+//   - Tagline morph word "contrarian" reserved more inline width
+//     than "earnest" — pushed "builders" too far right when the
+//     short word was visible. Fix: hard line break before
+//     "builders" so the morph word lives on its own line.
+//   - Add a sub line: "Jumpstart helps them find each other."
+//   - ScrollingCode now grid-of-cells with cursor-radius reveal
+//     (default invisible).
 
 export function PreLandingHero(): React.JSX.Element {
   const [mounted, setMounted] = useState(false);
@@ -55,43 +53,37 @@ export function PreLandingHero(): React.JSX.Element {
       aria-label="Jumpstart intro"
     >
       {/* L0: DottedSurface — Three.js particle wave, deepest layer.
-          Adds atmospheric depth on cream. opacity-50 so it sits behind
-          the smoke without overpowering it. */}
+          Toned to opacity-30 so the cream shows through more. */}
       <div
         aria-hidden
         className={
           "absolute inset-0 transition-opacity duration-1000 " +
-          (mounted ? "opacity-50" : "opacity-0")
+          (mounted ? "opacity-30" : "opacity-0")
         }
       >
         <DottedSurface dotColor={[70, 51, 37]} />
       </div>
 
-      {/* L1: SmokeBackground — orange flames rising. multiply blend so
-          the orange tint reads on top of the cream + dotted backdrop.
-          Bumped to 100% opacity so the smoke ribbons read clearly
-          behind the JUMPSTART wordmark (founder asked to embed
-          shaders behind JUMPSTART). */}
+      {/* L1: SmokeBackground — orange flames rising. Opacity dropped
+          100% -> 55% so the page is brighter. The shader still reads,
+          just doesn't dominate the cream. */}
       <div
         aria-hidden
         className={
           "absolute inset-0 mix-blend-multiply transition-opacity duration-700 " +
-          (mounted ? "opacity-100" : "opacity-0")
+          (mounted ? "opacity-55" : "opacity-0")
         }
       >
-        <SmokeBackground smokeColor="#FF6600" bgColor="#F4F1DB" />
+        <SmokeBackground smokeColor="#E85A1B" bgColor="#F4F1DB" />
       </div>
 
-      {/* L2: Focal smoke layer behind the JUMPSTART wordmark. A
-          second SmokeBackground masked to a centered ellipse via
-          radial-gradient so the smoke is more concentrated where the
-          wordmark sits. Reads as the wordmark "burning" out of the
-          shader. */}
+      {/* L2: Focal smoke behind JUMPSTART — opacity dropped 90% -> 35%
+          so it adds atmosphere without darkening. */}
       <div
         aria-hidden
         className={
           "absolute inset-x-0 top-[18%] h-[55%] mix-blend-multiply transition-opacity duration-700 " +
-          (mounted ? "opacity-90" : "opacity-0")
+          (mounted ? "opacity-35" : "opacity-0")
         }
         style={{
           maskImage:
@@ -100,35 +92,33 @@ export function PreLandingHero(): React.JSX.Element {
             "radial-gradient(ellipse at center, black 0%, black 45%, transparent 80%)",
         }}
       >
-        <SmokeBackground smokeColor="#FB651E" bgColor="#F4F1DB" />
+        <SmokeBackground smokeColor="#CC4E15" bgColor="#F4F1DB" />
       </div>
 
-      {/* L3: Bottom orange wash — emphasises rising-flame feel. */}
+      {/* L3: Bottom orange wash — dropped 0.18 -> 0.08 so the bottom
+          isn't dragged down into a saturated orange band. */}
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to top, rgba(255,102,0,0.18), transparent 58%)",
+            "linear-gradient(to top, rgba(232,90,27,0.08), transparent 55%)",
         }}
       />
 
-      {/* L4: ScrollingCode — continuous vertical streams of mono code
-          across 5 columns. Replaces the previous cursor-trail
-          CodeShimmer (founder asked for scrolling code, not just
-          appearing). Pure CSS keyframe transform-Y, no JS state churn. */}
-      <ScrollingCode direction="up" tone="warm" />
+      {/* L4: ScrollingCode — grid of 5x4=20 cells, INVISIBLE by
+          default. Cells fade in only when the cursor moves within
+          280px of their center. Pure CSS keyframe scroll inside each
+          cell. Mobile: skipped entirely (no hover cursor). */}
+      <ScrollingCode tone="warm" />
 
-      {/* L4: Foreground content. No.001 serial removed (founder asked
-          to drop). Descriptor sub-line removed too. JUMPSTART wordmark
-          gets the full middle, tagline nudged right of the wordmark
-          with a left margin so it visually offsets from the giant
-          word above it. */}
+      {/* L5: Foreground content. Three rows: top spacer, middle
+          headline cluster, bottom scroll prompt. */}
       <div className="relative z-10 flex min-h-svh flex-col items-stretch px-5 sm:px-8 text-ink">
-        {/* TOP — empty spacer to clear the 72px GlassNav. */}
+        {/* TOP — spacer to clear the 72px GlassNav. */}
         <div className="h-[96px] sm:h-[112px]" aria-hidden />
 
-        {/* MIDDLE — Headline cluster: huge wordmark + offset tagline. */}
+        {/* MIDDLE — JUMPSTART wordmark + tagline + sub. */}
         <div className="flex-1 w-full max-w-[1280px] mx-auto flex flex-col justify-center py-10 sm:py-12">
           <h1
             className="font-mono uppercase text-ink leading-[0.86] tracking-[-0.02em] font-bold"
@@ -136,13 +126,12 @@ export function PreLandingHero(): React.JSX.Element {
           >
             JUMPSTART
           </h1>
-          {/* Tagline nudged right (ml-8/16/24) so it visually offsets
-              from the left-aligned JUMPSTART wordmark. The adjective
-              ('formidable') is a GooeyText that morphs through several
-              YC-coded words (formidable / earnest / relentless /
-              contrarian / audacious) every ~2.5s. Inline-flow variant
-              of GooeyText so it sits inside the sentence inheriting
-              font-size, italic, and color from the parent <p>. */}
+
+          {/* Tagline. Hard line break BEFORE 'builders' so when the
+              morph word cycles to a shorter token (e.g. 'earnest'),
+              the trailing 'builders in one room for two days.' stays
+              on its own line and doesn't get pushed right by the
+              GooeyText width sizer. */}
           <p
             className="mt-8 sm:mt-10 max-w-3xl font-display italic text-ink/85 leading-tight ml-8 sm:ml-16 lg:ml-24"
             style={{ fontSize: "clamp(22px, 3.0vw, 40px)" }}
@@ -153,12 +142,23 @@ export function PreLandingHero(): React.JSX.Element {
               morphTime={1}
               cooldownTime={1.6}
               className="text-accent"
-            />{" "}
+            />
+            <br />
             builders in one room for two days.
+          </p>
+
+          {/* New sub line — the Jumpstart promise paired against the
+              YC framing above it. Smaller, italic too, but in muted
+              tone so the rotating tagline keeps weight. */}
+          <p
+            className="mt-5 sm:mt-6 max-w-2xl font-display italic text-muted leading-snug ml-8 sm:ml-16 lg:ml-24"
+            style={{ fontSize: "clamp(16px, 1.8vw, 22px)" }}
+          >
+            Jumpstart helps them find each other.
           </p>
         </div>
 
-        {/* BOTTOM — Scroll prompt with proper breathing room. */}
+        {/* BOTTOM — Scroll prompt. */}
         <div className="pb-[72px] sm:pb-[88px] w-full max-w-[1280px] mx-auto flex items-center justify-center">
           <button
             type="button"

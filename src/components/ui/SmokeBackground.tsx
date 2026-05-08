@@ -11,7 +11,7 @@ import React, { useEffect, useRef } from "react";
 //
 // Two prop knobs:
 //   - smokeColor: the high-luminance color the noise tints toward
-//     (default = YC orange #FF6600)
+//     (default = YC orange #E85A1B)
 //   - bgColor: the canvas clear color (default cream #F4F1DB)
 //
 // Costs roughly one shader pass per frame, no overdraw, fbm capped at
@@ -184,7 +184,7 @@ type Props = {
 };
 
 export function SmokeBackground({
-  smokeColor = "#FF6600",
+  smokeColor = "#E85A1B",
   bgColor = "#F4F1DB",
   className,
 }: Props): React.JSX.Element {
