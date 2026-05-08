@@ -126,7 +126,7 @@ export function InlineWaitlist({
           aria-hidden
           className={"h-px w-12 " + (isDark ? "bg-bg" : "bg-accent")}
         />
-        <p className={"ed-serial " + (isDark ? "text-bg/80" : "text-accent")}>
+        <p className={"ed-serial " + (isDark ? "text-bg/80" : "text-accent-text")}>
           On the list
         </p>
         <p

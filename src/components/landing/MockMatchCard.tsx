@@ -79,8 +79,11 @@ export function MockMatchCard({ match, className }: Props): React.JSX.Element {
         <div className="mt-4">
           <p
             className={
-              "font-mono text-[10px] uppercase tracking-[0.2em] mb-1 " +
-              (featured ? "text-accent" : "text-accent")
+              "font-mono text-[11px] uppercase tracking-[0.2em] mb-1 " +
+              // featured = espresso card → orange has 5:1 contrast there
+              // (large enough on dark bg). Non-featured = cream card →
+              // need accent-text (#A33800) for WCAG AA on small caps.
+              (featured ? "text-accent" : "text-accent-text")
             }
           >
             building
@@ -98,7 +101,7 @@ export function MockMatchCard({ match, className }: Props): React.JSX.Element {
         <div className="mt-4">
           <p
             className={
-              "font-mono text-[10px] uppercase tracking-[0.2em] mb-1 " +
+              "font-mono text-[11px] uppercase tracking-[0.2em] mb-1 " +
               (featured ? "text-bg/60" : "text-muted")
             }
           >
@@ -121,7 +124,7 @@ export function MockMatchCard({ match, className }: Props): React.JSX.Element {
             <span
               key={t}
               className={
-                "font-mono text-[9px] uppercase tracking-[0.16em] px-2 py-1 rounded-sm border " +
+                "font-mono text-[11px] uppercase tracking-[0.14em] px-2 py-1 rounded-sm border " +
                 (featured
                   ? "border-bg/30 text-bg/80"
                   : "border-border text-muted")

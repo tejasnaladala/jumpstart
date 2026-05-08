@@ -239,7 +239,7 @@ export function FounderGraph(): React.JSX.Element {
               {nodeMap.get(hoverId)?.initials}
             </span>{" "}
             ·{" "}
-            <span className="text-accent">
+            <span className="text-accent-text">
               {nodeMap.get(hoverId)?.tag}
             </span>{" "}
             ·{" "}
