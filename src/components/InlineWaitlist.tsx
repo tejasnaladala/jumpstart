@@ -25,6 +25,13 @@ type Props = {
   className?: string;
   placeholder?: string;
   buttonLabel?: string;
+  // attendeeCount: real social-proof count rendered under the form as
+  // "{n} SS 2026 attendees on the list." Gated on >= 25 so the line
+  // never renders with an embarrassing pre-launch number ("3 attendees
+  // on the list" reads worse than no count). Pass undefined to skip
+  // entirely (current default until the count is wired through to a
+  // real /api/waitlist GET endpoint).
+  attendeeCount?: number;
 };
 
 export function InlineWaitlist({
@@ -34,6 +41,7 @@ export function InlineWaitlist({
   className,
   placeholder = "you@email.com",
   buttonLabel = "Get on the list",
+  attendeeCount,
 }: Props): React.JSX.Element {
   const [email, setEmail] = useState("");
   const [handle, setHandle] = useState("");
@@ -253,6 +261,22 @@ export function InlineWaitlist({
           }
         >
           {error}
+        </p>
+      ) : null}
+
+      {/* Social-proof count. Gated on >= 25 so we never publish a
+          pre-launch number that reads worse than no number at all. */}
+      {typeof attendeeCount === "number" && attendeeCount >= 25 ? (
+        <p
+          className={
+            "mt-1 text-xs tabular-nums " +
+            (isDark ? "text-bg/70" : "text-muted")
+          }
+        >
+          <span className="font-semibold text-accent-text">
+            {attendeeCount.toLocaleString()}
+          </span>{" "}
+          SS 2026 attendees on the list.
         </p>
       ) : null}
     </form>

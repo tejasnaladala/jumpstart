@@ -6,6 +6,8 @@ import { NextDropCountdown } from "@/components/NextDropCountdown";
 import { CursorGlow } from "@/components/landing/CursorGlow";
 import { FounderGraphHero } from "@/components/landing/FounderGraphHero";
 import { PreLandingHero } from "@/components/landing/PreLandingHero";
+import { DropCardMockup } from "@/components/landing/DropCardMockup";
+import { HowItWorks } from "@/components/landing/HowItWorks";
 import { DitherWarp } from "@/components/ui/DitherWarp";
 
 // Landing page rebuild (May 7 2026, fourth pass — "make it crazy").
@@ -85,8 +87,8 @@ export default function LandingPage(): React.JSX.Element {
           </BlurFade>
           <BlurFade delay={0.06}>
             <p className="mt-5 max-w-2xl text-lg lg:text-xl text-muted leading-relaxed">
-              Knowing people through people, and people&apos;s people.
-              Hand-curated introductions, three times a week.
+              One curated intro, three times a week, before the room gets
+              crowded. Friend-of-a-friend or stack overlap, never random.
             </p>
           </BlurFade>
 
@@ -122,28 +124,28 @@ export default function LandingPage(): React.JSX.Element {
                   <Stat n="3×/wk" label="Drop cadence" />
                 </div>
               </div>
-              <div className="lg:col-span-5">
+              <div className="lg:col-span-5 space-y-5">
                 <div className="surface bg-bg/60 p-5 sm:p-6">
                   <NextDropCountdown />
                 </div>
+                {/* Audit gap fix: visitors had no idea what the product
+                    actually delivered. The DropCardMockup shows a
+                    representative Mon/Wed/Fri 9 PM PT drop right next
+                    to the email field, so the email-for-mystery trade
+                    becomes email-for-this-specific-thing. */}
+                <DropCardMockup />
               </div>
             </div>
           </BlurFade>
         </div>
       </section>
 
-      {/* Tagline pull-quote strip — sits between the hero (graph) and
-          §01 Why this exists. Padding tightened (py-10/14 -> py-4/6)
-          per founder ask: 'too much space above and below'. Now hugs
-          the surrounding content. */}
-      <section className="container-wide py-4 lg:py-6">
-        <BlurFade>
-          <p className="font-display italic text-3xl sm:text-4xl lg:text-5xl text-ink leading-tight max-w-4xl">
-            Builder finds builder.{" "}
-            <span className="text-accent">Three times a week.</span>
-          </p>
-        </BlurFade>
-      </section>
+      {/* HOW IT WORKS — three editorial cards that explain the loop:
+          we build the graph → one drop M/W/F at 9 PM PT → both yes
+          opens calendar. Replaces the old decorative "Builder finds
+          builder. Three times a week." pull-quote strip, which was a
+          recap of the 3x/wk stat already shown above. */}
+      <HowItWorks />
 
       {/* WHY THIS EXISTS — heavy section with accent masthead and
           boosted H2 (one tier bigger than the other H2s for thesis
@@ -170,10 +172,10 @@ export default function LandingPage(): React.JSX.Element {
             </BlurFade>
             <BlurFade delay={0.1}>
               <p className="mt-7 text-lg text-muted leading-relaxed max-w-prose">
-                You&apos;ll meet 30 founders by accident. Maybe one of them
-                changes your trajectory. The rest is luck of the seating
-                chart. Three times a week, you get one curated introduction
-                to a builder a friend of a friend already vouches for.
+                You&apos;ll meet 30 by accident. The other 5,970 you&apos;ll
+                never know existed. Three times a week, Jumpstart sends you
+                one founder a friend of a friend already vouches for. No
+                noise. No PR. No DMs from strangers.
               </p>
             </BlurFade>
             {/* Highlighted callout — drops the 'not another networking
@@ -267,8 +269,8 @@ export default function LandingPage(): React.JSX.Element {
                   <span className="italic text-accent">seating chart.</span>
                 </h2>
                 <p className="mt-5 text-bg/75 leading-relaxed max-w-prose">
-                  Six thousand builders. One graph. One match per drop, three
-                  times a week.
+                  Eight weeks of founders worth meeting, before Chase Center
+                  even opens.
                 </p>
               </div>
               <div className="lg:col-span-5">
@@ -283,14 +285,17 @@ export default function LandingPage(): React.JSX.Element {
         </BlurFade>
       </section>
 
-      <footer className="container-wide pb-10 border-t border-border pt-8 text-xs text-muted">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <span className="ed-serial">Jumpstart / Cohort YC SS 2026</span>
+      {/* Footer — tightened to a single-row line. The earlier 3-column
+          version repeated the "6,000 builders / one graph" stat that
+          already appears in the hero, hero stats, §01 sidebar, and
+          espresso CTA. Footer now just carries provenance + cadence. */}
+      <footer className="container-wide pb-10 border-t border-border pt-6 text-xs text-muted">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <span className="ed-serial">Jumpstart · YC SS 2026</span>
           <p>
-            Built by an attendee for the SS 2026 cohort. Not affiliated with Y
-            Combinator.
+            Built by an attendee. Not affiliated with Y Combinator.
           </p>
-          <span className="ed-serial">6,000 builders · one graph</span>
+          <span className="ed-serial">Drops M · W · F · 9 PM PT</span>
         </div>
       </footer>
     </main>

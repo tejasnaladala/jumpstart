@@ -3,10 +3,15 @@ import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
 
 // Glass-morph nav inspired by ditto.ai: transparent at top, switches to
-// cream-tinted backdrop-blur after the first scroll commit. Fixed position,
-// 72px tall, full-width. Uses an IntersectionObserver-style scroll listener
-// (not framer-motion useScroll, to keep the nav out of the framer-motion
-// boundary and lower the bundle on the public landing).
+// cream-tinted backdrop-blur after the first scroll commit. Fixed
+// position, 72px tall, full-width.
+//
+// Audit pass: the nav was logo-only. Once the user scrolled past the
+// pre-landing brand splash, there was no above-the-fold conversion
+// surface anywhere on screen. Added a "Get on the graph" CTA anchor
+// that fades in at the same scroll threshold as the glass background
+// (24px). The CTA links to #waitlist (the InlineWaitlist anchor in
+// the hero), so a click smooth-scrolls back to the form.
 
 export function GlassNav(): React.JSX.Element {
   const [scrolled, setScrolled] = useState(false);
@@ -29,12 +34,23 @@ export function GlassNav(): React.JSX.Element {
           : "bg-transparent border-b border-transparent")
       }
     >
-      {/* Full-viewport flex. Logo only — 'Get on the list' button
-          removed from the navbar at founder request (the pre-landing
-          itself is the funnel, no nav CTA needed). Right side stays
-          intentionally empty. */}
       <div className="h-full w-full flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <Logo />
+        {/* CTA fades in once the user has scrolled past the pre-landing.
+            Hidden on small screens (the floating bottom waitlist anchor
+            covers mobile conversion well enough). */}
+        <a
+          href="#waitlist"
+          className={
+            "hidden sm:inline-flex h-10 items-center rounded-md bg-accent text-white px-4 text-sm font-semibold transition-all duration-300 hover:bg-accent-edge focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent " +
+            (scrolled
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 -translate-y-1 pointer-events-none")
+          }
+          aria-label="Jump to the waitlist form"
+        >
+          Get on the graph
+        </a>
       </div>
     </header>
   );
