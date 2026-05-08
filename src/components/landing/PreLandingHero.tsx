@@ -106,48 +106,58 @@ export function PreLandingHero(): React.JSX.Element {
         }}
       />
 
-      {/* L3.5: Orange ascending sun — boosted size + brighter streaks
-          per founder ask ('orange lights too thin too small'). Three
-          stacked layers:
-            1. Wide sun core glow — large radial, bright orange center
-            2. Outer ambient halo — pulls warmth out to the edges
-            3. Vertical streak beams — thicker (3px every 12px gap)
-               and darker so they read clearly as light shafts. */}
+      {/* L3.5: Orange ascending sun — TRUE SEMICIRCLE DOME matching the
+          YC SS 2026 reference (founder shared the screenshot). Two
+          stacked layers, both clipped to a semicircle via
+          border-radius 50% 50% 0 0 sitting at the bottom edge:
+            1. Solid bright orange dome — radial gradient from saturated
+               core out to a soft fade at the edges
+            2. Vertical CREAM streaks rising through the orange — read
+               as light rays cutting through the dome
+          The semicircle is wider than the viewport on small screens
+          (max 1400px on lg) so it always fills the bottom band. */}
       <div
         aria-hidden
         className={
-          "absolute inset-x-0 bottom-0 h-[70%] pointer-events-none transition-opacity duration-1000 " +
+          "absolute inset-x-0 bottom-0 pointer-events-none flex justify-center items-end transition-opacity duration-1000 " +
           (mounted ? "opacity-100" : "opacity-0")
         }
       >
-        {/* Outer ambient halo — broadest, softest layer */}
         <div
-          className="absolute inset-0"
+          className="relative"
           style={{
-            background:
-              "radial-gradient(ellipse 80% 100% at 55% 110%, rgba(232,90,27,0.30) 0%, rgba(232,90,27,0.10) 40%, transparent 75%)",
+            // Aspect ratio 2:1 so border-radius 50%/100% creates a
+            // true semicircle (height = half width).
+            width: "min(120vw, 1600px)",
+            height: "min(60vw, 800px)",
           }}
-        />
-        {/* Vertical streak beams — thicker (3px ever 12px), darker */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "repeating-linear-gradient(to right, transparent 0px, transparent 12px, rgba(204,78,21,0.32) 12px, rgba(204,78,21,0.32) 14px)",
-            maskImage:
-              "radial-gradient(ellipse 60% 100% at 55% 100%, black 0%, black 35%, transparent 75%)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse 60% 100% at 55% 100%, black 0%, black 35%, transparent 75%)",
-          }}
-        />
-        {/* Bright sun core — concentrated bright glow at the horizon */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 50% 75% at 55% 105%, rgba(232,90,27,0.75) 0%, rgba(232,90,27,0.30) 30%, rgba(232,90,27,0.08) 55%, transparent 75%)",
-          }}
-        />
+        >
+          {/* Solid orange dome — radial gradient bright at center,
+              soft fade at the curved edges. */}
+          <div
+            className="absolute inset-0"
+            style={{
+              borderRadius: "50% 50% 0 0",
+              background:
+                "radial-gradient(circle at 50% 100%, rgba(232,90,27,0.95) 0%, rgba(232,90,27,0.85) 40%, rgba(232,90,27,0.50) 70%, rgba(232,90,27,0.10) 90%, transparent 100%)",
+            }}
+          />
+          {/* Cream vertical streaks rising through the dome — masked
+              so they only show inside the semicircle and fade at the
+              edges. Reads as light rays cutting the orange. */}
+          <div
+            className="absolute inset-0"
+            style={{
+              borderRadius: "50% 50% 0 0",
+              background:
+                "repeating-linear-gradient(to right, transparent 0, transparent 10px, rgba(248,245,234,0.55) 10px, rgba(248,245,234,0.55) 11px)",
+              maskImage:
+                "radial-gradient(circle at 50% 100%, black 0%, black 75%, transparent 100%)",
+              WebkitMaskImage:
+                "radial-gradient(circle at 50% 100%, black 0%, black 75%, transparent 100%)",
+            }}
+          />
+        </div>
       </div>
 
       {/* L4: ScrollingCode — grid of 5x4=20 cells, INVISIBLE by
@@ -156,21 +166,24 @@ export function PreLandingHero(): React.JSX.Element {
           cell. Mobile: skipped entirely (no hover cursor). */}
       <ScrollingCode tone="warm" />
 
-      {/* L4.5: SF.CA mark, bottom-right. Dates label (JUL 25-26 +
-          CHASE CENTER) removed because the scrolling code grid was
-          colliding with it visually (founder shared a screenshot
-          showing illegible overlap). SF.CA stays as the place mark.
-          Color shifted text-ink -> text-mocha (warm dark brown,
-          softer than near-black). */}
+      {/* L4.5: SF.CA mark, repositioned TOP-RIGHT corner (was bottom-
+          right, founder asked for cleaner placement that doesn't
+          clutter against the orange sun + scrolling code). Sits in
+          the empty top-right where the navbar CTA used to be — small
+          enough that it reads as a place mark, not a dominant element.
+          Mocha tone matches JUMPSTART. */}
       <div
         aria-hidden
-        className="absolute right-5 sm:right-8 lg:right-12 bottom-[140px] sm:bottom-[160px] lg:bottom-[180px] z-[5] text-right pointer-events-none hidden md:block"
+        className="absolute right-5 sm:right-8 lg:right-12 top-[28px] sm:top-[32px] z-[5] text-right pointer-events-none hidden md:block"
       >
         <div
-          className="font-mono uppercase font-bold text-mocha leading-[0.86] tracking-[-0.02em]"
-          style={{ fontSize: "clamp(48px, 6vw, 96px)" }}
+          className="font-mono uppercase font-bold text-mocha leading-none tracking-[-0.01em]"
+          style={{ fontSize: "clamp(20px, 2.2vw, 32px)" }}
         >
           SF.CA
+        </div>
+        <div className="mt-1.5 font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.22em] text-muted">
+          Jul 25–26 · 2026
         </div>
       </div>
 
