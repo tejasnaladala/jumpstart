@@ -11,31 +11,28 @@ import { TerminalLine } from "@/components/landing/TerminalLine";
 import { ComprehensiveMatchCard } from "@/components/landing/ComprehensiveMatchCard";
 import { MOCK_MATCHES } from "@/components/landing/mockMatches";
 import { PreLandingHero } from "@/components/landing/PreLandingHero";
+import { RippleShader } from "@/components/ui/RippleShader";
+import { DitherWarp } from "@/components/ui/DitherWarp";
 
-// Landing page rebuild (May 7 2026, third pass).
+// Landing page rebuild (May 7 2026, fourth pass — "make it crazy").
 //
-// Founder asked for several specific edits after the second pass:
-//  - Cohort is 6,000 attendees (not 2,000). Update everywhere.
-//  - Concept lift: "knowing people through people and people's people."
-//    Make this the strongest interconnected cohort. Founder graph stays
-//    the hero, globe gets a mid-page slot.
-//  - Tighten hero spacing (No.001 row sits too far below the navbar).
-//  - GlassNav: remove Sign in. Waitlist is the only CTA pre-product.
-//  - Logo: integrate the J mark with the wordmark (was awkwardly spaced).
-//  - Terminal text in HowItWorks renders black-on-brown (invisible). Fix.
-//  - Drop "founder reads every entry / first 50 manual" copy. Sounds
-//    artisanal-app, not founder-network. Remove from trust strip and CTA.
-//  - Tighten the dead space below the typing terminal.
-//  - Add ditto.ai-style collage placeholders for "People's people". The
-//    site reads non-personal; these placeholders hold space until real
-//    photos land (collages of meetings, founders, on-site moments).
-//
-// DateDrop onboarding study (via playwright MCP) confirmed the question
-// taxonomy worth borrowing for the longer Jumpstart onboarding (referenced
-// in the terminal copy): preference Likert scales, multi-select with
-// search, free-text personality questions with helpful placeholders.
-//
-// Voice rules from CLAUDE.md still load-bearing.
+// Audit findings acted on (this commit):
+//  - Visual flatness: every section used the same H2 size + same grid
+//    gap + same py — sections looked cloned. Now: standardized
+//    .section-pad + .grid-gap-std + .ed-masthead-accent for the heavy
+//    sections (Why, People, Final CTA) so visual rhythm tiers cleanly.
+//  - Tightened hero rule mb (was 7/lg:9, now 4/lg:5) so the No.001
+//    label kisses the H1 instead of floating below it.
+//  - Typographic hierarchy: Why H2 boosted one tier (text-5xl ->
+//    text-7xl on lg) so the thesis line dominates.
+//  - 21st.dev shader components wired in:
+//    * RippleShader (three.js concentric pulses, orange-on-cream)
+//      sits behind the FounderGraph as ambient pulse texture.
+//    * DitherWarp (Paper Design dithering, lazy-loaded) sits behind
+//      the featured Maya card AND the final CTA espresso block,
+//      adding subtle "computed" warm noise instead of flat surfaces.
+//  - Match-reason quote in cards bumped one tier: text-base -> text-lg.
+//  - Mobile collage: 3-col -> 2-col on small screens for breathable cells.
 
 export default function LandingPage(): React.JSX.Element {
   return (
@@ -44,33 +41,29 @@ export default function LandingPage(): React.JSX.Element {
       <GlassNav />
       <CursorGlow />
 
-      {/* PRE-LANDING HERO. Full-viewport intro: orange smoke shader
-          backdrop + cursor-trail code shimmer + giant JUMPSTART
-          wordmark + tagline + scroll prompt. Inspired by YC Startup
-          School 2026's site. Once visitors scroll past, they land in
-          the editorial body below. */}
+      {/* PRE-LANDING HERO. Full-viewport intro: orange smoke shader,
+          cursor-trail code shimmer, giant JUMPSTART wordmark, scroll
+          prompt. Once past, the editorial body begins. */}
       <PreLandingHero />
 
       {/* === LANDING BODY === */}
-      {/* Anchor target the PreLandingHero scroll button jumps to. */}
       <div id="landing-body" />
 
-      {/* HERO. Two-column on lg+: left = headline + sub + CTA + trust,
-          right = FounderGraph SVG. Tightened top padding (was 180px,
-          felt awkwardly low) and reduced rule margin. */}
-      <section className="relative pt-[100px] pb-14 sm:pt-[112px] sm:pb-16 lg:pt-[128px] lg:pb-20">
-        {/* Ambient orange-glow pad behind the graph. Decorative only. */}
+      {/* HERO. Two-column on lg+. RippleShader sits behind the
+          FounderGraph as ambient pulse texture. */}
+      <section className="relative pt-[80px] pb-14 sm:pt-[88px] sm:pb-16 lg:pt-[96px] lg:pb-20">
+        {/* Ambient orange-glow pad behind the graph */}
         <div
           aria-hidden
-          className="pointer-events-none absolute right-[-200px] top-[60px] hidden lg:block w-[700px] h-[700px] rounded-full"
+          className="pointer-events-none absolute right-[-200px] top-[40px] hidden lg:block w-[700px] h-[700px] rounded-full"
           style={{
             background:
-              "radial-gradient(circle at center, rgba(255,102,0,0.08), transparent 65%)",
+              "radial-gradient(circle at center, rgba(255,102,0,0.10), transparent 65%)",
           }}
         />
         <div className="container-wide relative">
           <BlurFade>
-            <div className="ed-rule mb-7 lg:mb-9 flex items-center justify-between gap-4 pt-3 text-xs">
+            <div className="ed-rule mb-4 lg:mb-5 flex items-center justify-between gap-4 pt-3 text-xs">
               <div className="flex items-center gap-2">
                 <span
                   aria-hidden
@@ -86,10 +79,10 @@ export default function LandingPage(): React.JSX.Element {
             </div>
           </BlurFade>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
             <div className="lg:col-span-7">
               <BlurFade>
-                <h1 className="font-display text-[44px] leading-[0.96] tracking-[-0.015em] text-ink sm:text-6xl lg:text-7xl xl:text-[80px]">
+                <h1 className="font-display text-[48px] leading-[0.94] tracking-[-0.018em] text-ink sm:text-7xl lg:text-[88px] xl:text-[104px]">
                   A founder graph for{" "}
                   <span className="italic text-accent">
                     YC Startup School.
@@ -137,11 +130,26 @@ export default function LandingPage(): React.JSX.Element {
               </BlurFade>
             </div>
 
-            {/* Right column: FounderGraph SVG + countdown card. */}
+            {/* Right column: FounderGraph SVG layered over RippleShader.
+                The shader is opacity-30 + blend-multiply so it reads as
+                a slow heartbeat behind the graph nodes. */}
             <div className="lg:col-span-5 relative mt-4 lg:mt-0">
               <BlurFade delay={0.18}>
                 <div className="relative">
-                  <FounderGraph />
+                  {/* Concentric pulse shader behind the graph */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -inset-6 sm:-inset-8 opacity-25 mix-blend-multiply"
+                    style={{ filter: "blur(0.5px)" }}
+                  >
+                    <RippleShader
+                      bgColor="#F4F1DB"
+                      accentColor="#FF6600"
+                    />
+                  </div>
+                  <div className="relative">
+                    <FounderGraph />
+                  </div>
                 </div>
               </BlurFade>
               <BlurFade delay={0.34}>
@@ -154,7 +162,7 @@ export default function LandingPage(): React.JSX.Element {
         </div>
       </section>
 
-      {/* Espresso marquee strip. Carries the cadence into the page break. */}
+      {/* Espresso marquee strip */}
       <Marquee
         items={[
           "Cohort YC SS 2026",
@@ -168,22 +176,22 @@ export default function LandingPage(): React.JSX.Element {
         variant="espresso"
       />
 
-      {/* WHY THIS EXISTS. The thesis line, then a short stanza. The point
-          is the math: 6,000 people, 48 hours, O(n²) collisions = you'll
-          meet 30 by accident. */}
-      <section className="container-wide py-16 lg:py-24">
+      {/* WHY THIS EXISTS — heavy section with accent masthead and
+          boosted H2 (one tier bigger than the other H2s for thesis
+          weight). */}
+      <section className="container-wide section-pad">
         <BlurFade>
-          <div className="ed-masthead mb-8 lg:mb-12">
+          <div className="ed-masthead-accent">
             <span className="ed-serial">§ 01 / Why this exists</span>
             <span className="ed-serial hidden sm:inline">
               Discovery is O(n²) at 6,000 attendees
             </span>
           </div>
         </BlurFade>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 grid-gap-std items-start">
           <div className="lg:col-span-7">
             <BlurFade>
-              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-ink leading-[1.04]">
+              <h2 className="font-display text-5xl sm:text-6xl lg:text-7xl text-ink leading-[1.02] tracking-[-0.012em]">
                 YC Startup School puts 6,000 builders in one room for 48
                 hours.{" "}
                 <span className="italic text-accent">
@@ -208,7 +216,7 @@ export default function LandingPage(): React.JSX.Element {
           </div>
 
           <BlurFade delay={0.16} className="lg:col-span-5">
-            <div className="surface bg-surface p-6 lg:p-8 space-y-5">
+            <div className="surface bg-surface p-6 lg:p-8 space-y-5 relative overflow-hidden">
               <p className="ed-serial text-accent-text">By the numbers</p>
               <ul className="space-y-4">
                 <NumRow lhs="6,000" rhs="hand-picked attendees" />
@@ -225,21 +233,17 @@ export default function LandingPage(): React.JSX.Element {
         </div>
       </section>
 
-      {/* PEOPLE'S PEOPLE — globe + collage placeholders. The thesis: this
-          isn't a feed, it's a graph. Globe shows geography of the cohort;
-          collage placeholders carry the human warmth (real photos drop
-          in once we have them). Ditto.ai-style: photos do the talking. */}
-      <section className="container-wide py-16 lg:py-24 relative">
+      {/* PEOPLE'S PEOPLE — globe + collage placeholders */}
+      <section className="container-wide section-pad relative">
         <BlurFade>
-          <div className="ed-masthead mb-8 lg:mb-12">
+          <div className="ed-masthead-accent">
             <span className="ed-serial">§ 02 / People&apos;s people</span>
             <span className="ed-serial hidden sm:inline">
               The graph extends through everyone you meet
             </span>
           </div>
         </BlurFade>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-          {/* Left: headline + sub + globe */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 grid-gap-std items-start">
           <div className="lg:col-span-6">
             <BlurFade>
               <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-ink leading-[1.04]">
@@ -264,12 +268,11 @@ export default function LandingPage(): React.JSX.Element {
             </BlurFade>
           </div>
 
-          {/* Right: 6-up collage placeholder grid. Empty cells with
-              hairline borders + mono labels — drops in real photos
-              later (founder dinners, on-site meetings, demo nights). */}
+          {/* Collage placeholder grid: 2-col on mobile (was 3, audit
+              flagged tiny cells), 3-col on lg. */}
           <div className="lg:col-span-6">
             <BlurFade delay={0.1}>
-              <div className="grid grid-cols-3 gap-2 sm:gap-3">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
                 <CollagePlaceholder span="row-span-2" label="founder dinners" />
                 <CollagePlaceholder label="demo night" />
                 <CollagePlaceholder label="off-site" />
@@ -288,12 +291,10 @@ export default function LandingPage(): React.JSX.Element {
         </div>
       </section>
 
-      {/* HOW IT WORKS. Mono terminal + dark steps. Tightened section
-          padding (was py-20, now py-16) to remove the dead space the
-          founder flagged below the typing block. */}
+      {/* HOW IT WORKS. Espresso section, terminal block + dark steps. */}
       <section
         id="how"
-        className="bg-espresso text-bg py-16 lg:py-20 relative overflow-hidden"
+        className="bg-espresso text-bg section-pad-tight relative overflow-hidden"
       >
         <div
           aria-hidden
@@ -316,7 +317,7 @@ export default function LandingPage(): React.JSX.Element {
             </h2>
           </BlurFade>
 
-          <div className="mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-stretch">
+          <div className="mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-12 grid-gap-std items-stretch">
             <div className="lg:col-span-7 flex">
               <div className="rounded-lg border border-bg/15 bg-espresso-deep/60 p-5 sm:p-7 font-mono text-sm w-full text-bg">
                 <div className="flex items-center gap-2 mb-5 text-bg/40 text-[10px] uppercase tracking-[0.2em]">
@@ -365,22 +366,18 @@ export default function LandingPage(): React.JSX.Element {
         </div>
       </section>
 
-      {/* SOCIAL PROOF — comprehensive match cards. Founder asked for
-          1-2 big personality-driven examples instead of 6 small
-          transactional cards. Each card now reads as a magazine profile:
-          building, shipping next, needs, offers back, working style,
-          off-the-clock, reads, and the matchmaker's reason for picking
-          them. Two cards side-by-side at lg. */}
-      <section className="container-wide py-16 lg:py-24">
+      {/* SOCIAL PROOF — comprehensive match cards. Featured Maya gets a
+          DitherWarp backdrop; Devansh stays cream. */}
+      <section className="container-wide section-pad">
         <BlurFade>
-          <div className="ed-masthead mb-8 lg:mb-12">
+          <div className="ed-masthead-accent">
             <span className="ed-serial">§ 04 / What a match looks like</span>
             <span className="ed-serial hidden sm:inline">
               Two cards from the cohort, comprehensive
             </span>
           </div>
         </BlurFade>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 grid-gap-std items-start mb-12">
           <div className="lg:col-span-7">
             <BlurFade>
               <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.04]">
@@ -401,15 +398,24 @@ export default function LandingPage(): React.JSX.Element {
           </div>
         </div>
 
-        {/* Two big cards side-by-side on lg, stacked on smaller screens.
-            Featured Maya is dark espresso; Devansh is the cream surface
-            counterpart. Equal width so neither feels secondary. */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           <BlurFade delay={0.06}>
-            <ComprehensiveMatchCard
-              match={MOCK_MATCHES[0]!}
-              className="h-full"
-            />
+            {/* Featured card with subtle dither warp behind it. */}
+            <div className="relative rounded-md overflow-hidden h-full">
+              <div className="absolute inset-0 opacity-[0.18] mix-blend-screen pointer-events-none">
+                <DitherWarp
+                  colorFront="#FF6600"
+                  colorBack="#00000000"
+                  speed={0.22}
+                  type="4x4"
+                  shape="warp"
+                />
+              </div>
+              <ComprehensiveMatchCard
+                match={MOCK_MATCHES[0]!}
+                className="h-full relative z-10"
+              />
+            </div>
           </BlurFade>
           <BlurFade delay={0.14}>
             <ComprehensiveMatchCard
@@ -427,12 +433,21 @@ export default function LandingPage(): React.JSX.Element {
         </BlurFade>
       </section>
 
-      {/* FINAL CTA. Espresso block. Stripped of the "founder reads every
-          entry / first 50 personal" copy at founder's request. The pitch
-          is the headline + the form. Nothing else. */}
-      <section className="container-wide py-16 sm:py-20">
+      {/* FINAL CTA — espresso block with DitherWarp backdrop overlay. */}
+      <section className="container-wide section-pad-tight">
         <BlurFade>
-          <div className="bg-espresso text-bg rounded-2xl px-6 py-12 sm:px-12 sm:py-14 lg:px-16 lg:py-16 relative overflow-hidden">
+          <div className="bg-espresso text-bg rounded-2xl px-6 py-12 sm:px-12 sm:py-14 lg:px-16 lg:py-20 relative overflow-hidden">
+            {/* Dithering shader as the ambient backdrop, blended subtly
+                so the espresso reads as "computed warmth" not flat. */}
+            <div className="absolute inset-0 opacity-[0.16] mix-blend-screen pointer-events-none">
+              <DitherWarp
+                colorFront="#FF8533"
+                colorBack="#00000000"
+                speed={0.18}
+                type="4x4"
+                shape="warp"
+              />
+            </div>
             <div
               aria-hidden
               className="absolute inset-0 opacity-[0.06] grain"
@@ -440,10 +455,10 @@ export default function LandingPage(): React.JSX.Element {
             />
             <div
               aria-hidden
-              className="absolute -top-12 -right-12 w-72 h-72 rounded-full pointer-events-none"
+              className="absolute -top-16 -right-16 w-80 h-80 rounded-full pointer-events-none"
               style={{
                 background:
-                  "radial-gradient(circle at center, rgba(255,102,0,0.18), transparent 60%)",
+                  "radial-gradient(circle at center, rgba(255,102,0,0.22), transparent 60%)",
               }}
             />
             <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
@@ -456,7 +471,7 @@ export default function LandingPage(): React.JSX.Element {
                     6,000 builders · one graph
                   </span>
                 </div>
-                <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.04] text-bg max-w-2xl">
+                <h2 className="font-display text-5xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-[-0.012em] text-bg max-w-2xl">
                   For founders who ship before they{" "}
                   <span className="italic text-accent">announce.</span>
                 </h2>
@@ -487,8 +502,6 @@ export default function LandingPage(): React.JSX.Element {
   );
 }
 
-// HowItWorks step copy — borrows DateDrop's pattern of mixing question
-// types (preference scales, picks, free text) but in a founder register.
 const STEPS: { title: string; body: string }[] = [
   {
     title: "Build your card.",
@@ -519,7 +532,7 @@ function DarkStep({
 }): React.JSX.Element {
   return (
     <div className="border-t border-bg/20 pt-5">
-      <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent-text block">
+      <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent block">
         {String(n).padStart(2, "0")}
       </span>
       <h3 className="font-display italic text-2xl text-bg mt-3 leading-tight">
@@ -567,11 +580,6 @@ function NumRow({
   );
 }
 
-// CollagePlaceholder: empty bordered cell with a mono label. Holds layout
-// space until real cohort photos drop in (founder dinners, demo nights,
-// on-site meetings). Ditto.ai-style — photos eventually do the talking,
-// but until then the editorial mono tag carries the slot. The cell uses
-// a subtle accent-wash tint so the grid reads warm, not empty.
 function CollagePlaceholder({
   label,
   span,
@@ -586,18 +594,16 @@ function CollagePlaceholder({
         (span || "")
       }
     >
-      {/* Subtle grain so the cell doesn't read as flat */}
       <div
         aria-hidden
         className="absolute inset-0 opacity-[0.05] grain pointer-events-none"
       />
-      {/* Editorial frame: hairline corners */}
       <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-accent-edge/40" />
       <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-accent-edge/40" />
       <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-accent-edge/40" />
       <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-accent-edge/40" />
       <div className="absolute inset-0 flex items-end p-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
           {label}
         </span>
       </div>

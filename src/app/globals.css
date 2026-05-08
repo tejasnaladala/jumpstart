@@ -194,6 +194,44 @@
     @apply ed-rule pt-3 mb-8 flex items-baseline justify-between gap-4;
   }
 
+  /* Variant masthead: heavier accent. The section-opening rule grows a
+     left-side accent thread + a pulsing dot, matching the YC SS mast-
+     head pattern. Use when the section needs visual weight (Why,
+     People's people, final CTA). */
+  .ed-masthead-accent {
+    @apply pt-3 mb-8 lg:mb-12 flex items-baseline justify-between gap-4;
+    border-top: 1px solid theme("colors.border");
+    border-left: 3px solid theme("colors.accent");
+    padding-left: 1rem;
+    position: relative;
+  }
+  .ed-masthead-accent::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 28px;
+    height: 1px;
+    background: theme("colors.accent");
+  }
+
+  /* Standardized section vertical padding scale. Use one of these on
+     every <section> wrapper instead of arbitrary py values. Based on
+     the audit: rhythm was fractured because mixing py-16/lg:py-20 with
+     py-16/lg:py-24 with py-20/lg:py-28 read as random. */
+  .section-pad {
+    @apply py-16 sm:py-20 lg:py-28;
+  }
+  .section-pad-tight {
+    @apply py-12 sm:py-14 lg:py-16;
+  }
+
+  /* Standardized 12-col grid gap. Mixed gap-10/gap-12/gap-16 was the
+     other rhythm break. */
+  .grid-gap-std {
+    @apply gap-10 lg:gap-14;
+  }
+
   /* Large folio numerals for editorial step lists. Display serif at
      scale, matched to the h1 character. */
   .ed-folio {
