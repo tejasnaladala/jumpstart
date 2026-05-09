@@ -152,8 +152,8 @@ export function InlineWaitlist({
           You&apos;re in. The founder reads every entry by hand.
         </p>
         <p className={"text-sm " + helperTone + " max-w-prose leading-relaxed"}>
-          Verified SS 2026 attendees go to the front. The first 50 are reviewed personally;
-          expect a reply within 24 to 48 hours.
+          Verified SS 2026 attendees go to the front. We review entries daily;
+          keep an eye on your inbox for the invite link.
         </p>
         <div className="mt-2 flex flex-wrap items-center gap-2">
           <button
@@ -166,7 +166,7 @@ export function InlineWaitlist({
                 : "bg-ink text-bg hover:bg-ink/90")
             }
           >
-            Share on X
+            Post to YC chat
           </button>
           <button
             type="button"

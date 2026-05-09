@@ -89,8 +89,8 @@ export function PreLandingHero(): React.JSX.Element {
             className="mt-5 sm:mt-7 max-w-3xl font-display italic text-ink/85 leading-tight"
             style={{ fontSize: "clamp(20px, 2.6vw, 36px)" }}
           >
-            Find the founders you{" "}
-            <span className="text-accent">should have met already.</span>
+            Find the people you were{" "}
+            <span className="text-accent">supposed to meet.</span>
           </p>
 
           {/* Sub — concrete cadence + venue cue. */}
@@ -98,7 +98,7 @@ export function PreLandingHero(): React.JSX.Element {
             className="mt-3 sm:mt-4 max-w-2xl font-display italic text-muted leading-snug"
             style={{ fontSize: "clamp(16px, 1.8vw, 22px)" }}
           >
-            One intro, three times a week, before Chase Center opens.
+            YC brings the cohort. Jumpstart routes the room.
           </p>
         </div>
 

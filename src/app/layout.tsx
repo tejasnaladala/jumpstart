@@ -36,12 +36,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3030";
 export const metadata: Metadata = {
   title: "Jumpstart for Startup School 2026",
   description:
-    "The unofficial pre-event matchmaker for YC Startup School 2026. Two days in person at Chase Center, July 25-26. Curated founder matches Monday, Wednesday, Friday at 9pm PT in the lead-in window.",
+    "Find the people you were supposed to meet at YC Startup School. One curated founder match per drop, three times a week, before the room gets crowded.",
   metadataBase: new URL(SITE_URL),
   openGraph: {
     title: "Jumpstart for Startup School 2026",
     description:
-      "Pre-event matchmaker for the 2-day in-person cohort at Chase Center, July 25-26.",
+      "YC brings the cohort. Jumpstart routes the room. Route yourself toward the 12 people worth meeting.",
     type: "website",
     images: ["/opengraph-image"],
   },
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Jumpstart for Startup School 2026",
     description:
-      "Pre-event matchmaker for the 2-day in-person cohort at Chase Center, July 25-26.",
+      "YC brings the cohort. Jumpstart routes the room. Route yourself toward the 12 people worth meeting.",
     images: ["/opengraph-image"],
   },
 };

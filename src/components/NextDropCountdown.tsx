@@ -5,6 +5,7 @@ import {
   formatDropLabel,
   firstOrNextDrop,
   FIRST_DROP_AT,
+  type Countdown,
 } from "@/lib/drop/schedule";
 
 // Live countdown to the next Mon/Wed/Fri 9pm PT drop, rendered as a
@@ -27,17 +28,27 @@ export function NextDropCountdown({
   tone = "light",
   className,
 }: Props): React.JSX.Element {
-  const target = firstOrNextDrop(new Date());
+  // Use a stable target derived from the current time. We memoize the
+  // target time so the useEffect doesn't cycle on every render.
+  const [target] = useState(() => firstOrNextDrop(new Date()));
   const isFirstDrop = target.getTime() === FIRST_DROP_AT.getTime();
   const eyebrow = isFirstDrop ? "First drop" : "Next drop";
   const cadenceCopy = isFirstDrop
     ? "Cohort opens with the first drop. Mon/Wed/Fri at 9 PM PT after."
     : "Mon, Wed, Fri at 9 PM PT. One curated founder per drop.";
-  const [c, setC] = useState(() => countdownTo(target));
+
+  // Hydration safety: we initialize with a null-like state and only
+  // start the countdown after mount. This prevents the "Server-rendered
+  // text didn't match the client" error common with live timers.
+  const [c, setC] = useState<Countdown | null>(null);
 
   useEffect(() => {
+    // Initial tick
+    setC(countdownTo(target));
+
     const t = setInterval(() => {
-      setC(countdownTo(target));
+      const next = countdownTo(target);
+      setC(next);
     }, 1000);
     return () => clearInterval(t);
   }, [target]);
@@ -49,7 +60,18 @@ export function NextDropCountdown({
   const labelTone = isDark ? "text-bg/85" : "text-ink/80";
   const accentLine = isDark ? "bg-bg/40" : "bg-accent";
 
-  if (c.done) return <div className={className} aria-hidden />;
+  // If not mounted yet (c is null) or drop has passed (c.done),
+  // render a skeleton or nothing to keep hydration quiet.
+  if (!c || c.done) {
+    return (
+      <div className={"flex flex-col gap-3 opacity-0 " + (className || "")} aria-hidden>
+        <div className={"h-px w-12 " + accentLine} />
+        <p className="ed-serial">{eyebrow}</p>
+        <p className={"font-display italic text-2xl sm:text-3xl leading-tight " + labelTone}>{label}</p>
+        <div className="h-10" />
+      </div>
+    );
+  }
 
   return (
     <div
