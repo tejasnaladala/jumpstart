@@ -29,6 +29,8 @@ export type FounderCard = {
   looking_for: string;
   can_help_with: string;
   talk_to_me_if: string;
+  technical_intensity?: number; // 1-5
+  weird_thing?: string;
   tags: string[];
   intents: Intent[];
   trust_tier: TrustTier;

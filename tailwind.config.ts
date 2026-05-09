@@ -8,38 +8,20 @@ export default {
         // == YC Startup School 2026 base palette ==
         // Pulled directly from the YC SS 2026 events stylesheet
         // (bookface-static.ycombinator.com/vite/assets/tailwind-*.css).
-        // Bg evolution:
-        //   #F4F1DB — YC actual yellow-cream
-        //   #F8F5EA — too white (founder rejected)
-        //   #F2CFA5 — too orange/saturated (founder rejected)
-        //   #F2E5C2 — current. Warm cream, ~20% saturation. Reads as
-        //     warm and editorial, not orange, not bleach-white.
-        //     Halfway between YC's #F4F1DB and the peach #F2CFA5.
-        // WCAG: text-ink (#16140F) on #F2E5C2 = 14.1:1, text-mocha
-        // (#3A2418) = 9.5:1. Both AAA.
-        bg: "#F2E5C2",
+        bg: "#F4F1DB", // warm cream, the SS hero background
         surface: "#FDFDF8", // pale off-white for cards and sheets
         ink: "#16140F", // warm near-black, primary text
         muted: "#463325", // warm dark brown, secondary text
-        // mocha — dark brown for display headings (JUMPSTART, SF.CA).
-        // Replaces text-ink on those elements per founder ask: 'dark
-        // brown mocha, not black'. Still passes WCAG AA on the new
-        // ivory bg.
         mocha: "#3A2418",
         border: "#E8E3CC", // tinted divider derived from the cream
-        // Orange palette toned down 1-2 shades from the strict YC #FF6600
-        // (founder felt the neon was too hot vs the YC SS site's actual
-        // rendered orange, which sits a touch darker / more amber).
-        accent: "#E85A1B", // toned from #FF6600 — still YC-coded, less neon
-        "accent-soft": "#FCEAE0", // pale peach (slightly cooler now)
-        "accent-edge": "#CC4E15", // hover state — deeper, warmer
-        // accent-text: still passes WCAG AA on cream. Pulled deeper to
-        // match the new accent's reduced saturation.
-        "accent-text": "#8C2F00",
-        // accent-wash: 10% orange tint for card backgrounds.
-        "accent-wash": "#FBE0CD",
+        accent: "#FF6600", // the iconic YC orange
+        "accent-soft": "#FFF0E9", // pale peach for accent backgrounds
+        "accent-edge": "#FB651E", // hotter orange for hovers and edges
         success: "#48B584",
         error: "#E4544B",
+        signal: "#FFD600",
+        glacier: "#A0A5B1",
+        carbon: "#101010",
 
         // == Jumpstart brand extensions (NOT from YC palette) ==
         // These are extra shades layered on top of the YC base for editorial
@@ -62,9 +44,7 @@ export default {
           DEFAULT: "#2D2417",
           deep: "#1F1A11",
           warm: "#3A2C1C",
-          // dust refined from #4A3B2A → #453622 for better text contrast on
-          // espresso bg (Linear+YC SS pattern: secondary text needs ≥3:1).
-          dust: "#453622",
+          dust: "#4A3B2A", // lightest, for inset dark-on-dark elements
         },
       },
       fontFamily: {
@@ -73,23 +53,16 @@ export default {
         display: ["var(--font-display)", "Georgia", "serif"],
       },
       fontSize: {
-        // Bumped xxs floor 10→11 and xs floor 11→12 to clear impeccable's
-        // tiny-text rule (12px minimum for body content). Editorial mono
-        // serials use xxs only as decorative chips, never as body copy.
-        xxs: ["11px", { lineHeight: "15px" }],
-        xs: ["12px", { lineHeight: "16px" }],
+        xxs: ["10px", { lineHeight: "14px" }],
+        xs: ["11px", { lineHeight: "16px" }],
         sm: ["13px", { lineHeight: "18px" }],
-        // Body bumped from 14/20 → 15/22 for legibility at desktop widths.
-        // Linear baseline body is 15-16px; Stripe is 16px. We split the
-        // difference at 15px to keep our editorial density.
-        base: ["15px", { lineHeight: "22px" }],
-        // lg bumped from 16/22 → 17/26 for hero subhead readability.
-        lg: ["17px", { lineHeight: "26px" }],
-        xl: ["19px", { lineHeight: "28px" }],
-        "2xl": ["22px", { lineHeight: "30px" }],
-        "3xl": ["28px", { lineHeight: "36px" }],
-        "4xl": ["36px", { lineHeight: "44px" }],
-        "5xl": ["48px", { lineHeight: "56px" }],
+        base: ["14px", { lineHeight: "20px" }],
+        lg: ["16px", { lineHeight: "22px" }],
+        xl: ["18px", { lineHeight: "26px" }],
+        "2xl": ["22px", { lineHeight: "28px" }],
+        "3xl": ["28px", { lineHeight: "34px" }],
+        "4xl": ["36px", { lineHeight: "42px" }],
+        "5xl": ["48px", { lineHeight: "54px" }],
       },
       borderRadius: {
         xs: "4px",
@@ -128,6 +101,14 @@ export default {
         blink: {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0" },
+        },
+        "signal-float": {
+          "0%, 100%": { transform: "translate3d(0,0,0) rotate(0deg)" },
+          "50%": { transform: "translate3d(0,-10px,0) rotate(1.5deg)" },
+        },
+        "signal-pulse": {
+          "0%, 100%": { opacity: "0.55", transform: "scale(1)" },
+          "50%": { opacity: "1", transform: "scale(1.04)" },
         },
       },
     },
