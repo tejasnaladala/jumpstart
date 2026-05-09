@@ -117,6 +117,9 @@ export async function POST(req: Request): Promise<Response> {
   // success state doesn't make it look like a fresh entry.
   const dup = alreadyOnList(email);
 
+  // LOG FOR AUDIT: print the signup to console so we can see it in logs
+  console.log(`[WAITLIST] ${dup ? 'DUPLICATE ' : ''}Signup: ${email} (via ${source || 'direct'})`);
+
   const entry: WaitlistEntry = {
     ts: new Date().toISOString(),
     email,
