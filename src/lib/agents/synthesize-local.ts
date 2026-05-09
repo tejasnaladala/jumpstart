@@ -23,6 +23,8 @@ type IntakeShape = {
     looking_for?: string;
     can_help?: string;
     waste?: string;
+    intensity?: string;
+    weird?: string;
   };
 };
 
@@ -43,6 +45,8 @@ export function synthesizeCardLocal(input: IntakeShape) {
     talk_to_me_if:
       polishSentence(intent.waste, "you ship things and you do not need to be sold on the work being a real venture.") ||
       "you ship things and you do not need to be sold on the work being a real venture.",
+    technical_intensity: parseInt(intent.intensity || "3"),
+    weird_thing: polish(intent.weird),
   };
 }
 

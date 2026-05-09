@@ -22,6 +22,8 @@ export const MOCK_COHORT: FounderCard[] = [
     tags: ["ai-agents", "infra", "evals", "research", "remote"],
     intents: ["collaborator", "peer"],
     trust_tier: "verified",
+    technical_intensity: 5,
+    weird_thing: "Formal verification of neural networks",
     updated_at: "2026-04-30T18:11:00Z",
   },
   {
@@ -68,6 +70,8 @@ export const MOCK_COHORT: FounderCard[] = [
     tags: ["hardtech", "robotics", "biotech", "cofounder", "sf"],
     intents: ["cofounder"],
     trust_tier: "verified",
+    technical_intensity: 5,
+    weird_thing: "Building DIY bioreactors in his kitchen",
     updated_at: "2026-04-28T22:00:00Z",
   },
   {

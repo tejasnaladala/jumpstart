@@ -27,7 +27,17 @@ function score(me: FounderCard, other: FounderCard): number {
   const sharedTags = me.tags.filter((t) => other.tags.includes(t)).length;
   const intentOverlap = me.intents.filter((i) => other.intents.includes(i)).length;
   const sameCityBonus = locationCity(me.location) === locationCity(other.location) ? 1 : 0;
-  return sharedTags * 3 + intentOverlap * 2 + sameCityBonus;
+
+  // Intensity parity bonus: 10 points if they have the exact same intensity
+  // 5 points if they are within 1 level
+  let intensityBonus = 0;
+  if (me.technical_intensity && other.technical_intensity) {
+    const diff = Math.abs(me.technical_intensity - other.technical_intensity);
+    if (diff === 0) intensityBonus = 10;
+    else if (diff === 1) intensityBonus = 5;
+  }
+
+  return sharedTags * 3 + intentOverlap * 2 + sameCityBonus + intensityBonus;
 }
 
 // Match explanations. Critical rule: never claim shared characteristics
@@ -41,14 +51,27 @@ const EXPLAIN_TEMPLATES: Record<MatchType, (m: FounderCard, o: FounderCard) => s
       .filter((t) => o.tags.includes(t))
       .find((t) => !["sf", "india", "remote", "cofounder"].includes(t));
     const firstName = o.name.split(" ")[0] || o.name;
+
+    let base = "";
     if (overlap) {
-      return `${firstName} works on ${overlap.replace(/-/g, " ")} from a different angle than you. Worth a 30-minute compare-notes call about what each of you has learned recently.`;
+      base = `${firstName} works on ${overlap.replace(/-/g, " ")} from a different angle than you.`;
+    } else {
+      base = `${firstName} is working in adjacent territory. Different angle, similar shape of problem.`;
     }
-    return `${firstName} is working in adjacent territory. Different angle, similar shape of problem. Worth a 30-minute compare-notes call.`;
+
+    if (o.weird_thing) {
+      base += ` Also: ${o.weird_thing.endsWith(".") ? o.weird_thing : o.weird_thing + "."}`;
+    }
+
+    return `${base} Worth a 30-minute compare-notes call about what each of you has learned recently.`;
   },
   cofounder_shape: (me, o) => {
     const firstName = o.name.split(" ")[0] || o.name;
-    return `${firstName} is also looking for a cofounder and your domains are adjacent enough to spark serious conversation. Worth a real call before either of you locks in elsewhere.`;
+    let base = `${firstName} is also looking for a cofounder and your domains are adjacent enough to spark serious conversation.`;
+    if (o.weird_thing) {
+      base += ` They mentioned they are into ${o.weird_thing.replace(/\.$/, "")}.`;
+    }
+    return `${base} Worth a real call before either of you locks in elsewhere.`;
   },
   weird_adjacent: (me, o) => {
     const firstName = o.name.split(" ")[0] || o.name;

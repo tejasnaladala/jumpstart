@@ -39,7 +39,7 @@ export function HowItWorks(): React.JSX.Element {
           <Card
             n="02"
             title="One drop, M·W·F at 9 PM PT"
-            body="Three drops a week before the event. One curated founder per drop. Friend-of-a-friend or stack overlap, never random."
+            body="Three drops a week. One curated founder per drop. Scored on technical intensity and market overlap, never random."
           />
         </BlurFade>
         <BlurFade delay={0.18}>

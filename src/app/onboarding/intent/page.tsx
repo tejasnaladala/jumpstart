@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/primitive/Button";
-import { Textarea } from "@/components/primitive/Input";
+import { Textarea, Input } from "@/components/primitive/Input";
+import { Slider } from "@/components/primitive/Slider";
 import { StepDots } from "@/components/ProgressBar";
 import { DraftIndicator } from "@/components/primitive/DraftIndicator";
 import { Kbd } from "@/components/primitive/Kbd";
@@ -29,6 +30,16 @@ const QUESTIONS = [
     q: "What kind of meeting would feel like a waste of your time?",
     placeholder: "We use this to filter, not to judge."
   },
+  {
+    key: "intensity",
+    q: "How intense are you building right now?",
+    type: "slider"
+  },
+  {
+    key: "weird",
+    q: "One weirdly specific thing you want to talk about?",
+    placeholder: "e.g. 'Optimizing LLM token usage for 100M context windows' or 'The history of Toronto's underground tunnels'."
+  }
 ];
 
 type Answers = Record<string, string>;
@@ -56,7 +67,11 @@ export default function IntentInterviewStep() {
   const answer = answers[current.key] || "";
 
   async function next() {
-    if (!answer.trim()) return;
+    if (current.key !== "intensity" && !answer.trim()) return;
+    const currentVal = current.key === "intensity" ? (answer || "3") : answer;
+    if (current.key === "intensity") {
+       setAnswers(prev => ({ ...prev, intensity: currentVal }));
+    }
     setThinking(true);
     await new Promise((r) => setTimeout(r, 700));
     setThinking(false);
@@ -103,19 +118,37 @@ export default function IntentInterviewStep() {
             <p className="text-base font-medium text-ink leading-relaxed">{current.q}</p>
           </div>
 
-          <Textarea
-            ref={taRef}
-            placeholder={current.placeholder}
-            value={answer}
-            onChange={(e) => setAnswers((s) => ({ ...s, [current.key]: e.target.value }))}
-            rows={4}
-            className="ml-7"
-            maxLength={600}
-            showCounter
-            onKeyDown={(e) => {
-              if ((e.metaKey || e.ctrlKey) && e.key === "Enter") next();
-            }}
-          />
+          {current.type === "slider" ? (
+            <div className="ml-7 flex flex-col gap-4 max-w-md">
+              <Slider
+                min={1}
+                max={5}
+                step={1}
+                value={[parseInt(answer || "3")]}
+                onValueChange={(v: number[]) =>
+                  setAnswers((s) => ({ ...s, [current.key]: v[0]!.toString() }))
+                }
+              />
+              <div className="flex justify-between text-xxs uppercase tracking-widest text-muted font-bold">
+                <span>Casual Builder</span>
+                <span>Shipping 24/7</span>
+              </div>
+            </div>
+          ) : (
+            <Textarea
+              ref={taRef}
+              placeholder={current.placeholder}
+              value={answer}
+              onChange={(e) => setAnswers((s) => ({ ...s, [current.key]: e.target.value }))}
+              rows={current.key === "weird" ? 2 : 4}
+              className="ml-7"
+              maxLength={current.key === "weird" ? 140 : 600}
+              showCounter
+              onKeyDown={(e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") next();
+              }}
+            />
+          )}
           {thinking ? (
             <div className="flex gap-2 ml-7 items-center text-sm text-muted">
               <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
@@ -137,7 +170,11 @@ export default function IntentInterviewStep() {
             </span>
             <DraftIndicator status={draftStatus} className="hidden sm:inline-flex" />
           </div>
-          <Button onClick={next} disabled={!answer.trim()} loading={thinking}>
+          <Button
+            onClick={next}
+            disabled={current.key !== "intensity" && !answer.trim()}
+            loading={thinking}
+          >
             {step < QUESTIONS.length - 1 ? "Next question" : "Build my card"}
           </Button>
         </div>

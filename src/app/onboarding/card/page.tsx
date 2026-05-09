@@ -13,6 +13,7 @@ import { extractIntents, extractTags, synthesizeCardLocal } from "@/lib/agents/s
 import { useToast } from "@/components/primitive/Toast";
 import { eligibleDropFor, formatDropLabel } from "@/lib/drop/schedule";
 import { setEligibleDrop } from "@/lib/drop/eligibility";
+import { Slider } from "@/components/primitive/Slider";
 
 export default function CardReviewStep() {
   const router = useRouter();
@@ -111,6 +112,8 @@ export default function CardReviewStep() {
         looking_for: synth.looking_for,
         can_help_with: synth.can_help_with,
         talk_to_me_if: synth.talk_to_me_if,
+        technical_intensity: synth.technical_intensity,
+        weird_thing: synth.weird_thing,
         // Tags + intents come from the user's actual signal. Empty is
         // a valid state - TagAdder lets them add manually on this page.
         tags,
@@ -202,6 +205,30 @@ export default function CardReviewStep() {
             onChange={(v) => setCard((c) => ({ ...c, talk_to_me_if: v }))}
             editing={editing === "talk_to_me_if"}
             onEdit={() => setEditing(editing === "talk_to_me_if" ? null : "talk_to_me_if")}
+          />
+
+          <div className="mt-5 pt-4 border-t border-border">
+            <p className="text-xxs uppercase tracking-wider text-muted font-semibold mb-2">Technical Intensity</p>
+            <div className="flex items-center gap-4">
+              <Slider
+                min={1}
+                max={5}
+                step={1}
+                value={[card.technical_intensity || 3]}
+                onValueChange={(v) => setCard((c) => ({ ...c, technical_intensity: v[0] }))}
+                className="max-w-[200px]"
+              />
+              <span className="text-sm font-mono font-bold text-accent">{card.technical_intensity || 3}/5</span>
+            </div>
+          </div>
+
+          <EditableSection
+            label="One Weirdly Specific Thing"
+            value={card.weird_thing || ""}
+            onChange={(v) => setCard((c) => ({ ...c, weird_thing: v }))}
+            editing={editing === "weird_thing"}
+            onEdit={() => setEditing(editing === "weird_thing" ? null : "weird_thing")}
+            placeholder="e.g. History of Toronto's underground tunnels"
           />
 
           <div className="mt-5 pt-4 border-t border-border">
@@ -322,12 +349,14 @@ function EditableSection({
   onChange,
   editing,
   onEdit,
+  placeholder,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   editing: boolean;
   onEdit: () => void;
+  placeholder?: string;
 }) {
   return (
     <div className="mt-5 pt-4 border-t border-border">
@@ -344,6 +373,7 @@ function EditableSection({
           rows={3}
           maxLength={220}
           showCounter
+          placeholder={placeholder}
         />
       ) : (
         <p className="text-sm text-ink leading-relaxed">{value || <span className="text-muted italic">No answer yet.</span>}</p>
