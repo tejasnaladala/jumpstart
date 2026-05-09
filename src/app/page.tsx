@@ -9,6 +9,7 @@ import { PreLandingHero } from "@/components/landing/PreLandingHero";
 import { DropCardMockup } from "@/components/landing/DropCardMockup";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { DitherWarp } from "@/components/ui/DitherWarp";
+import { RippleShader } from "@/components/ui/RippleShader";
 
 // Landing page rebuild (May 7 2026, fourth pass — "make it crazy").
 //
@@ -59,6 +60,10 @@ export default function LandingPage(): React.JSX.Element {
           }}
         />
         <div className="container-wide relative">
+          {/* Ambient pulse — heartbeat of the cohort graph. 21st.dev ripple shader. */}
+          <div className="absolute -inset-x-20 -inset-y-40 z-0 pointer-events-none opacity-[0.25]">
+            <RippleShader />
+          </div>
           <BlurFade>
             <div className="ed-rule mb-5 lg:mb-6 flex items-center justify-between gap-4 pt-3 text-xs">
               <div className="flex items-center gap-2">
@@ -87,8 +92,8 @@ export default function LandingPage(): React.JSX.Element {
           </BlurFade>
           <BlurFade delay={0.06}>
             <p className="mt-5 max-w-2xl text-lg lg:text-xl text-muted leading-relaxed">
-              One curated intro, three times a week, before the room gets
-              crowded. Friend-of-a-friend or stack overlap, never random.
+              Route yourself toward the 12 people worth meeting. One curated intro,
+              three times a week, before the room gets crowded.
             </p>
           </BlurFade>
 
@@ -173,9 +178,8 @@ export default function LandingPage(): React.JSX.Element {
             <BlurFade delay={0.1}>
               <p className="mt-7 text-lg text-muted leading-relaxed max-w-prose">
                 You&apos;ll meet 30 by accident. The other 5,970 you&apos;ll
-                never know existed. Three times a week, Jumpstart sends you
-                one founder a friend of a friend already vouches for. No
-                noise. No PR. No DMs from strangers.
+              never know existed. Stop hoping random event conversations
+              turn into cofounders. See why someone is worth talking to before you DM.
               </p>
             </BlurFade>
             {/* Highlighted callout — drops the 'not another networking
@@ -265,12 +269,12 @@ export default function LandingPage(): React.JSX.Element {
                   </span>
                 </div>
                 <h2 className="font-display text-5xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-[-0.012em] text-bg max-w-2xl">
-                  Skip the{" "}
-                  <span className="italic text-accent">seating chart.</span>
+                  Built for builders who&apos;d{" "}
+                  <span className="italic text-accent">rather ship.</span>
                 </h2>
                 <p className="mt-5 text-bg/75 leading-relaxed max-w-prose">
-                  Eight weeks of founders worth meeting, before Chase Center
-                  even opens.
+                  Know who to DM before the event starts. Turn a 10,000-person event
+                  into a short list of people worth talking to.
                 </p>
               </div>
               <div className="lg:col-span-5">
