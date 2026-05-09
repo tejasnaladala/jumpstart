@@ -4,6 +4,7 @@ import { IntroRequestSchema, jsonError, genericValidationErrors } from "@/lib/ap
 import { requireSession, UnauthorizedError } from "@/lib/auth/session";
 import { checkLimit } from "@/lib/auth/rate-limit";
 import { recordSafetyBlock } from "@/lib/agents/log";
+import { getServiceRoleClient, SupabaseConfigError } from "@/lib/supabase/server";
 
 export async function POST(req: Request) {
   let session;
@@ -61,7 +62,10 @@ export async function POST(req: Request) {
     if (err instanceof MatchOwnershipError) {
       return jsonError(403, "MATCH_NOT_OWNED", "This match is not yours to act on.");
     }
-    return jsonError(503, "INTROS_NOT_IMPLEMENTED", "Intro path requires the matches table. Wire DB before deploying.");
+    if (err instanceof SupabaseConfigError) {
+      return jsonError(503, "INTROS_NOT_IMPLEMENTED", err.message);
+    }
+    return jsonError(500, "INTROS_OWNERSHIP_ERROR", "Could not verify match ownership.");
   }
 
   // Safety pass on the note (if present).
@@ -101,13 +105,56 @@ export async function POST(req: Request) {
     return jsonError(400, "SAFETY_BLOCK", "Your note was flagged. Please rewrite without sales language or external links.");
   }
 
+  // Persist the intro. Stub mode keeps the synthetic id; prod inserts via
+  // service role (RLS would block requester from inserting on behalf of the
+  // recipient relationship without the chained ownership check, which we
+  // already performed above).
+  const supabaseConfigured = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+  const isStub = process.env.JUMPSTART_ALLOW_STUB === "1" && !supabaseConfigured;
+
+  let intro_id: string;
+  let sent_at: string;
+
+  if (isStub) {
+    intro_id = `intro_${Date.now()}`;
+    sent_at = new Date().toISOString();
+  } else {
+    try {
+      const svc = getServiceRoleClient();
+      const insertNote = note && note.trim().length > 0 ? note.trim() : null;
+      const { data, error } = await svc
+        .from("intros")
+        .insert({
+          requester_id,
+          recipient_id,
+          match_id,
+          note: insertNote,
+          response: "pending",
+        })
+        .select("id, sent_at")
+        .single();
+      if (error || !data) {
+        return jsonError(500, "INTROS_INSERT_FAILED", "Could not save the intro.");
+      }
+      intro_id = data.id;
+      sent_at = data.sent_at;
+    } catch (err) {
+      if (err instanceof SupabaseConfigError) {
+        return jsonError(503, "INTROS_NOT_IMPLEMENTED", err.message);
+      }
+      return jsonError(500, "INTROS_ERROR", "Could not save the intro.");
+    }
+  }
+
   return Response.json({
     accepted: true,
-    intro_id: `intro_${Date.now()}`,
+    intro_id,
     match_id,
     requester_id,
     recipient_id,
-    sent_at: new Date().toISOString(),
+    sent_at,
   });
 }
 
@@ -140,14 +187,32 @@ async function assertMatchOwnership(
     void requester_id;
     return;
   }
-  // Real implementation:
-  //   const { data, error } = await supabase
-  //     .from("matches")
-  //     .select("id, user_id, candidate_user_id")
-  //     .eq("id", match_id)
-  //     .single();
-  //   if (error || !data) throw new MatchOwnershipError("match not found");
-  //   if (data.user_id !== requester_id) throw new MatchOwnershipError();
-  //   if (data.candidate_user_id !== recipient_id) throw new MatchOwnershipError();
-  throw new Error("matches table not yet wired in production");
+
+  // Production. Service role bypasses RLS so we can validate ownership in
+  // a single query. We check three things:
+  //   (a) match exists,
+  //   (b) match.user_id == requester_id (only the drop owner can act),
+  //   (c) match.candidate_user_id == recipient_id (caller cannot reroute
+  //       the intro to a different user by spoofing the body).
+  // Failing any of those throws MatchOwnershipError, which the caller maps
+  // to 403 MATCH_NOT_OWNED.
+  const svc = getServiceRoleClient();
+  const { data, error } = await svc
+    .from("matches")
+    .select("id, user_id, candidate_user_id")
+    .eq("id", match_id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`matches select failed: ${error.message}`);
+  }
+  if (!data) {
+    throw new MatchOwnershipError("match not found");
+  }
+  if (data.user_id !== requester_id) {
+    throw new MatchOwnershipError("requester does not own match");
+  }
+  if (data.candidate_user_id !== recipient_id) {
+    throw new MatchOwnershipError("recipient does not match candidate");
+  }
 }

@@ -5,11 +5,13 @@
 // .jumpstart-logs/agent.jsonl. Capped at 10MB with rotation.
 //
 // In production with Supabase, inserts into the agent_logs table using
-// the service role client. Server-side only.
+// the service role client AND continues to file-log as a belt-and-suspenders
+// trail. The Supabase insert is best-effort and never throws.
 
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { RunResult } from "./runner";
+import { getServiceRoleClient } from "@/lib/supabase/server";
 
 const LOG_DIR = path.resolve(process.cwd(), ".jumpstart-logs");
 const LOG_FILE = path.join(LOG_DIR, "agent.jsonl");
@@ -96,10 +98,30 @@ export async function logAgentRun(entry: LogEntry): Promise<void> {
   );
 
   if (supabaseConfigured) {
-    // TODO(prod): use a server-side service-role client to INSERT into agent_logs.
-    // Until that is wired we still want a record, so fall through to file
-    // logging which is harmless in prod (Vercel's filesystem is ephemeral
-    // but the row also goes to Supabase later).
+    // Best-effort persistence. Failure here must never throw — the caller
+    // is in the hot path of an agent invocation and we have a file fallback.
+    try {
+      const svc = getServiceRoleClient();
+      await svc.from("agent_logs").insert({
+        agent_name: entry.agent_name,
+        user_id: entry.user_id ?? null,
+        prompt: entry.input_summary,
+        response: typeof entry.result.raw === "string" ? entry.result.raw : null,
+        model: null,
+        tokens_in: entry.result.tokens_in,
+        tokens_out: entry.result.tokens_out,
+        latency_ms: entry.result.latency_ms,
+        cost_usd: Number(entry.result.cost_usd.toFixed(6)),
+        feedback_signal: {
+          ok: entry.result.ok,
+          via: entry.result.via,
+          attempts: entry.result.attempts ?? 1,
+          error: entry.result.error ?? null,
+        },
+      });
+    } catch {
+      // Swallow. File log below still runs.
+    }
   }
 
   await ensureDir();
