@@ -30,20 +30,6 @@ To switch agents from stub to real Claude calls, add `ANTHROPIC_API_KEY` to `.en
 - `src/lib/agents/` Nine agent definitions, the runner, and the cost/log layer.
 - `src/lib/mock/` Local cohort fixture and tag taxonomy used in stub mode.
 - `evals/` Eight eval suites, one per agent, with a runner that emits `METRIC` lines.
-- `harness/` Persona harness: 13 YC-archetype personas drive the live app through Playwright. A coordinator reads the logs, proposes fixes, runs a two-reviewer approval gate, and applies safe changes inside `harness/`, `scripts/`, `evals/`, `docs/`, and `src/lib/`. Frontend changes always escalate to a human.
-
-## Autonomous test stack
-
-The product can run continuously while the synthetic founders pressure-test it, a coordinator triages findings, and a watchdog supervises everything.
-
-```bash
-bash scripts/launch-autonomous.sh   # bring up the stack (idempotent)
-bash scripts/monitor.sh             # live dashboard, 3s refresh
-bash scripts/verify-stack.sh        # one-shot health check (0/2/1 = green/degraded/critical)
-bash scripts/stop-autonomous.sh     # clean shutdown
-```
-
-Operating manual: [`docs/autonomous-stack.md`](docs/autonomous-stack.md).
 
 ## Evals
 
@@ -51,14 +37,6 @@ Operating manual: [`docs/autonomous-stack.md`](docs/autonomous-stack.md).
 bun run eval            # all suites, prints pass rate, exits 0 unless STRICT=1
 STRICT=1 bun run eval   # non-zero exit on any regression
 ```
-
-## Run one persona end to end
-
-```bash
-HARNESS_HEADLESS=0 bun run harness:persona p_priya_fintech
-```
-
-Watch a synthetic founder sign up, onboard, see her drop, and request an intro. Useful for catching selector drift after a UI change.
 
 ## Build and check
 
