@@ -23,7 +23,7 @@ All routes return `Response.json(...)` for success and `jsonError(status, code, 
 
 1. **Public bypass.** `/api/health` and `/api/cron/*` skip the cookie check. The cron route does its own bearer-token validation; health is intentionally public.
 2. **Stub-mode gate.** If `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` are missing **and** `JUMPSTART_ALLOW_STUB !== "1"`, returns `500 SUPABASE_NOT_CONFIGURED`. With `JUMPSTART_ALLOW_STUB=1`, passes through to the route handler.
-3. **Cookie presence check.** When Supabase is configured, looks for any cookie matching `^sb-.+-auth-token(\.\d+)?$`. Supabase SSR can chunk auth tokens (`.0`, `.1`, …); the regex accepts both. Missing cookie → `401 UNAUTHORIZED`. Closes a P2 finding from a prior Codex review.
+3. **Cookie presence check.** When Supabase is configured, looks for any cookie matching `^sb-.+-auth-token(\.\d+)?$`. Supabase SSR can chunk auth tokens (`.0`, `.1`, …); the regex accepts both. Missing cookie → `401 UNAUTHORIZED`. Closes a P2 finding from a prior code review.
 4. **Note in source:** "Treat as perf hint, NOT security boundary." The route handler's `requireSession()` is the actual auth check.
 
 ## Auth flow
@@ -137,7 +137,7 @@ onboarding_min: 30 / 1m
 browse_min:     60 / 1m
 ```
 
-**Production:** Upstash `Ratelimit.slidingWindow`. Per-key limiters cached in `upstashByKey: Map`. No global singleton (a Codex review caught a previous version that shared one limiter across keys).
+**Production:** Upstash `Ratelimit.slidingWindow`. Per-key limiters cached in `upstashByKey: Map`. No global singleton (a prior review caught a version that shared one limiter across keys).
 
 **Dev / private-beta:** in-memory sliding window with mutex per key, periodic cleanup every 60s.
 

@@ -4,22 +4,19 @@
 
 ```
 .
-├── .claude/                    Claude Code settings, hooks, agents
 ├── .env.example                Required envs + flag matrix
 ├── .eslintrc.json              ESLint
 ├── .git/
 ├── .github/                    CI workflows (ci.yml, autoresearch.yml)
 ├── .gitignore
-├── .octogent/                  Multi-agent department/tentacle config (dormant)
 ├── .vision-kb/                 Vision knowledge base (research artifacts)
-├── CLAUDE.md                   Project context for Claude (load-bearing event facts)
 ├── CONTRIBUTING.md             How to contribute
 ├── README.md                   Quickstart + autonomous stack pointers
 ├── autoresearch.ideas.md       Backlog of measurable optimization targets
 ├── bun.lock                    Bun lockfile (76 KB)
 ├── docs/                       Operating manuals + this codebase-map + the design spec
 ├── evals/                      Eval cases + runner (8 suites)
-├── harness/                    Persona harness + coordinator + delegation
+├── harness/                    Persona harness + coordinator
 ├── next-env.d.ts
 ├── next.config.js              Next.js config (minimal)
 ├── package.json                Scripts, deps, devDeps
@@ -176,7 +173,7 @@ harness/
 │   ├── metrics.ts              Aggregator + METRIC emitter
 │   ├── proposals.ts            Findings → edits, scope guard
 │   ├── realism.ts              Behavioral simulation
-│   ├── reviewers.ts            Codex + Fool review
+│   ├── reviewers.ts            Dual-reviewer approval gate for proposed fixes
 │   ├── session.ts              Playwright session wrapper
 │   └── state.ts                Per-persona JSON state
 ├── personas/
@@ -185,7 +182,6 @@ harness/
     ├── assertion-loop.ts
     ├── autoresearch.ts
     ├── coordinator.ts
-    ├── delegation-loop.ts
     └── run-assertions.ts
 ```
 
@@ -219,34 +215,17 @@ ci.yml                          build → typecheck → lint → eval (strict) �
 autoresearch.yml                Weekly Monday eval run
 ```
 
-## .octogent/tentacles/
-
-```
-agents/                         Agent definitions + evals
-data/                           Schema + seed + migrations
-frontend-ux/                    Drop / Browse / You rendering
-growth/                         Cohort metrics + funnel
-infra/                          Harness + CI + observability
-research/                       Eval suite design + trend analysis
-trust-safety/                   Safety classifier + intro blocking
-README.md                       Tentacle system overview
-```
-
-Status: scaffolded but inactive. The in-process coordinator handles tentacle work today.
-
 ## docs/ (existing operating manuals + this map)
 
 ```
 autonomous-stack.md             8-process operating manual
 design-brief.md
 design-prompts.md
-external-tools.md               gstack + autoresearch setup
 imessage-ditto-debate.md        Decision doc
 launch-playbook.md              Pre-launch checklist
 monitoring-quickstart.md        Single page to keep open
 pocketbase-setup.md
-prelaunch-review-synthesis.md   12-agent prelaunch review output
-superpowers/specs/2026-05-05-jumpstart-design.md   THE DESIGN SPEC
+prelaunch-review-synthesis.md   Prelaunch review output
 codebase-map/                   This folder
 graph/                          Knowledge graph artifacts (see ../graph/)
 codebase_registry.json          Canonical machine-readable registry
@@ -254,28 +233,26 @@ FRONTEND_COLLABORATOR_HANDOFF.md
 BACKEND_OWNER_BRIEF.md
 ```
 
-## Important files (top 20 by load-bearingness)
+## Important files (top 18 by load-bearingness)
 
-1. `docs/superpowers/specs/2026-05-05-jumpstart-design.md` — design spec, source of truth
-2. `CLAUDE.md` — corrected event facts that override the spec
-3. `package.json` — scripts (every workflow has a bun command)
-4. `.env.example` — flag matrix
-5. `src/lib/agents/runner.ts` — every agent call goes through this
-6. `src/lib/auth/session.ts` — auth + stub mode
-7. `src/lib/auth/rate-limit.ts` — limit definitions + prod gate
-8. `src/middleware.ts` — auth fast-fail
-9. `src/lib/api/schema.ts` — every API contract
-10. `src/lib/types.ts` — shared types
-11. `src/lib/match/local-drop.ts` — deterministic match scoring
-12. `supabase/migrations/0001_init.sql` — schema
-13. `supabase/migrations/0002_complete_rls.sql` — RLS
-14. `src/app/api/intros/route.ts` — most complex route (auth + rate + safety + ownership)
-15. `src/app/api/drops/route.ts` — drop endpoint with stubbed DB read
-16. `src/app/api/cron/retention/route.ts` — cron + bearer + 503-honest
-17. `vercel.json` — deploy + cron + CSP
-18. `harness/scripts/coordinator.ts` — autonomous editor with safe-zone gate
-19. `harness/personas/seed.ts` — the 12 personas that drive the live app
-20. `evals/run-all.ts` — eval orchestrator
+1. `package.json` — scripts (every workflow has a bun command)
+2. `.env.example` — flag matrix
+3. `src/lib/agents/runner.ts` — every agent call goes through this
+4. `src/lib/auth/session.ts` — auth + stub mode
+5. `src/lib/auth/rate-limit.ts` — limit definitions + prod gate
+6. `src/middleware.ts` — auth fast-fail
+7. `src/lib/api/schema.ts` — every API contract
+8. `src/lib/types.ts` — shared types
+9. `src/lib/match/local-drop.ts` — deterministic match scoring
+10. `supabase/migrations/0001_init.sql` — schema
+11. `supabase/migrations/0002_complete_rls.sql` — RLS
+12. `src/app/api/intros/route.ts` — most complex route (auth + rate + safety + ownership)
+13. `src/app/api/drops/route.ts` — drop endpoint with stubbed DB read
+14. `src/app/api/cron/retention/route.ts` — cron + bearer + 503-honest
+15. `vercel.json` — deploy + cron + CSP
+16. `harness/scripts/coordinator.ts` — autonomous editor with safe-zone gate
+17. `harness/personas/seed.ts` — the 12 personas that drive the live app
+18. `evals/run-all.ts` — eval orchestrator
 
 ## Dead or unclear files
 

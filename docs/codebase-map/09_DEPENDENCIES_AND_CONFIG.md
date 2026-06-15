@@ -48,7 +48,6 @@
 | `bun run coord` / `:once` / `:loop` | autonomous coordinator |
 | `bun run research` / `:once` / `:loop` | autoresearch |
 | `bun run assert:loop` | assertion loop |
-| `bun run delegate` / `:once` / `:loop` | two-Claude delegation |
 | `bun run db:generate` | `tsx scripts/generate-types.ts` (**file missing**) |
 | `bun run db:seed` | `tsx scripts/seed-cohort.ts` (**file missing**) |
 | `bun run db:migrate` | `supabase db push` |
@@ -172,20 +171,19 @@ Production launch requires:
 
 ## Optional integrations referenced but not yet wired
 
-- Sentry (mentioned in `CLAUDE.md` tech stack list)
-- Vercel AI SDK for streaming UI (mentioned in spec; not in current deps)
+- Sentry (in the planned tech stack)
+- Vercel AI SDK for streaming UI (planned; not in current deps)
 - Clerk (alternative auth, not chosen)
 
 ## Voice / lint configuration
 
 - `.eslintrc.json` (45 bytes) — minimal Next.js extends.
 - `loop.sh` runs custom voice-rule checks (em dashes, console.log, marketing language). CI lint job calls `bun run lint` which runs `next lint`; the voice rules layer is separate.
-- `CLAUDE.md` voice rules are the authoritative source for copy.
+- The voice rules in `CONTRIBUTING.md` are the authoritative source for copy.
 
 ## Tooling for the autonomous stack
 
 - `tsx` — runs TS directly for harness/eval/coord scripts.
-- `gh` CLI — used by `delegation-loop.ts` for issue triage.
 - `git` — used by `checkpointer.ps1` for safe-zone auto-commits.
 
 ## Versions of note
@@ -222,6 +220,6 @@ Optional (real Anthropic):
 
 ```bash
 # add to .env.local
-ANTHROPIC_API_KEY=sk-ant-...
+ANTHROPIC_API_KEY=<your-anthropic-api-key>
 # remove JUMPSTART_FORCE_STUBS if set
 ```

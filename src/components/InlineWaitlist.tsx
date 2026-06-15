@@ -7,7 +7,7 @@ import { useToast } from "@/components/primitive/Toast";
 // where the full WaitlistForm card would feel heavy. Same /api/waitlist
 // POST contract; same 8s timeout + AbortError UX as the full form.
 //
-// Editorial restraint per CLAUDE.md voice rules: no exclamation marks,
+// Editorial restraint: no exclamation marks,
 // no "X people in line" theater, no progress bar. Just a row that
 // looks like newspaper letters-to-the-editor: hairline border, mono
 // label, serif success line.

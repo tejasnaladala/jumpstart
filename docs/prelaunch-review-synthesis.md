@@ -1,8 +1,8 @@
 # Prelaunch review synthesis
 
-Output of the 12-agent prelaunch review (2 DX-persona reviews + 10 simulated
-user-test agents). Findings ranked by severity. Closed-beta-of-10 only - 
-some "fix later" items deferred until ~50 attendees.
+Output of the prelaunch review: a developer-experience pass plus simulated
+user tests across the core flows. Findings ranked by severity. Closed-beta-of-10
+only, so some "fix later" items are deferred until roughly 50 attendees.
 
 The fixes batch listed at the end of this doc was applied in a single pass
 before the launch link went out. Anything in the **Watch list** is intentional

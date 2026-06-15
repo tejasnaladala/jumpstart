@@ -4,9 +4,9 @@ This folder is the navigation layer for the Jumpstart repo. If you are new to th
 
 ## What this is
 
-A working set of docs that explains every layer of Jumpstart in enough detail that a new engineer can be productive in under an hour. It is generated from a static audit on `implementation/v1` (commit `200255c` and prior). It is not auto-regenerated; refresh it after material changes by re-running `/graphify` or the equivalent codebase-intelligence pass.
+A working set of docs that explains every layer of Jumpstart in enough detail that a new engineer can be productive in under an hour. It is built from a static audit on `implementation/v1` (commit `200255c` and prior). It is not auto-regenerated; refresh it after material changes.
 
-The docs that ship with the repo (under `docs/`) are operating manuals (`autonomous-stack.md`, `monitoring-quickstart.md`, `launch-playbook.md`, `external-tools.md`, `pocketbase-setup.md`) and the design spec (`docs/superpowers/specs/2026-05-05-jumpstart-design.md`). This folder is different: it describes what is actually in the code.
+The docs that ship with the repo (under `docs/`) are operating manuals (`autonomous-stack.md`, `monitoring-quickstart.md`, `launch-playbook.md`, `pocketbase-setup.md`). This folder is different: it describes what is actually in the code.
 
 ## How to navigate
 
@@ -57,7 +57,7 @@ This is a load-bearing distinction in this repo because two people are working i
 - `src/lib/types.ts` — `FounderCard`, `Match`, `Drop`, `IntroRequest`, etc.
 - `src/lib/api/schema.ts` — request/response Zod schemas
 - `.env.example` — flag matrix and required keys
-- `CLAUDE.md`, `README.md`, `CONTRIBUTING.md`
+- `README.md`, `CONTRIBUTING.md`
 
 ## What is fragile vs safe to modify
 

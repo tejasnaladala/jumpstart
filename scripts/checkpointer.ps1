@@ -31,7 +31,7 @@ function Log-Event {
 }
 
 # Safe paths the checkpointer is allowed to commit.
-$safePaths = @("harness/", "scripts/", "evals/", "docs/", "src/lib/", ".octogent/")
+$safePaths = @("harness/", "scripts/", "evals/", "docs/", "src/lib/")
 
 Log-Event -event "started"
 

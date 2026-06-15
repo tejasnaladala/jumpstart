@@ -68,13 +68,11 @@ In one sentence: every important action is an agent invocation that writes struc
 
 4. **Deterministic local match generator.** `src/lib/match/local-drop.ts:103` runs in the browser and on the server when stubs are on. Score = `sharedTags*3 + intentOverlap*2 + sameCity*1`, with diversity rule (≥2 distinct match types in the top-3). The real Matchmaker agent runs on the same shape so swap-in is trivial.
 
-5. **Eight-process autonomous stack.** `scripts/launch-autonomous.sh` brings up server + harness loop + coordinator + autoresearch + assertion loop + delegation loop + checkpointer + caffeinate, supervised by a watchdog. The coordinator can edit code in safe zones (`harness/`, `scripts/`, `evals/`, `docs/`, `src/lib/`) but never frontend (`src/app/`, `src/components/`).
+5. **Autonomous test stack.** `scripts/launch-autonomous.sh` brings up server + harness loop + coordinator + autoresearch + assertion loop + checkpointer + caffeinate, supervised by a watchdog. The coordinator can edit code in safe zones (`harness/`, `scripts/`, `evals/`, `docs/`, `src/lib/`) but never frontend (`src/app/`, `src/components/`).
 
-6. **Two-Claude collaboration via GitHub.** `harness/scripts/delegation-loop.ts` polls issues with `status:ready` + `owner:mukund-claude` labels and posts standardized nudges. Filters labels client-side because `gh issue list --label` drops labels containing colons.
+6. **PocketBase prepared but dormant.** `src/lib/pocketbase/client.ts` and `pocketbase/` directory exist as a closed-beta fallback. Currently unused; closed beta uses `localStorage` directly. Decision pending whether to wire PocketBase or migrate straight to Supabase for the 6,000-attendee launch.
 
-7. **PocketBase prepared but dormant.** `src/lib/pocketbase/client.ts` and `pocketbase/` directory exist as a closed-beta fallback. Currently unused; closed beta uses `localStorage` directly. Decision pending whether to wire PocketBase or migrate straight to Supabase for the 2,000-attendee launch.
-
-8. **Voice rules enforced at multiple layers.** No em dashes, no AI-vocabulary, sentence-case headings. CI lints for them; agents are prompted with them; humanizer skill (gstack) re-passes user-facing copy.
+7. **Voice rules enforced at multiple layers.** No em dashes, no AI-vocabulary, sentence-case headings. CI lints for them; agents are prompted with them; a humanizer pass re-checks user-facing copy.
 
 ## Current maturity level
 
@@ -102,10 +100,7 @@ In one sentence: every important action is an agent invocation that writes struc
 - Working branch: `implementation/v1` (this is what should be reviewed)
 - Recent direction (latest 5 commits, oldest first):
   - `82d2514` chore(verification): hide stub-mode OTP codes from visible UI
-  - `3b61426`–`294eb52` checkpoint: autonomous loop touched files in safe zones
-  - `144d091` feat(coord): two-claude collaboration via GitHub + delegation loop
   - `1e62991` chore(analytics): install ELU Analytics
-  - `200255c` fix(delegate): gh issue list --label drops colon labels; filter client-side
 
 ## Phase plan from the spec (still applicable)
 

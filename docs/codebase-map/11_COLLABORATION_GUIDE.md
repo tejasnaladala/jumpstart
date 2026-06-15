@@ -1,6 +1,6 @@
 # Collaboration guide
 
-This repo has a frontend collaborator and a backend owner working in parallel, plus an AI pair (Codex 5.5) on the backend side. The rules below keep the two sides from stepping on each other.
+This repo has a frontend collaborator and a backend owner working in parallel. The rules below keep the two sides from stepping on each other.
 
 ## Ownership split
 
@@ -11,7 +11,7 @@ This repo has a frontend collaborator and a backend owner working in parallel, p
 - Local frontend-only stores while they remain localStorage.
 - Copy and page-level loading/error states.
 
-### Backend owner (humans + Codex) owns
+### Backend owner owns
 
 - API contracts and route handlers.
 - Auth, session, admin middleware and policies.
@@ -130,30 +130,14 @@ Suggested branch prefixes:
 - src/path/to/file.ts:NN
 ```
 
-## Two-Claude (Codex + this Claude) collaboration
+## Labels
 
-There is an automated delegation loop in `harness/scripts/delegation-loop.ts`. It looks for issues labeled `status:ready` + `owner:mukund-claude` and posts standardized nudges.
+- `status:*` labels: `status:ready`, `status:in-progress`, `status:review`, `status:done`.
+- `owner:*` labels: `owner:backend`, `owner:design`.
+- `area:*` labels: `area:frontend`, `area:backend`, `area:db`, `area:agents`, `area:harness`, `area:auth`, `area:infra`.
+- `priority:*` labels: `priority:p0` … `priority:p3`.
 
-Conventions:
-
-- Use `status:*` labels: `status:ready`, `status:in-progress`, `status:review`, `status:done`.
-- Use `owner:*` labels: `owner:tejas-claude`, `owner:mukund-claude`, `owner:codex`.
-- Use `area:*` labels: `area:frontend`, `area:backend`, `area:db`, `area:agents`, `area:harness`, `area:auth`, `area:infra`.
-- Use `priority:*` labels: `priority:p0` … `priority:p3`.
-
-When you (this Claude) hand off to Codex, paste a self-contained prompt in the conversation. Codex begins from the prompt; do not assume it has read the chat. Pattern:
-
-```
-You are Codex 5.5 working on the jumpstart repo at branch implementation/v1.
-
-Goal: <one sentence>
-Files: <paths>
-Constraints: <do not touch X, preserve Y>
-Test plan: <commands>
-Definition of done: <observable check>
-```
-
-When Codex hands back, expect a PR. Run a code review (use `/review` skill or codex-review mode) before merging.
+Hand off work through a self-contained GitHub issue. The reader has no conversation history, so include the goal, the files in play, the constraints (what not to touch), the test plan, and an observable definition of done. Open a PR when the work is ready and request a review before merging.
 
 ## Handoff checklists
 
@@ -188,7 +172,7 @@ When Codex hands back, expect a PR. Run a code review (use `/review` skill or co
 - [ ] `bun run test:e2e`
 - [ ] `bun run eval` (STRICT=1 if agents touched)
 - [ ] Manual smoke: 4-step onboarding → drop → match → request intro
-- [ ] Voice rules (`CLAUDE.md`): no em dashes, no marketing language
+- [ ] Voice rules: no em dashes, no marketing language
 - [ ] Docs updated where relevant
 - [ ] `.env.example` updated if new keys
 - [ ] CI green
@@ -205,7 +189,7 @@ When Codex hands back, expect a PR. Run a code review (use `/review` skill or co
 | Both touch `.env.example` | Merge in any order, both should re-pull and verify |
 | Disagreement on an API code | Backend chooses; document rationale in `05_API_CONTRACTS.md` |
 
-## Voice rules (`CLAUDE.md`)
+## Voice rules
 
 Apply to all user-facing copy and all docs in this repo. Both sides enforce.
 

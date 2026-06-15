@@ -122,11 +122,6 @@ start_if_missing "assertion_loop" \
   '[ "$(log_age_seconds experiments/assertion-loop.jsonl)" -lt 600 ]' \
   'HARNESS_ASSERT_PAUSE_MS=300000 nohup bun run assert:loop > experiments/assertion-loop.log 2>&1 &'
 
-# 5c. delegation-loop (nudges status:ready issues toward Mukund's Claude)
-start_if_missing "delegation_loop" \
-  '[ "$(log_age_seconds experiments/delegation.jsonl)" -lt 600 ]' \
-  'HARNESS_DELEGATION_PAUSE_MS=300000 nohup bun run delegate:loop > experiments/delegation-loop.log 2>&1 &'
-
 # 6. checkpointer
 start_if_missing "checkpointer" \
   '[ "$(log_age_seconds experiments/checkpoint.jsonl)" -lt 600 ]' \

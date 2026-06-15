@@ -115,15 +115,6 @@ contract - once a persona's id is in production state files, do not
 rename it. Bump the id (e.g. `p_priya_fintech_v2`) for material identity
 changes that should reset state.
 
-## Octogent integration (later)
-
-The directory layout was chosen to map cleanly to octogent tentacles.
-When you're ready to swarm-orchestrate, run `/octo-plan` and the
-tentacle planner will read each persona's intent + behavior and
-scaffold `.octogent/tentacles/<persona_id>/` with CONTEXT.md +
-todo.md per persona. The tentacle worker invokes the persona's tick
-through the same `harness/lib/coordinator.ts` primitives.
-
 ## What this harness deliberately does NOT do
 
 - It does not simulate the recipient surface in the app - that surface

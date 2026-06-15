@@ -1,12 +1,10 @@
 # Jumpstart launch playbook
 
 This file is the canonical reference for shipping Jumpstart to the closed
-beta of 10 (and beyond). Saved here so any future session can `Read` it
-and pick up the exact sequencing without rederiving from chat.
+beta of 10 (and beyond). It captures the exact sequencing so anyone picking
+up the launch does not have to rederive it.
 
-**Source of truth for product spec:** `docs/superpowers/specs/2026-05-05-jumpstart-design.md`
-(with the correction banner reflecting the 2-day in-person event reality).
-**Source of truth for project conventions:** `CLAUDE.md`.
+Project conventions live in `CONTRIBUTING.md`.
 
 ---
 

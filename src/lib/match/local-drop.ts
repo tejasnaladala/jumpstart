@@ -130,20 +130,22 @@ export function generateLocalDrop(me: FounderCard): Match[] {
     .map((c) => ({ c, type: classify(me, c), s: score(me, c) }))
     .sort((a, b) => b.s - a.s);
 
-  // Diversity: pick top 3 with distinct match types where possible
+  // Diversity: prefer distinct match types. First pass takes the highest
+  // scorer of each unseen type so the drop spans as many types as the cohort
+  // allows. Second pass backfills the remaining slots with the next-best
+  // candidates, only repeating a type once no fresh type is left.
   const picked: typeof ranked = [];
   const seenTypes = new Set<MatchType>();
   for (const item of ranked) {
     if (picked.length >= 3) break;
-    if (!seenTypes.has(item.type) || picked.length >= 2) {
+    if (!seenTypes.has(item.type)) {
       picked.push(item);
       seenTypes.add(item.type);
     }
   }
-  while (picked.length < 3 && ranked.length > picked.length) {
-    const next = ranked.find((r) => !picked.includes(r));
-    if (next) picked.push(next);
-    else break;
+  for (const item of ranked) {
+    if (picked.length >= 3) break;
+    if (!picked.includes(item)) picked.push(item);
   }
 
   const shownAt = new Date().toISOString();

@@ -66,7 +66,6 @@ The applier writes to:
 - `evals/` (eval cases)
 - `docs/` (documentation)
 - `src/lib/` (non-UI logic)
-- `.octogent/` (tentacle scaffolding)
 
 The applier refuses to write to:
 - `src/app/` (frontend pages)
@@ -155,8 +154,8 @@ These are the seams where a future iteration would plug in:
   API key is wired. Set `ANTHROPIC_API_KEY` in the env and both reviewers
   call Haiku 4.5 per proposal. Per-call cost ~$0.001; for ~30 proposals/hr
   that's pennies a day.
-- **Cross-persona memory.** Ruflo's `memory_store`/`memory_search`
-  primitives could give each persona vector recall across runs. Not
+- **Cross-persona memory.** A vector store with simple store/search
+  primitives could give each persona recall across runs. Not
   needed for closed-beta-of-10 but worth queuing.
 - **Spec-first software factory.** Today the coordinator only fixes
   bugs. A spec-first factory would let the founder write a spec + tests

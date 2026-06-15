@@ -1,4 +1,3 @@
-.superpowers/
 external/inspection/
 node_modules/
 .jumpstart-logs/
@@ -19,14 +18,13 @@ coverage/
 .ruff_cache/
 __pycache__/
 
-# autoresearch session artifacts (per driveline convention)
+# autoresearch session artifacts
 autoresearch.jsonl
 autoresearch-dashboard.md
 autoresearch.md
 autoresearch.sh
 experiments/
 plots/
-.gstack/
 
 # Harness runtime state — per-persona JSON files written every round.
 # The schema lives in code (harness/types.ts) so reproducibility is
@@ -39,10 +37,5 @@ harness/seeds/
 # in pocketbase/schema.json and IS tracked.
 pocketbase/bin/
 pocketbase/pb_data/
-
-# Octogent tentacle scaffolding (auto-generated per-tentacle folders).
-# Tracked: README.md, tentacle.json schema. Untracked: per-tentacle folders.
-.octogent/tentacles/*/
-!.octogent/tentacles/README.md
 
 .vercel

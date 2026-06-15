@@ -1,12 +1,12 @@
 # Jumpstart design brief, v1
 
-This is the file you hand to Claude (or v0, or any AI design tool) to drive a comprehensive visual and interaction redesign at the highest fidelity. Pair it with `docs/design-prompts.md` for the exact prompts to send.
+The design brief for Jumpstart's visual and interaction language. It states the aesthetic direction, the locked tokens, and the acceptance criteria a redesign has to meet.
 
 ## Product, in one paragraph
 
 Jumpstart is the unofficial global attendee graph for YC Startup School 2026. It delivers three curated founder matches every Wednesday, with a one-line on why you should meet and an opener you can copy. No directory to scroll, no swiping, no followers. Verified attendees only. The cohort is bounded to the 90 days of the program. The product is built by an attendee, for the cohort.
 
-The full product spec lives at `docs/superpowers/specs/2026-05-05-jumpstart-design.md`. The implementation ultraplan lives at `docs/superpowers/specs/2026-05-06-implementation-ultraplan.md`. Both are sources of truth.
+The full product spec and the implementation plan are the sources of truth for product direction.
 
 ## The aesthetic direction
 
@@ -119,7 +119,7 @@ No new dependencies without justification. No global state libraries. No CSS-in-
 
 ## What to deliver
 
-For each new screen or component the design AI produces, deliver:
+For each new screen or component, deliver:
 
 1. The TSX source file, ready to drop into `src/components/` or `src/app/`.
 2. A short rationale (under 200 words) explaining the design choices and which interaction primitive to use.
@@ -134,7 +134,7 @@ For the landing page in particular, deliver:
 
 ## Reference set
 
-Visual references the AI should study, in order of priority:
+Visual references to study, in order of priority:
 
 1. https://events.ycombinator.com/startup-school-2026 - the cream + espresso palette, the marquee strip, the chunky condensed display, the brown buttons
 2. https://linear.app - the restraint, the typography, the dense-but-calm layout
@@ -151,13 +151,10 @@ Do not produce work that resembles:
 - Crypto landings (neon + gradients + maximalist)
 - Marketing-page tropes (smiling stock photos, big "trusted by" logo grids)
 
-## Files to upload
+## Reference files for a redesign
 
-Bundle these for the design AI:
+Read these before touching the landing:
 
-- `docs/superpowers/specs/2026-05-05-jumpstart-design.md` (full product spec)
-- `docs/superpowers/specs/2026-05-06-implementation-ultraplan.md` (build sequence)
-- `docs/external-tools.md` (tooling stack)
 - `tailwind.config.ts` (locked tokens)
 - `src/app/globals.css` (current base styles)
 - `src/app/page.tsx` (current landing)

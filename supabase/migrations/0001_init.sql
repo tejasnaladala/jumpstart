@@ -1,4 +1,4 @@
--- Jumpstart initial schema. Section 18 of docs/superpowers/specs/2026-05-05-jumpstart-design.md.
+-- Jumpstart initial schema (section 18 of the product design spec).
 
 create extension if not exists vector;
 

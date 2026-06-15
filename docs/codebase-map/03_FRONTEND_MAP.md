@@ -226,6 +226,6 @@ Files that run purely in the client/server-without-DB layer:
 1. The frontend works **end to end in stub mode** today. `bun install && bun run dev` boots the app at `http://localhost:3030` with the deterministic dev user; no API keys needed.
 2. The match data on `/drop` comes from `local-drop.ts`. When the backend wires the real Matchmaker agent, the same `Match` shape will return; UI does not change.
 3. Tabs are **Drop / Browse / You** in v1. No Pods, Micro-meetups, Relationship Map, or Follow-up tracker. They are explicitly parked.
-4. Voice rules in `CLAUDE.md` apply to all UI copy. No em dashes. Sentence-case headings. Vary length.
+4. Voice rules in `CONTRIBUTING.md` apply to all UI copy. No em dashes. Sentence-case headings. Vary length.
 5. The Founder Pass and the Founder Card are the same identity object presented two ways. Don't introduce a separate model.
 6. The **landing page is sacred** — it is the conversion surface. Coordinate any change with the founder before shipping.
