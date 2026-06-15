@@ -46,7 +46,7 @@ export async function middleware(req: NextRequest) {
   // calls requireSession() which validates the cookie with Supabase.
   // Supabase SSR can chunk auth cookies as `sb-...-auth-token.0`,
   // `sb-...-auth-token.1`, so the suffix check accepts both `-auth-token`
-  // and `-auth-token.<n>`. Closes Codex challenge P2 #8.
+  // and `-auth-token.<n>`.
   const hasAuthCookie = req.cookies
     .getAll()
     .some((c) => c.name.startsWith("sb-") && /-auth-token(?:\.\d+)?$/.test(c.name));

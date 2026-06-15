@@ -157,7 +157,7 @@ export async function checkLimit(
   // Hard guard: production must use Upstash unless this is an explicit
   // private-beta tunnel (JUMPSTART_PRIVATE_BETA=1). The in-memory limiter is
   // bypassable across serverless cold starts and instances, so it must NOT
-  // run in real prod. Closes Codex challenge P2 #9.
+  // run in real prod.
   if (process.env.NODE_ENV === "production" && process.env.JUMPSTART_PRIVATE_BETA !== "1") {
     throw new Error(
       "Upstash is required in production. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN, or run private beta with JUMPSTART_PRIVATE_BETA=1."

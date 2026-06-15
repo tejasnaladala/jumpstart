@@ -36,9 +36,8 @@ const CUTOUT_X = (VIEW_W * CUTOUT_X_PCT) / 100;
 // template literal whose final static ended in whitespace, producing
 // a 175-char path on the wire vs the 201-char source intent. Browser
 // then fired `<path> attribute d: Expected number, "...a14,14 0 1,1
-// -28M605.2,480..."` on every Pass render. Repro at
-// harness/scripts/repro-swc-bug.ts. The .join() call is opaque to the
-// constant evaluator, so the path round-trips intact through the build.
+// -28M605.2,480..."` on every Pass render. The .join() call is opaque to
+// the constant evaluator, so the path round-trips intact through the build.
 const TICKET_PATH = [
   `M20,0 H${VIEW_W - 20} A20,20 0 0 1 ${VIEW_W},20 V${VIEW_H - 20} A20,20 0 0 1 ${VIEW_W - 20},${VIEW_H}`,
   `H20 A20,20 0 0 1 0,${VIEW_H - 20} V20 A20,20 0 0 1 20,0 Z`,

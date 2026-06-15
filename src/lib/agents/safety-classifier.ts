@@ -54,7 +54,7 @@ ${VOICE_RULES}
 
   // Per-call nonce is generated in user() and stored in a WeakMap keyed by
   // the input object so parse() can validate the SPECIFIC nonce, not a
-  // generic regex. Closes Codex CP2 finding #3 and Fool CP2 finding #4.
+  // generic regex.
   user: (input: Input) => {
     const nonce = boundaryNonce();
     LAST_NONCE_BY_INPUT.set(input, nonce);

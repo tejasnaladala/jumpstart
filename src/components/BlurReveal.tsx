@@ -10,7 +10,7 @@ type Props = {
   // Per-word duration (seconds). Default 1.0. Slightly randomized per word
   // to avoid robotic uniformity.
   durationSec?: number;
-  // Initial blur in px. Default 6 (down from 14 per Fool a11y review:
+  // Initial blur in px. Default 6 (down from 14 per accessibility review:
   // 14px renders text completely unreadable mid-reveal for low-vision
   // users not using the reduced-motion preference).
   blurPx?: number;
@@ -43,7 +43,7 @@ export function BlurReveal({
   const ref = useRef<HTMLSpanElement>(null);
   // Synchronous reduced-motion read on first render. Honors the OS
   // preference at the very first paint so reduced-motion users never see
-  // any animation flash. Closes Codex M5.
+  // any animation flash.
   const [reducedMotion] = useState(() => {
     if (typeof window === "undefined") return false;
     try {

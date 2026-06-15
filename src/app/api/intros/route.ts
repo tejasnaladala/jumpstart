@@ -55,7 +55,7 @@ export async function POST(req: Request) {
 
   // Ownership check: the match row must exist, must belong to the
   // requester, and the recipient_id in the body must equal the
-  // candidate_user_id on the match. Closes Codex P2 finding.
+  // candidate_user_id on the match.
   try {
     await assertMatchOwnership(requester_id, match_id, recipient_id);
   } catch (err) {
@@ -172,7 +172,7 @@ async function assertMatchOwnership(
 ): Promise<void> {
   // Stub-mode bypass requires BOTH the explicit stub flag AND no Supabase
   // configured. A stray JUMPSTART_ALLOW_STUB=1 in prod with Supabase wired
-  // must not bypass ownership. Closes Codex challenge P2 #7.
+  // must not bypass ownership.
   const supabaseConfigured = Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );

@@ -29,8 +29,8 @@ with check (user_id = auth.uid());
 
 -- MEETINGS
 -- Both participants can READ. Each writes feedback attributed to themselves
--- via author_id. Closes Fool CP2 finding #6 (one party pre-writing the
--- other's outcome).
+-- via author_id. This prevents one party from pre-writing the other's
+-- outcome.
 
 alter table meetings add column if not exists author_id uuid references users (id) on delete cascade;
 create unique index if not exists meetings_intro_author_idx on meetings (intro_id, author_id);
@@ -114,8 +114,8 @@ revoke all on agent_logs from authenticated, anon;
 
 -- INSERT policy on intros must not just check requester_id; it must also
 -- verify the match exists, belongs to the requester, and that the
--- recipient_id equals the candidate on that match. Closes Codex challenge
--- P1 #2 (cold-spam path that bypassed the API ownership check).
+-- recipient_id equals the candidate on that match. This closes a cold-spam
+-- path that bypassed the API ownership check.
 create policy "user requests own intro"
 on intros for insert to authenticated
 with check (
@@ -164,14 +164,13 @@ with check (id = auth.uid());
 
 -- Prevent self-promotion: revoke UPDATE on the trust_tier column from
 -- authenticated users. Service role retains full update for admin paths.
--- Closes Codex challenge P1 #1 (any signed-in user could set their own
--- trust_tier='verified' and unlock founder_cards visibility).
+-- Without this, any signed-in user could set their own
+-- trust_tier='verified' and unlock founder_cards visibility.
 revoke update (trust_tier) on users from authenticated;
 
 -- SECURITY DEFINER function that returns whether a target user_id has a
 -- verified-or-peer-vouched trust_tier. Bypasses RLS so the founder_cards
 -- visibility policy can call it without depending on cross-user reads.
--- Closes Codex CP4 finding #3.
 
 create or replace function public.is_verified_user(target_id uuid)
 returns boolean

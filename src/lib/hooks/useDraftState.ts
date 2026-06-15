@@ -58,7 +58,6 @@ export function useDraftState<T>(
   // Track which key the current state was hydrated for, so a key change
   // (e.g. /match/a -> /match/b in-place navigation) re-hydrates from the
   // new key instead of leaking the old draft into the new bucket.
-  // Closes Codex H1.
   const [hydratedKey, setHydratedKey] = useState<string | null>(null);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const settleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -136,7 +135,7 @@ export function useDraftState<T>(
           data: value,
         };
         // Set status inside try so a failed write does not leave the UI
-        // stuck on "saving". Closes Codex M3.
+        // stuck on "saving".
         window.localStorage.setItem(key, JSON.stringify(env));
         setStatus("saving");
         lastSavedRef.current = serialized;
@@ -158,8 +157,7 @@ export function useDraftState<T>(
 
   function clear() {
     // Cancel any pending debounced save so a queued write does not
-    // resurrect the cleared draft after a successful submit. Closes
-    // Codex H2.
+    // resurrect the cleared draft after a successful submit.
     if (saveTimerRef.current) {
       clearTimeout(saveTimerRef.current);
       saveTimerRef.current = null;

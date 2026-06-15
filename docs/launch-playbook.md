@@ -63,8 +63,8 @@ skip 1; the rest assume you've actually walked the funnel yourself.
   while you build features is the actual failure mode. Build features
   in response to friend feedback, not in anticipation of it.
 - **Don't ship to YC's official channels (Bookface, Slack groups) yet.**
-  Codex flagged this in the autoplan: hitting visibility before product-
-  market fit triggers YC to build the official version themselves.
+  Hitting visibility before product-market fit risks YC building the
+  official version themselves.
 - **In-app messaging via the Inbox surface (founder reversed the prior
   no-DMs stance).** Original concern: DM apps become chat apps and the
   meeting rate plummets. New design keeps that risk contained: requests

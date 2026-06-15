@@ -16,10 +16,10 @@ type Props = {
 //
 // A11y: visible chrome is decorative (aria-hidden); the screen-reader only
 // hears terminal transitions ("Draft saved", "Save failed") via a separate
-// polite live region. Per Fool review: aria-live + aria-atomic on the
-// outer span screamed every 350ms during typing as the dirty -> saving ->
-// saved cycle ran. Now silent during typing, only announces on settled
-// terminal states.
+// polite live region. An earlier accessibility pass found that aria-live +
+// aria-atomic on the outer span screamed every 350ms during typing as the
+// dirty -> saving -> saved cycle ran. Now silent during typing, only
+// announces on settled terminal states.
 export function DraftIndicator({ status, className, timestamp }: Props) {
   const label =
     status === "saving"

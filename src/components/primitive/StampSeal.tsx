@@ -9,7 +9,7 @@ type Props = {
   // Accessible label read by screen readers. Override when the visual
   // labels include initialisms ("SS 2026") that read as letters by
   // default. Defaults to a spoken-friendly expansion of the visual
-  // labels. Closes Fool a11y finding.
+  // labels.
   ariaLabel?: string;
   // Center glyph (default: a small star). Pass null for no glyph.
   glyph?: React.ReactNode | null;
@@ -35,7 +35,7 @@ export function StampSeal({
   // textPath needs a path; we draw two arcs (top half + bottom half)
   // along which the labels are laid. IDs come from React's useId() so
   // every instance has a unique pair, even when two identical-prop seals
-  // render on the same page (closes Codex M4).
+  // render on the same page.
   const reactId = useId();
   const topId = `seal-top-${reactId.replace(/[^a-zA-Z0-9]/g, "_")}`;
   const bottomId = `seal-bot-${reactId.replace(/[^a-zA-Z0-9]/g, "_")}`;

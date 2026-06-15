@@ -25,7 +25,7 @@ async function ensureDir() {
   try {
     await fs.mkdir(LOG_DIR, { recursive: true });
     // Containment: realpath both the log dir and the project root and
-    // refuse to use the dir if it escapes (symlink trick). Fool CP2 #3.
+    // refuse to use the dir if it escapes (symlink trick).
     const realLog = await fs.realpath(LOG_DIR);
     const realRoot = await fs.realpath(process.cwd());
     if (!realLog.startsWith(realRoot)) {

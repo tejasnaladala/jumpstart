@@ -43,8 +43,7 @@ export function AccordionLine({
           "text-left group rounded-md",
           // Visible focus ring for keyboard users. The global focus-visible
           // shadow at globals.css:71 doesn't fully wrap a row-button, so we
-          // override outline:none with a ring that reads on cream. Closes
-          // Codex M2.
+          // override outline:none with a ring that reads on cream.
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
         )}
       >
