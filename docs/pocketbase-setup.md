@@ -13,9 +13,10 @@ bash scripts/start-pocketbase.sh
 
 That:
 
-1. Downloads the PocketBase binary (~10MB) into `pocketbase/bin/`.
-2. Starts the server on `http://localhost:8090`.
-3. Exposes the admin UI at `http://localhost:8090/_/`.
+1. Downloads the pinned PocketBase archive and the release's official `checksums.txt`.
+2. Verifies the archive with SHA-256 before extracting the executable into `pocketbase/bin/`.
+3. Starts the server on `http://127.0.0.1:8090`.
+4. Exposes the admin UI at `http://127.0.0.1:8090/_/`.
 
 Open the admin UI on first run, create your admin account, then import
 the collection schema:
@@ -34,7 +35,7 @@ swap-in.
 In `.env.local`:
 
 ```
-NEXT_PUBLIC_POCKETBASE_URL=http://localhost:8090
+NEXT_PUBLIC_POCKETBASE_URL=http://127.0.0.1:8090
 ```
 
 Rebuild and restart the app. `src/lib/pocketbase/client.ts` becomes
@@ -70,6 +71,7 @@ Data persists in `pocketbase/pb_data/` and survives restarts.
 
 ## Production deploy notes
 
+- Loopback is the default. Setting `POCKETBASE_BIND=0.0.0.0:8090` is an explicit external-exposure decision.
 - Run behind a reverse proxy (Caddy or nginx) for TLS.
 - Put `pocketbase/pb_data/` on a persistent volume.
 - Set `--encryptionEnv POCKETBASE_ENCRYPTION_KEY` for at-rest

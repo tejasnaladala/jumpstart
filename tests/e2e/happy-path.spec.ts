@@ -44,28 +44,8 @@ test.describe("happy path", () => {
     await expect(page.getByText(/Drop pending/i)).toBeVisible();
   });
 
-  test("match detail loads with explanation and opener", async ({ page }) => {
-    // In dev mode/tests, we can mock a delivered match to test the detail view
+  test("drop route remains accessible", async ({ page }) => {
     await page.goto("/drop");
-    await page.evaluate(() => {
-      const now = new Date();
-      // Find the next/current drop window
-      const d = new Date(now);
-      d.setUTCHours(4, 0, 0, 0); // 9pm PT is 4am UTC next day or same day
-      if (d < now) d.setUTCDate(d.getUTCDate() + 1);
-
-      const match = {
-        id: "match_maya_0",
-        candidate: { name: "Maya Chen", building_summary: "AI agents", tags: ["ai"], location: "Toronto" },
-        explanation: "Why meet",
-        suggested_opener: "Hi",
-        match_type: "domain_peer"
-      };
-      // We'd need to know the EXACT ISO string the app expects.
-      // Simplification: just skip this test if complex, or mock the API.
-      // Since this is local-only, we'll try to find what the app calculated.
-    });
-    // For now, let's just ensure the drop page loads.
     await expect(page.getByText(/Your Drop/i).first()).toBeVisible();
   });
 
@@ -92,7 +72,7 @@ test.describe("api auth and rate limit", () => {
     const res = await request.get("/api/health");
     expect(res.status()).toBe(200);
     const body = await res.json();
-    expect(body.ready).toBe(true);
+    expect(body).toEqual({ ok: true, status: "alive" });
   });
 
   test("api/intros validates body", async ({ request }) => {
@@ -144,5 +124,14 @@ test.describe("api auth and rate limit", () => {
     // 503 when CRON_SECRET is not configured (dev), or 403 if it is and the
     // header is missing/wrong. Either is correct.
     expect([403, 503]).toContain(res.status());
+  });
+});
+
+test.describe("admin operations", () => {
+  test("health page reports local liveness without provider probes", async ({ page }) => {
+    await page.goto("/admin/health");
+    await expect(page.getByRole("heading", { name: "Live health" })).toBeVisible();
+    await expect(page.getByText("Application process is responding")).toBeVisible();
+    await expect(page.getByText(/Anthropic/i)).toHaveCount(0);
   });
 });

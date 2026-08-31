@@ -42,7 +42,7 @@
 ### Backend #backend
 
 - APIs: `src/app/api/**`
-- Auth: `src/lib/auth/**`, `src/middleware.ts`
+- Auth: `src/lib/auth/**`, `src/proxy.ts`
 - Schemas: `src/lib/api/schema.ts`
 - Agents: `src/lib/agents/**`
 - Rate limits: `src/lib/auth/rate-limit.ts`
@@ -58,7 +58,7 @@
 
 - Session: `src/lib/auth/session.ts`
 - Admin: `src/lib/auth/admin.ts`
-- Middleware: `src/middleware.ts`
+- Proxy: `src/proxy.ts`
 - Cron auth: `src/app/api/cron/retention/route.ts`
 - CSP/headers: `vercel.json`
 

@@ -23,7 +23,7 @@ debt for the 10-friend window; the trigger to revisit each item is named.
 | 7 | Sending an intro with empty note silently sent literal `""` to the recipient via the Safety Classifier. UI copy said "Leave blank if the suggested opener feels right" but the API never saw the opener. | deep match-flow | Send `note.trim() || opener` so recipient gets the Pass-pulled phrasing if user blanked the field. |
 | 8 | `FounderPass` StampSeal hardcoded `topLabel="Verified"` even when `card.trust_tier === "provisional"`. Pre-verification users saw a green "Verified" stamp on their own Pass - false confidence. | a11y user, stress-tester | StampSeal label and color now derive from `card.trust_tier`. Provisional renders muted "Pending". |
 | 9 | `metadataBase` hardcoded to `https://jumpstart.dev` (a domain we don't own). Cloudflared tunnel link previews would resolve OG image URLs against the wrong origin. | security/API | `metadataBase` reads from `NEXT_PUBLIC_SITE_URL` env, falls back to `http://localhost:3030`. Tunnel ops just sets the env var. |
-| 10 | No live operational visibility for the founder during closed beta. If a probe fails or stub-mode breaks, no surface to see it. | DX-Maya, DX-Priya | New `/admin/health` page polls `/api/health` every 4s, renders per-dependency probe grid (Supabase, Anthropic, Upstash) with stub/healthy/failing state, latency, and 30-poll history sparkline. New tile on `/admin` home. |
+| 10 | No live process visibility for the founder during closed beta. | DX-Maya, DX-Priya | `/admin/health` polls a local-only liveness route every 10s and retains recent status. Provider readiness remains a separate authenticated-operations follow-up. |
 
 ---
 

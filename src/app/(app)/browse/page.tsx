@@ -33,6 +33,7 @@ export default function BrowsePage() {
   const [composeTitle, setComposeTitle] = useState("");
   const [composeBody, setComposeBody] = useState("");
   const [composeCat, setComposeCat] = useState<PostCategory>("show");
+  const [rankingEpoch] = useState(() => Date.now());
 
   useEffect(() => {
     seedDemoPostsIfNeeded();
@@ -49,13 +50,13 @@ export default function BrowsePage() {
     const base = filter === "all" ? posts : posts.filter((p) => p.category === filter);
     // Default sort: HN-style score = upvotes / age^1.5. Recency wins.
     return base.slice().sort((a, b) => {
-      const ageA = (Date.now() - new Date(a.created_at).getTime()) / 3600_000;
-      const ageB = (Date.now() - new Date(b.created_at).getTime()) / 3600_000;
+      const ageA = (rankingEpoch - new Date(a.created_at).getTime()) / 3600_000;
+      const ageB = (rankingEpoch - new Date(b.created_at).getTime()) / 3600_000;
       const sa = a.upvotes / Math.pow(ageA + 2, 1.4);
       const sb = b.upvotes / Math.pow(ageB + 2, 1.4);
       return sb - sa;
     });
-  }, [posts, filter]);
+  }, [posts, filter, rankingEpoch]);
 
   function submitPost() {
     const title = composeTitle.trim();
@@ -72,14 +73,12 @@ export default function BrowsePage() {
     if (!result.ok) {
       // Hard-blocked content (slurs / threats / doxx). UI never names
       // the specific pattern to avoid feedback for ban-evaders.
-      // eslint-disable-next-line no-alert
       alert("Post blocked. Rewrite without language that targets people or could harm them.");
       return;
     }
     if (result.flagged) {
       // Soft-flagged: post is up, admin will review. Keep the user
       // moving without a scary modal.
-      // eslint-disable-next-line no-alert
       alert("Posted. Heads up: an admin will review the language before it stays public.");
     }
     setComposeTitle("");

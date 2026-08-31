@@ -23,7 +23,7 @@ export default function ThreadPage() {
   const [thread, setThread] = useState<Thread | null>(null);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
-  const meRef = useRef(loadMe());
+  const [me] = useState(loadMe);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function ThreadPage() {
     setSending(true);
     try {
       const updated = appendMessage(thread!.id, {
-        from_user_id: meRef.current.user_id,
+        from_user_id: me.user_id,
         text,
         ts: new Date().toISOString(),
       });
@@ -122,7 +122,7 @@ export default function ThreadPage() {
               const lastMsg = thread.messages[thread.messages.length - 1];
               enqueue({
                 kind: "reported_message",
-                triggered_by: meRef.current.user_id,
+                triggered_by: me.user_id,
                 target_id: lastMsg?.text || thread.id,
                 target_kind: "message",
                 target_label: `${thread.other.name} in your inbox`,
@@ -163,7 +163,7 @@ export default function ThreadPage() {
             <div className="flex flex-col gap-2">
               <AnimatePresence initial={false}>
                 {thread.messages.map((m, i) => {
-                  const mine = m.from_user_id === meRef.current.user_id;
+                  const mine = m.from_user_id === me.user_id;
                   return (
                     <motion.div
                       key={`${m.ts}-${i}`}

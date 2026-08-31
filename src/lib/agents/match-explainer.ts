@@ -1,7 +1,7 @@
 import type { AgentDef } from "./types";
 import { VOICE_RULES } from "./types";
 
-type Input = {
+export type MatchExplainerInput = {
   user_card: {
     name: string;
     building: string;
@@ -25,7 +25,7 @@ type Output = {
   specificity_anchor: string;
 };
 
-export const matchExplainer: AgentDef<Input, Output> = {
+export const matchExplainer: AgentDef<MatchExplainerInput, Output> = {
   name: "match_explainer",
   description:
     "Writes the why-you-should-meet for a single match, 2 to 3 sentences, must cite at least one detail from the other card.",
@@ -55,7 +55,7 @@ specificity_anchor is the exact phrase you took from the candidate's card. Used 
 ${VOICE_RULES}
 `.trim(),
 
-  user: (input: Input) => `
+  user: (input: MatchExplainerInput) => `
 You are explaining the match.
 
 User you are writing for.

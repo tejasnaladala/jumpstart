@@ -295,7 +295,7 @@ function WaitingForDrop({
             </p>
             <p className="text-xs text-muted leading-relaxed">
               We will fire one browser notification at 9pm PT on drop nights. No
-              spam, no daily digest, no "we miss you" emails.
+              spam, no daily digest, no &quot;we miss you&quot; emails.
             </p>
           </div>
           <Button onClick={onAskPerm} loading={askingPerm} size="sm">

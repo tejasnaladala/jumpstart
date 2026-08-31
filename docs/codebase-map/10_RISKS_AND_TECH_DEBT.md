@@ -35,7 +35,7 @@ Comprehensive ranked list. P0 = production blocker. P1 = ship-blocker for public
 | 17 | `verifications`, `intent_interviews` lack hot-path indexes | DB | Add `(user_id, created_at desc)`, `(artifact_expires_at)` |
 | 18 | `reports.status` is text, not enum | DB | Convert or add CHECK |
 | 19 | Verification screenshots stored as data URLs in localStorage | `verification/page.tsx:136-144` | Encrypt before public launch |
-| 20 | `/api/health` exposes dependency status to anyone | `health/route.ts:170` | Admin-gate or rate-limit if reconnaissance becomes a concern |
+| 20 | Public liveness does not cover dependency readiness | `health/route.ts` | Add a separately authenticated operator readiness check before external launch |
 | 21 | EluIdentify fires unconditionally; no opt-out UI | `src/components/EluIdentify.tsx` | Add user consent toggle in Settings (Phase 2) |
 | 22 | PocketBase scaffolding present, dormant; decide drop or wire | `src/lib/pocketbase/`, `pocketbase/` | Decision PR + cleanup |
 | 23 | `pass/[id]` has no error boundary if API fails | `pass/[id]/page.tsx` | Add error.tsx + skeleton |

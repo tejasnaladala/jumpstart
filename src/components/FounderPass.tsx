@@ -48,7 +48,6 @@ const TICKET_PATH = [
 export function FounderPass({
   card,
   cohort = "Startup School 2026",
-  venue: _venue = "",
   className,
   tilt = true,
 }: Props) {

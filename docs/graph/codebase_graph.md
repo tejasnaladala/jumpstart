@@ -20,7 +20,7 @@
    - `src/lib/verification/otp.ts`
 
 3. Backend API and auth
-   - `src/middleware.ts`
+   - `src/proxy.ts`
    - `src/app/api/**/route.ts`
    - `src/lib/auth/**`
    - `src/lib/api/schema.ts`

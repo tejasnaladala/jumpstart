@@ -2,14 +2,20 @@
 // Outputs METRIC lines so autoresearch can parse the result.
 
 import { runAgent } from "../src/lib/agents/runner";
-import { matchExplainer } from "../src/lib/agents/match-explainer";
-import { safetyClassifier } from "../src/lib/agents/safety-classifier";
+import {
+  matchExplainer,
+  type MatchExplainerInput,
+} from "../src/lib/agents/match-explainer";
+import {
+  safetyClassifier,
+  type SafetyClassifierInput,
+} from "../src/lib/agents/safety-classifier";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-type Case = {
+type Case<I> = {
   id: string;
-  input: any;
+  input: I;
   must_contain_any?: string[];
   must_not_contain?: string[];
   min_chars?: number;
@@ -25,12 +31,15 @@ type EvalResult = {
   reason?: string;
 };
 
-async function loadCases(file: string): Promise<{ cases: Case[] }> {
+async function loadCases<I>(file: string): Promise<{ cases: Case<I>[] }> {
   const fp = path.resolve(__dirname, "cases", file);
   return JSON.parse(readFileSync(fp, "utf-8"));
 }
 
-function checkExplainer(output: string, c: Case): { ok: boolean; reason?: string } {
+function checkExplainer(
+  output: string,
+  c: Case<MatchExplainerInput>
+): { ok: boolean; reason?: string } {
   if (c.min_chars && output.length < c.min_chars) {
     return { ok: false, reason: `output ${output.length} chars, expected >= ${c.min_chars}` };
   }
@@ -52,7 +61,7 @@ function checkExplainer(output: string, c: Case): { ok: boolean; reason?: string
 }
 
 async function runExplainer(): Promise<EvalResult[]> {
-  const { cases } = await loadCases("match-explainer.json");
+  const { cases } = await loadCases<MatchExplainerInput>("match-explainer.json");
   const results: EvalResult[] = [];
   for (const c of cases) {
     const r = await runAgent(matchExplainer, c.input);
@@ -73,7 +82,7 @@ async function runExplainer(): Promise<EvalResult[]> {
 
 async function runSafety(): Promise<EvalResult[]> {
   // Inline cases for the safety classifier so we can ship without another file.
-  const cases: Case[] = [
+  const cases: Case<SafetyClassifierInput>[] = [
     {
       id: "safety_clean_intro",
       input: {

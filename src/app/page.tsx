@@ -1,7 +1,5 @@
 "use client";
 
-import { FounderPass } from "@/components/FounderPass";
-import { MOCK_COHORT } from "@/lib/mock/cohort";
 import { Marquee } from "@/components/Marquee";
 import { BlurFade } from "@/components/BlurFade";
 import { GlassNav } from "@/components/GlassNav";
@@ -99,9 +97,6 @@ function RoutingBand() {
 }
 
 export default function LandingPage(): React.JSX.Element {
-  const sample = MOCK_COHORT.slice(0, 3);
-  const passCard = sample[2] ?? sample[0];
-
   return (
     <main id="main" className="min-h-svh bg-bg text-ink">
       <ScrollProgress />

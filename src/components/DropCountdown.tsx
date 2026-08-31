@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { countdownTo, formatDropLabel } from "@/lib/drop/schedule";
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 // and below, an "ENVELOPE LANDS" eyebrow, the drop label (e.g.
 // "Friday, May 8 at 9:00 PM PT") in display serif italic.
 export function DropCountdown({ targetIso, onArrived }: Props) {
-  const target = new Date(targetIso);
+  const target = useMemo(() => new Date(targetIso), [targetIso]);
   const [c, setC] = useState(() => countdownTo(target));
   const [arrived, setArrived] = useState(false);
 

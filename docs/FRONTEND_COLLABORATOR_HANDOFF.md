@@ -94,7 +94,7 @@ There is no `MobileShell`, `NavDock`, `CandidateStack`, `DropComposer`, or `Inbo
 | --- | --- | --- |
 | `src/app/(app)/match/[id]/page.tsx` | `POST /api/intros` | Stub path returns success; production DB write is TODO. |
 | `src/app/pass/[id]/page.tsx` | `GET /api/browse?id=<user_id>` | Single-card mode works in stub; prod TODO. |
-| `src/app/admin/health/page.tsx` | `GET /api/health` (poll every 4s) | Working. |
+| `src/app/admin/health/page.tsx` | `GET /api/health` (poll every 10s) | Working. Local liveness only; no provider probes. |
 | `src/app/admin/curate/page.tsx` | `GET /api/drops` (admin pending list) | Stub path works. |
 
 Backend APIs that exist but the wizard does not yet consume:

@@ -140,7 +140,7 @@ src/
 │   │   └── otp.ts              Stub OTP send/verify
 │   └── types.ts                FounderCard, Match, Drop, IntroRequest, AgentInvocation
 │
-└── middleware.ts               Auth fast-fail at /api/*
+└── proxy.ts                    Auth fast-fail at /api/*
 ```
 
 ## evals/ tree
@@ -240,7 +240,7 @@ BACKEND_OWNER_BRIEF.md
 3. `src/lib/agents/runner.ts` — every agent call goes through this
 4. `src/lib/auth/session.ts` — auth + stub mode
 5. `src/lib/auth/rate-limit.ts` — limit definitions + prod gate
-6. `src/middleware.ts` — auth fast-fail
+6. `src/proxy.ts` — auth fast-fail
 7. `src/lib/api/schema.ts` — every API contract
 8. `src/lib/types.ts` — shared types
 9. `src/lib/match/local-drop.ts` — deterministic match scoring

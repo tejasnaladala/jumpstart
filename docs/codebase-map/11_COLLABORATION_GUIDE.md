@@ -45,7 +45,7 @@ With awareness (frontend-owned today only because they are browser-local; persis
 ## Files backend should touch
 
 - `src/app/api/**`
-- `src/middleware.ts`
+- `src/proxy.ts`
 - `src/lib/auth/**`
 - `src/lib/api/schema.ts`
 - `src/lib/agents/**`

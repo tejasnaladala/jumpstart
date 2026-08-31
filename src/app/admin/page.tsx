@@ -4,7 +4,7 @@ const TILES = [
   {
     href: "/admin/health",
     title: "Live health",
-    body: "Polls /api/health every 4s. Per-dependency probes (Supabase, Anthropic, Upstash) with latency, plus a 30-poll history sparkline.",
+    body: "Polls the local liveness endpoint every 10s. No provider calls, credentials, or paid traffic.",
   },
   {
     href: "/admin/curate",

@@ -21,7 +21,7 @@ The key backend problem is that product UI is ahead of backend persistence. Rout
 
 | Method | Path | Handler | Auth | Status |
 | --- | --- | --- | --- | --- |
-| `GET` | `/api/health` | `src/app/api/health/route.ts` | Public | Working. Probes Supabase + Anthropic + Upstash. |
+| `GET` | `/api/health` | `src/app/api/health/route.ts` | Public | Local liveness only. Returns a static process-alive response and performs no outbound calls. |
 | `GET` | `/api/browse` | `src/app/api/browse/route.ts` | `requireSession()` | Working in stub mode against `MOCK_COHORT`. Production DB read TODO. |
 | `POST` | `/api/drops` | `src/app/api/drops/route.ts:12` | `requireSession()` | Blocked by `loadMeFromDb` TODO at `route.ts:53`. Returns 503 `DROPS_NOT_IMPLEMENTED` in prod. |
 | `POST` | `/api/intros` | `src/app/api/intros/route.ts:8` | `requireSession()` (stub bypass requires both `JUMPSTART_ALLOW_STUB=1` and missing Supabase) | Stub path works. Production ownership check throws at `route.ts:152` (returns 503 `INTROS_NOT_IMPLEMENTED`). |
@@ -37,7 +37,7 @@ See `docs/codebase-map/05_API_CONTRACTS.md` for request/response shapes.
 | Session auth | `src/lib/auth/session.ts` | `getSession`, `requireSession`, `isStubMode`, `SessionUser`. Reads `users.trust_tier` after `auth.getUser()`. |
 | Admin gating | `src/lib/auth/admin.ts` | `getAdmin`, `requireAdmin`, `AdminForbiddenError`. Allowlist + dev-admin bypass. |
 | Rate limiting | `src/lib/auth/rate-limit.ts` | `checkLimit`. Upstash `Ratelimit.slidingWindow` + in-memory fallback + hard prod gate at line 150. |
-| API middleware | `src/middleware.ts` | Auth fast-fail for `/api/*`. Public bypass list: `/api/health`, `/api/cron/*`. Cookie regex: `^sb-.+-auth-token(\.\d+)?$`. |
+| API proxy | `src/proxy.ts` | Auth fast-fail for `/api/*`. Public bypass list: `/api/health`, `/api/cron/*`. Cookie regex: `^sb-.+-auth-token(\.\d+)?$`. |
 | Zod schemas | `src/lib/api/schema.ts` | Every API contract. ID accepts UUID + stub prefixes (`u_`, `fc_`, `match_`, `drop_`). |
 | Domain types | `src/lib/types.ts` | `FounderCard`, `Match`, `Drop`, `IntroRequest`, `AgentInvocation`, `MatchType`, `TrustTier`, `Intent`. |
 | Agent runner | `src/lib/agents/runner.ts:61` | `runAgent(def, input)`. Retry x3 with jittered backoff. Sonnet 30s/2048 tok, Haiku 15s/1024 tok. Prompt cache. JSON prefill. Cost tracking. |
@@ -92,7 +92,7 @@ PocketBase: `pocketbase/schema.json` exists (defines `users`, `founder_cards`, `
 
 Stub mode: when Supabase envs are missing AND `JUMPSTART_ALLOW_STUB=1`, `getSession()` returns the deterministic `DEV_USER` from `src/lib/mock/me.ts`. Production hardening: `NODE_ENV=production` is not sufficient to disable stub (Vercel preview also runs production). The explicit flag is the gate.
 
-`src/middleware.ts` provides a fast-fail cookie presence check at the edge. It is a perf hint, not a security boundary; the route handler enforces.
+`src/proxy.ts` provides a fast-fail cookie presence check. It is a performance hint, not a security boundary; the route handler enforces.
 
 Admin: `src/lib/auth/admin.ts:26`. Allowlist (`JUMPSTART_ADMIN_EMAILS` CSV) + dev bypass (`JUMPSTART_DEV_ADMIN=1` + non-prod or `JUMPSTART_PRIVATE_BETA=1`). Empty allowlist → admin disabled.
 
@@ -154,7 +154,7 @@ There is no `NEXT_PUBLIC_USE_STUBS`; an earlier draft referenced it. Do not add 
 | P2 | Admin allowlist empty by default | `src/lib/auth/admin.ts:34`. Founder must populate `JUMPSTART_ADMIN_EMAILS` before launch. |
 | P2 | OTP demo code in response | `src/lib/verification/otp.ts:130` returns `demo_code` in stub mode response. Strip before public beta. |
 | P2 | `agent_logs` retention | Sensitive prompts retained indefinitely. Plan TTL or partition. |
-| P3 | `/api/health` exposes dependency status | `src/app/api/health/route.ts:170`. Consider admin-gating in prod. |
+| P3 | No authenticated dependency-readiness endpoint | `/api/health` is intentionally local-only liveness. Add a separately authenticated operator check before external launch. |
 | P3 | `pgvector` lists=100 with ~2,000 rows | Aggressive tuning; REINDEX after seed. |
 
 ## Security concerns
@@ -253,7 +253,7 @@ Goal: wire POST /api/drops and POST /api/intros to real Supabase reads/writes on
 
 Constraints:
 - Do not change frontend UI.
-- Do not touch src/middleware.ts auth shape.
+- Do not weaken the `src/proxy.ts` auth fast-fail shape.
 - Do not change Zod schemas in src/lib/api/schema.ts (contract stays).
 - Preserve the response shapes documented in 05_API_CONTRACTS.md.
 - Stub-mode flag set is JUMPSTART_*, not NEXT_PUBLIC_USE_STUBS.
