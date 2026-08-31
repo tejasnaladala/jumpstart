@@ -45,7 +45,7 @@ All four use `useDraftState` (`src/lib/hooks/useDraftState.ts`) for autosave to 
 | URL | File | Purpose |
 |---|---|---|
 | `/admin` | `admin/page.tsx` | Hub of admin tiles |
-| `/admin/health` | `admin/health/page.tsx` | Live dependency probe (polls `/api/health` every 4s) |
+| `/admin/health` | `admin/health/page.tsx` | Local liveness history (polls `/api/health` every 10s) |
 | `/admin/curate` | `admin/curate/page.tsx` | Manual match curation (closed-beta) |
 | `/admin/moderation` | `admin/moderation/page.tsx` | Moderation queue |
 | `/admin/logs` | `admin/logs/page.tsx` | Agent invocation logs |
@@ -139,7 +139,7 @@ Every frontend `fetch` call grouped by endpoint:
 |---|---|---|---|---|
 | `/api/intros` | POST | `/match/[id]` (request modal submit) | `IntroRequestSchema { match_id, recipient_id, note? }` | success: redirect to `/inbox`; safety block: toast "rewrite without sales language" |
 | `/api/browse` | GET | `/pass/[id]` | query `?id=<user_id>` | `{ card }` or 404 toast |
-| `/api/health` | GET | `/admin/health` (poll every 4s) | — | render dependency table |
+| `/api/health` | GET | `/admin/health` (poll every 10s) | — | render local process liveness |
 | `/api/drops` | GET | `/admin/curate` | — | list pending drops |
 | `/api/onboarding/interview` | POST | (called via `/onboarding` flow when wired) | `InterviewSchema` | `next_question` or `is_final` |
 
@@ -217,7 +217,7 @@ Files that run purely in the client/server-without-DB layer:
 - `src/lib/auth/**` — session, admin, rate limit
 - `src/lib/api/schema.ts` — request/response Zod (propose a change, do not edit unilaterally)
 - `src/lib/safety/**`, `src/lib/moderation/**`, `src/lib/verification/**`, `src/lib/forum/**`, `src/lib/inbox/**`, `src/lib/drop/**` — server-shaped logic
-- `src/middleware.ts` — auth fast-fail
+- `src/proxy.ts` — auth fast-fail
 - `src/app/admin/**` — admin pages (read-only dashboards, not feature work)
 - `supabase/**`, `evals/**`, `harness/**`, `scripts/**`, `.github/**`, `vercel.json`
 

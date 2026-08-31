@@ -6,7 +6,7 @@ import { Pill } from "@/components/primitive/Pill";
 import { Textarea } from "@/components/primitive/Input";
 import { useToast } from "@/components/primitive/Toast";
 import { useEffect, useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { loadMe } from "@/lib/mock/me";
 import {
@@ -21,7 +21,6 @@ import { enqueue } from "@/lib/moderation/queue";
 
 export default function PostDetailPage() {
   const params = useParams<{ id: string }>();
-  const router = useRouter();
   const toast = useToast();
   const [post, setPost] = useState<Post | null>(null);
   const [voted, setVoted] = useState(false);

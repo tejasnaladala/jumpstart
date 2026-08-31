@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/primitive/Button";
-import { Textarea, Input } from "@/components/primitive/Input";
+import { Textarea } from "@/components/primitive/Input";
 import { Slider } from "@/components/primitive/Slider";
 import { StepDots } from "@/components/ProgressBar";
 import { DraftIndicator } from "@/components/primitive/DraftIndicator";

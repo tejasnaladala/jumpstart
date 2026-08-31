@@ -17,7 +17,6 @@ type Status = "idle" | "submitting" | "success" | "error";
 
 const SHARE_TEXT_X =
   "Just got on the Jumpstart waitlist. Pre-event matchmaker for YC Startup School 2026. One curated founder match per drop, Mon Wed Fri at 9pm PT.";
-const SHARE_TEXT_LINKEDIN = SHARE_TEXT_X;
 
 export function WaitlistForm({
   source,

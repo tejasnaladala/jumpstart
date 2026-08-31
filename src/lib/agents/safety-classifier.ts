@@ -1,7 +1,7 @@
 import type { AgentDef } from "./types";
 import { VOICE_RULES } from "./types";
 
-type Input = {
+export type SafetyClassifierInput = {
   artifact_type: "intro_note" | "card_field" | "report" | "verification";
   artifact_text: string;
   context: {
@@ -19,7 +19,7 @@ type Output = {
   redactions?: string[]; // optional list of substrings to redact
 };
 
-export const safetyClassifier: AgentDef<Input, Output> = {
+export const safetyClassifier: AgentDef<SafetyClassifierInput, Output> = {
   name: "safety_classifier",
   description:
     "Reads every intro note, report, card field, and verification submission. Scores risk, returns a recommendation.",
@@ -55,7 +55,7 @@ ${VOICE_RULES}
   // Per-call nonce is generated in user() and stored in a WeakMap keyed by
   // the input object so parse() can validate the SPECIFIC nonce, not a
   // generic regex.
-  user: (input: Input) => {
+  user: (input: SafetyClassifierInput) => {
     const nonce = boundaryNonce();
     LAST_NONCE_BY_INPUT.set(input, nonce);
     return `

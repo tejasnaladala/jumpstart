@@ -56,7 +56,6 @@ export function NextDropCountdown({
   const label = formatDropLabel(target);
   const isDark = tone === "dark";
   const eyebrowTone = isDark ? "text-bg/70" : "text-muted";
-  const numTone = isDark ? "text-bg" : "text-ink";
   const labelTone = isDark ? "text-bg/85" : "text-ink/80";
   const accentLine = isDark ? "bg-bg/40" : "bg-accent";
 

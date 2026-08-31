@@ -37,6 +37,7 @@ export default defineConfig({
     timeout: 60_000,
     env: {
       JUMPSTART_ALLOW_STUB: "1",
+      JUMPSTART_DEV_ADMIN: "1",
       JUMPSTART_FORCE_STUBS: "1",
       PORT,
     },

@@ -1,16 +1,11 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from "@playwright/test";
 
-test('walkthrough', async ({ page }) => {
-  await page.goto('http://localhost:3030');
-  await page.screenshot({ path: 'landing_page.png' });
+test("walkthrough", async ({ page }, testInfo) => {
+  await page.goto("/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Private founder map");
+  await page.screenshot({ path: testInfo.outputPath("landing-page.png") });
 
-  const signupLink = page.getByRole('link', { name: /get started|sign up/i });
-  if (await signupLink.isVisible()) {
-    await signupLink.click();
-  } else {
-    await page.goto('http://localhost:3030/onboarding');
-  }
-
-  await page.waitForTimeout(2000);
-  await page.screenshot({ path: 'onboarding_step1.png' });
+  await page.goto("/signup");
+  await expect(page.getByRole("heading", { name: /Get your Founder Drop/i })).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath("signup.png") });
 });

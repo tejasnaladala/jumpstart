@@ -88,7 +88,7 @@ Note: this audit did not run tests because `node_modules` was not installed and 
 | Symptom | Likely cause | Files to check |
 |---|---|---|
 | Redirects to `/signup` from app pages | No session and stub not allowed | `src/app/(app)/layout.tsx`, `src/lib/auth/session.ts` |
-| API returns `SUPABASE_NOT_CONFIGURED` | Supabase missing and `JUMPSTART_ALLOW_STUB` not set | `src/middleware.ts` |
+| API returns `SUPABASE_NOT_CONFIGURED` | Supabase missing and `JUMPSTART_ALLOW_STUB` not set | `src/proxy.ts` |
 | `/api/intros` returns 503 | Real DB ownership path not wired | `src/app/api/intros/route.ts` |
 | `/api/drops` returns 503 | Real DB card read not wired | `src/app/api/drops/route.ts` |
 | Drop waits forever | No delivered localStorage match for eligible drop | `src/app/(app)/drop/page.tsx`, `src/lib/drop/delivery.ts` |
@@ -151,7 +151,7 @@ Manual Drop curation:
 - `src/lib/auth/session.ts`
 - `src/lib/auth/admin.ts`
 - `src/lib/auth/rate-limit.ts`
-- `src/middleware.ts`
+- `src/proxy.ts`
 - `src/app/api/intros/route.ts`
 - `src/app/api/drops/route.ts`
 - `src/app/api/cron/retention/route.ts`

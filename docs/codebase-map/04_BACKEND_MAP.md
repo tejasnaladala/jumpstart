@@ -2,13 +2,13 @@
 
 ## Framework
 
-Next.js 15.1 app router route handlers under `src/app/api/`. Every handler is a `route.ts` exporting `GET`, `POST`, etc. Runtime is Node (default; no `runtime = "edge"` declared anywhere). Vercel `iad1` region.
+Next.js 16.3 app router route handlers under `src/app/api/`. Every handler is a `route.ts` exporting `GET`, `POST`, etc. Runtime is Node (default; no `runtime = "edge"` declared anywhere). Vercel `iad1` region.
 
 ## Route handlers
 
 | Method | Path | File | Auth | Rate limit | Zod | Calls |
 |---|---|---|---|---|---|---|
-| GET | `/api/health` | `src/app/api/health/route.ts:161` | none (public) | none | none | `probeSupabase`, `probeAnthropic`, `probeUpstash` |
+| GET | `/api/health` | `src/app/api/health/route.ts` | none (public) | none | none | no outbound calls; static process liveness |
 | GET | `/api/cron/retention` | `src/app/api/cron/retention/route.ts:11` | `Bearer ${CRON_SECRET}` (timingSafeEqual) | none | none | TODO: Supabase delete loop. Returns 503 today. |
 | GET | `/api/browse` | `src/app/api/browse/route.ts:11` | `requireSession()` | `browse_min` (60/min) | `BrowseQuerySchema` | reads MOCK_COHORT, paginates |
 | POST | `/api/drops` | `src/app/api/drops/route.ts:12` | `requireSession()` | `drops_day` (5/day) | `DropRequestSchema` (optional) | `loadMeFromDb()` (TODO), `generateLocalDrop` |
@@ -17,11 +17,11 @@ Next.js 15.1 app router route handlers under `src/app/api/`. Every handler is a 
 
 All routes return `Response.json(...)` for success and `jsonError(status, code, message, extras?)` for failures. See `src/lib/api/schema.ts:23` for the `jsonError` helper.
 
-## Middleware behavior
+## Proxy behavior
 
-`src/middleware.ts` matches `"/api/:path*"`.
+`src/proxy.ts` matches `"/api/:path*"`.
 
-1. **Public bypass.** `/api/health` and `/api/cron/*` skip the cookie check. The cron route does its own bearer-token validation; health is intentionally public.
+1. **Public bypass.** `/api/health` and `/api/cron/*` skip the cookie check. The cron route does its own bearer-token validation; health is intentionally public and returns only local liveness.
 2. **Stub-mode gate.** If `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` are missing **and** `JUMPSTART_ALLOW_STUB !== "1"`, returns `500 SUPABASE_NOT_CONFIGURED`. With `JUMPSTART_ALLOW_STUB=1`, passes through to the route handler.
 3. **Cookie presence check.** When Supabase is configured, looks for any cookie matching `^sb-.+-auth-token(\.\d+)?$`. Supabase SSR can chunk auth tokens (`.0`, `.1`, …); the regex accepts both. Missing cookie → `401 UNAUTHORIZED`. Closes a P2 finding from a prior code review.
 4. **Note in source:** "Treat as perf hint, NOT security boundary." The route handler's `requireSession()` is the actual auth check.
@@ -32,7 +32,7 @@ All routes return `Response.json(...)` for success and `jsonError(status, code, 
 
 1. User submits email at `/signup`.
 2. Supabase Auth sends magic link (UNKNOWN: not yet wired in code; mock writes to `localStorage`).
-3. User clicks link → Supabase redirect URL → middleware validates auth cookie → `getSession()` reads `auth.getUser()` → DB query for `users.trust_tier` → returns `SessionUser { id, email, trust_tier }`.
+3. User clicks link → Supabase redirect URL → proxy checks for an auth-cookie hint → `getSession()` validates with `auth.getUser()` → DB query for `users.trust_tier` → returns `SessionUser { id, email, trust_tier }`.
 4. `requireSession()` throws `UnauthorizedError` (401) if any step returns null.
 
 Files: `src/lib/auth/session.ts:39` (`getSession`), `:53` (DB read), `:103` (`requireSession`).
@@ -149,7 +149,7 @@ browse_min:     60 / 1m
 |---|---|---|---|
 | Anthropic | `ANTHROPIC_API_KEY`; kill: `JUMPSTART_DISABLE_ANTHROPIC=1`; force stub: `JUMPSTART_FORCE_STUBS=1` | All agents | `src/lib/agents/runner.ts:14`, instantiated `:29` |
 | Upstash Redis | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Rate limiting | `src/lib/auth/rate-limit.ts:9` |
-| Supabase | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | Auth (current); future cron/logging | `src/lib/auth/session.ts:10,53`, `src/app/api/health/route.ts:51` |
+| Supabase | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | Auth (current); future cron/logging | `src/lib/auth/session.ts:10,53` |
 | Resend | `RESEND_API_KEY` | Intro accept email (TODO) | `src/lib/drop/notification.ts` (deferred) |
 | PostHog | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Frontend analytics | root layout |
 | ELU Analytics | (TBD) | Frontend identify | `src/components/EluIdentify.tsx` |
@@ -186,7 +186,7 @@ Validation never echoes user input back to the client. Server-side log captures 
 | 6 | Admin allowlist empty by default; founder must populate `JUMPSTART_ADMIN_EMAILS` before launch. | `src/lib/auth/admin.ts:34` | P2 |
 | 7 | PocketBase scaffolding still present; team must decide drop/wire before launch. | `src/lib/pocketbase/`, `pocketbase/` | P2 |
 | 8 | OTP demo code returned in stub-mode response (intentional for dev). Remove `demo_code` field before public beta. | `src/lib/verification/otp.ts:130` | P2 |
-| 9 | `/api/health` exposes dependency status to anyone. Lock to admin or rate-limit if reconnaissance becomes a concern. | `src/app/api/health/route.ts:170` | P3 |
+| 9 | Public liveness does not prove provider readiness. Add a separately authenticated operator check before external launch. | `src/app/api/health/route.ts` | P3 |
 | 10 | Vercel `/tmp` is ephemeral; agent JSONL logs lost on cold start. Move to Supabase per item 1. | `src/lib/agents/log.ts:14` | P3 |
 
 ## Files backend owner should touch

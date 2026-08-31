@@ -62,7 +62,7 @@ In one sentence: every important action is an agent invocation that writes struc
 
 1. **Tiered stub mode.** Three independent flags (`JUMPSTART_FORCE_STUBS`, `JUMPSTART_ALLOW_STUB`, `JUMPSTART_PRIVATE_BETA`) plus a kill switch (`JUMPSTART_DISABLE_ANTHROPIC`). The app degrades gracefully from real Anthropic to local heuristics; auth degrades to a deterministic dev user; rate limiting falls back to in-memory. Each flag is checked explicitly to prevent accidental bypass in Vercel preview environments where `NODE_ENV=production`.
 
-2. **Middleware as perf hint, not security.** `src/middleware.ts` rejects API calls with no Supabase auth cookie at the edge to save cold-start work. The route handler is the actual security boundary via `requireSession()`.
+2. **Proxy as performance hint, not security.** `src/proxy.ts` rejects API calls with no Supabase auth-cookie hint to save route work. The route handler is the actual security boundary via `requireSession()`.
 
 3. **Centralized agent runner.** All eight agents go through `src/lib/agents/runner.ts:139` (`runAgent`). It does retries with jittered backoff, model-specific timeouts, prompt cache on system blocks, JSON prefill (`{ role: "assistant", content: "{" }` to force JSON output), and cost tracking with hardcoded prices ($3/$15 Sonnet, $1/$5 Haiku per MTok).
 

@@ -11,7 +11,7 @@ import { useDraftState } from "@/lib/hooks/useDraftState";
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { loadMe } from "@/lib/mock/me";
-import { generateLocalDrop, getMatchById } from "@/lib/match/local-drop";
+import { getMatchById } from "@/lib/match/local-drop";
 import { MATCH_TYPE_LABEL } from "@/lib/types";
 import type { Match } from "@/lib/types";
 import { createOutgoingThread } from "@/lib/inbox/threads";
@@ -178,14 +178,14 @@ export default function MatchDetailPage() {
               Stale link
             </p>
             <h1 className="font-display text-3xl sm:text-4xl text-ink leading-tight mt-2">
-              This match isn't in your current drop
+              This match isn&apos;t in your current drop
             </h1>
             <p className="text-sm text-muted mt-3 leading-relaxed">
-              Drops rotate at 9pm PT on Mon, Wed, and Fri. The match you're looking for
+              Drops rotate at 9pm PT on Mon, Wed, and Fri. The match you&apos;re looking for
               has already cycled out, or the link was for a different account.
             </p>
             <div className="mt-5 flex gap-2">
-              <Button onClick={() => router.push("/drop")}>Back to today's drop</Button>
+              <Button onClick={() => router.push("/drop")}>Back to today&apos;s drop</Button>
               <Button variant="ghost" onClick={() => router.push("/browse")}>
                 Browse cohort
               </Button>
@@ -266,7 +266,7 @@ export default function MatchDetailPage() {
             </button>
           </div>
           <p className="text-sm text-ink leading-relaxed bg-bg border border-border rounded-md p-3 italic">
-            "{opener}"
+            &quot;{opener}&quot;
           </p>
           <div className="flex flex-wrap gap-2 mt-3">
             <Button

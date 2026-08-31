@@ -90,11 +90,11 @@
     "confidence": "high"
   },
   {
-    "id": "file:middleware",
-    "label": "middleware.ts",
+    "id": "file:proxy",
+    "label": "proxy.ts",
     "type": "BackendService",
-    "path": "src/middleware.ts",
-    "summary": "Fast-fail middleware for /api routes, with health and cron bypasses.",
+    "path": "src/proxy.ts",
+    "summary": "Fast-fail proxy for /api routes, with health and cron bypasses.",
     "owner": "backend",
     "importance": "critical",
     "confidence": "high"

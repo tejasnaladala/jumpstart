@@ -6,7 +6,7 @@
 2. Supabase sends magic link.
 3. User clicks the link, lands on a callback URL handled by `@supabase/ssr`.
 4. Browser receives `sb-...-auth-token` cookie (chunked as `.0`, `.1`, … if large).
-5. Subsequent `/api/*` requests pass through `src/middleware.ts`. Cookie regex: `^sb-.+-auth-token(\.\d+)?$`.
+5. Subsequent `/api/*` requests pass through `src/proxy.ts`. Cookie regex: `^sb-.+-auth-token(\.\d+)?$`.
 6. Route handler calls `requireSession()` (`src/lib/auth/session.ts:103`) which calls `getSession()` which does:
    - Constructs SSR client with anon key + cookies.
    - `supabase.auth.getUser()` validates the cookie.
@@ -48,7 +48,7 @@
 
 | Route | Session | Rate limit | Zod | Notes |
 |---|---|---|---|---|
-| `/api/health` | — | — | — | public, dependency probe |
+| `/api/health` | — | — | — | public, local liveness only; no outbound calls |
 | `/api/cron/retention` | bearer `CRON_SECRET` | — | — | Vercel Cron only |
 | `/api/browse` | ✅ | `browse_min` (60/m) | ✅ | |
 | `/api/drops` | ✅ | `drops_day` (5/d) | ✅ | |

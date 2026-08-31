@@ -84,21 +84,21 @@
     "confidence": "high"
   },
   {
-    "source": "file:middleware",
+    "source": "file:proxy",
     "target": "api:health",
     "type": "AUTHORIZES",
     "summary": "Middleware explicitly bypasses public health endpoint.",
     "confidence": "high"
   },
   {
-    "source": "file:middleware",
+    "source": "file:proxy",
     "target": "api:cron-retention",
     "type": "AUTHORIZES",
     "summary": "Middleware bypasses cron routes because they use bearer auth.",
     "confidence": "high"
   },
   {
-    "source": "file:middleware",
+    "source": "file:proxy",
     "target": "service:session",
     "type": "DEPENDS_ON",
     "summary": "Middleware mirrors session env assumptions but is not the real security boundary.",
@@ -333,27 +333,6 @@
     "target": "service:agent-log",
     "type": "READS_FROM",
     "summary": "Admin logs reads file-backed agent logs.",
-    "confidence": "high"
-  },
-  {
-    "source": "api:health",
-    "target": "external:supabase",
-    "type": "CALLS",
-    "summary": "Health route probes Supabase REST when configured.",
-    "confidence": "high"
-  },
-  {
-    "source": "api:health",
-    "target": "external:anthropic",
-    "type": "CALLS",
-    "summary": "Health route probes Anthropic messages API when configured and enabled.",
-    "confidence": "high"
-  },
-  {
-    "source": "api:health",
-    "target": "external:upstash",
-    "type": "CALLS",
-    "summary": "Health route probes Upstash Redis REST ping when configured.",
     "confidence": "high"
   },
   {

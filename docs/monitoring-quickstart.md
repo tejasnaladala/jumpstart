@@ -7,10 +7,10 @@ closed-beta-of-10 launch. Five things to watch.
 
 Open these in browser tabs:
 
-- `http://localhost:3030/admin/health` - per-dependency probes (Supabase,
-  Anthropic, Upstash) with a 30-poll history sparkline. Auto-refreshes
-  every 4s. **Green dot = configured-and-healthy. Grey dot = stub-mode
-  (expected during closed beta). Red dot = wired-but-failing (page).**
+- `http://localhost:3030/admin/health` - local application liveness with
+  recent poll history. Auto-refreshes every 10s and never calls a provider.
+  **Green = the application process is responding. Red = the local route
+  failed. This is intentionally not a dependency-readiness check.**
 - `http://localhost:3030/admin` - tile launcher. Live health, Moderation,
   Agent logs, Cohort dashboard.
 - `http://localhost:3030/admin/cohort` - cohort distribution, drop performance.
@@ -82,8 +82,8 @@ You get:
 | `assertion_pass_rate < 100` | `experiments/harness-assertions.jsonl` - grep `"passed":false` |
 | `errors > 0` in activity | `experiments/harness-runs/<latest>/*/telemetry.json` - console errors and 4xx/5xx per persona |
 | `acceptance_rate < 30%` | Decision rules might be too picky, or matchmaker scoring drifted. Inspect `harness/lib/coordinator.ts decideAccept` |
-| `/admin/health` shows red dot | Real probe failure - restart Supabase/Anthropic/Upstash dep |
-| `/admin/health` shows grey dot | Stub mode (expected during closed beta) |
+| `/admin/health` shows a failure | The application route is not responding; inspect the server process and logs |
+| A provider-backed feature fails | Check that provider's dashboard and server logs; public liveness does not probe dependencies |
 
 ## Persona-specific debugging
 
@@ -98,7 +98,7 @@ specific archetype's flow fails (e.g. mobile profile + filter sheet
 
 ## What you do NOT need to watch
 
-- Server stdout - we read it through `/api/health`.
+- Server stdout - keep it available because `/api/health` deliberately contains no logs or dependency detail.
 - The cloudflared tunnel terminal - it logs noise but the URL is
   constant for the session. If it dies, the URL rotates; check it.
 - Per-persona state files in `harness/state/` - those are durable but

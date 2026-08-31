@@ -40,7 +40,7 @@ Stable error codes:
 
 ### `GET /api/health`
 
-**File:** `src/app/api/health/route.ts:161`
+**File:** `src/app/api/health/route.ts`
 
 **Auth:** none (public).
 
@@ -52,26 +52,15 @@ Stable error codes:
 
 ```ts
 {
-  ok: boolean,
-  ready: boolean,
-  ts: string,                // ISO timestamp
-  region: string,            // process.env.VERCEL_REGION or "local"
-  build: string,             // git short SHA when present
-  dependencies: {
-    supabase: { ok: boolean, latency_ms: number, error?: string },
-    anthropic: { ok: boolean, latency_ms: number, error?: string },
-    upstash:   { ok: boolean, latency_ms: number, error?: string },
-  },
-  stub_mode?: boolean        // present only when JUMPSTART_PRIVATE_BETA=1
+  ok: true,
+  status: "alive"
 }
 ```
 
-**Response (503):** Same shape with `ok: false` when a required upstream is down.
-
 **Notes:**
-- 3-second total budget; per-probe timeout 1s.
-- Frontend consumer: `/admin/health` (poll every 4s).
-- **Risk:** dependency status visible to anyone unless `JUMPSTART_PRIVATE_BETA=1` strips fields. Consider gating to admin in prod.
+- Performs no outbound calls and cannot create provider traffic.
+- Frontend consumer: `/admin/health` (poll every 10s).
+- This endpoint proves process liveness only. Provider readiness belongs in a separately authenticated operator surface.
 
 ---
 
@@ -303,7 +292,7 @@ In production, all of these become UUIDs from `gen_random_uuid()` per the migrat
 |---|---|---|
 | `POST /api/intros` | `src/app/(app)/match/[id]/page.tsx` | Request modal submit |
 | `GET /api/browse?id=` | `src/app/pass/[id]/page.tsx` | Public Founder Pass |
-| `GET /api/health` | `src/app/admin/health/page.tsx` | Live dependency table |
+| `GET /api/health` | `src/app/admin/health/page.tsx` | Local liveness history |
 | `GET /api/drops` | `src/app/admin/curate/page.tsx` | Pending drops list |
 | `POST /api/onboarding/interview` | `src/app/onboarding/*` (when wired) | Conversational interview |
 
@@ -314,7 +303,7 @@ In production, all of these become UUIDs from `gen_random_uuid()` per the migrat
 | 1 | `/api/drops` returns 503 in prod until DB wired | `drops/route.ts:54` | P0 |
 | 2 | `/api/intros` ownership check throws in prod | `intros/route.ts:152` | P0 |
 | 3 | `/api/cron/retention` returns 503 (deletion not implemented) | `cron/retention/route.ts:51` | P1 |
-| 4 | `/api/health` exposes dependency status; consider admin-gating in prod | `health/route.ts:170` | P2 |
+| 4 | No authenticated provider-readiness endpoint exists | `health/route.ts` | P2 |
 | 5 | `/api/onboarding/interview` not yet called from frontend wizard | (frontend) | P2 |
 | 6 | No request-id / trace-id in error envelope; harder to correlate logs | all | P3 |
 | 7 | `BrowseQuerySchema.tags` accepts arbitrary kebab-case; no enum validation against COHORT_TAGS | `schema.ts` | P3 |

@@ -76,17 +76,13 @@ End-to-end traces of the main user journeys. Each flow names the files involved,
 ## Flow 4: Health check
 
 1. Anyone hits `GET /api/health` (no auth).
-2. Server runs three probes in parallel (3s budget):
-   - Supabase: `select 1` via anon client.
-   - Anthropic: head request to API base (stubbed when no key).
-   - Upstash: `ping`.
-3. Returns `{ ok, ready, ts, dependencies: {...} }`. 503 if any required is down.
-4. Frontend `/admin/health` polls every 4s and renders the table.
+2. The route returns `{ ok: true, status: "alive" }` without reading provider configuration or making a network request.
+3. Frontend `/admin/health` polls every 10s and renders recent local liveness.
 
 **Failure modes:**
 
-- Probe times out → reported as `ok: false, latency_ms: 3000`.
-- Stub mode: `dependencies.supabase.ok = false` even though acceptable; `stub_mode: true` flag tells consumer.
+- The application process or route fails, so the request itself errors.
+- A provider can be unavailable while liveness stays green; inspect authenticated operator diagnostics and server logs for readiness.
 
 ---
 
@@ -178,7 +174,7 @@ Supabase Postgres
 | Zod | Invalid input | 400 `VALIDATION` with `fields[]` | Caller fixes payload |
 | Safety | Risk score high | 400 `SAFETY_BLOCK` with reasons | Caller rewrites |
 | Agent | Anthropic 5xx | retry up to 3, then fall back to stub or 500 | Stub returns generic answer |
-| DB | Supabase down | 503 from `/api/health`, 500 from routes | Page shows toast |
+| DB | Supabase down | Provider-backed routes fail; `/api/health` remains local liveness | Inspect authenticated diagnostics and server logs |
 | Cron | Token mismatch | 403 | Check Vercel env |
 
 ## Stub-mode honesty matrix
@@ -196,5 +192,5 @@ Supabase Postgres
 
 - Every agent call writes a JSONL line: `agent`, `via`, `tokens_in/out`, `cost_usd`, `latency_ms`, `attempts`.
 - Every safety block writes a JSONL line tagged `event: safety_block`.
-- `/api/health` includes `region` and `build` fields when present in env.
+- `/api/health` intentionally contains no environment or dependency metadata.
 - Rate-limit responses include `retry_in_ms` and human help text.

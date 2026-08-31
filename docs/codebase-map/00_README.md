@@ -45,7 +45,7 @@ This is a load-bearing distinction in this repo because two people are working i
 - `src/lib/api/schema.ts` — Zod schemas for request/response (the contract)
 - `src/lib/safety/**`, `src/lib/moderation/**`, `src/lib/verification/**`, `src/lib/forum/**`, `src/lib/inbox/**`, `src/lib/drop/**` — server logic
 - `src/lib/pocketbase/**` — currently dormant client (closed-beta fallback)
-- `src/middleware.ts` — auth cookie fast-fail
+- `src/proxy.ts` — auth cookie fast-fail
 - `supabase/migrations/**` — DB schema
 - `evals/**`, `harness/**` — testing and autonomous ops infrastructure
 - `scripts/**` — launch, watchdog, checkpointer, monitor
@@ -66,7 +66,7 @@ This is a load-bearing distinction in this repo because two people are working i
 - `src/lib/agents/runner.ts` — the Anthropic call wrapper. Retries, timeouts, prompt cache, JSON prefill, cost tracking. Breaking this kills every agent.
 - `src/lib/auth/session.ts` — stub-mode gating. Any change to the env-flag conditions can leak stub auth into prod.
 - `src/lib/auth/rate-limit.ts:150` — the hard gate that blocks in-memory rate limiting in production.
-- `src/middleware.ts` — auth fast-fail. Public-route bypass list is critical.
+- `src/proxy.ts` — auth fast-fail. Public-route bypass list is critical.
 - `supabase/migrations/0002_complete_rls.sql` — RLS policies. A wrong USING clause is a data leak.
 - `harness/scripts/coordinator.ts` — autonomous stack. Has write zones; do not widen them casually.
 
